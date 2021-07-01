@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9D4DC5F2-B1BF-4902-BF03-F740F7E5A91B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aeris</RootNamespace>
+    <AssemblyName>Aeris</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <PublishUrl>publicar\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Aeris.CommandLine</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Aeris.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandLine.cs" />
+    <Compile Include="FolderBrowserDialogObject.cs" />
+    <Compile Include="frmBasePreview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmBasePreview.Designer.cs">
+      <DependentUpon>frmBasePreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSwizzleHashesBatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSwizzleHashesBatch.Designer.cs">
+      <DependentUpon>frmSwizzleHashesBatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSwizzleExternalHashImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSwizzleExternalHashImage.Designer.cs">
+      <DependentUpon>frmSwizzleExternalHashImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSwizzleExternalBaseImages.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSwizzleExternalBaseImages.Designer.cs">
+      <DependentUpon>frmSwizzleExternalBaseImages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmTextureImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTextureImage.Designer.cs">
+      <DependentUpon>frmTextureImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmUnswizzleHashesBatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmUnswizzleHashesBatch.Designer.cs">
+      <DependentUpon>frmUnswizzleHashesBatch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmUnswizzleExternalHashTextures.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmUnswizzleExternalHashTextures.Designer.cs">
+      <DependentUpon>frmUnswizzleExternalHashTextures.cs</DependentUpon>
+    </Compile>
+    <Compile Include="logEvents.cs" />
+    <Compile Include="FieldIDs.cs" />
+    <Compile Include="FileTools.cs" />
+    <Compile Include="frmAeris.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAeris.Designer.cs">
+      <DependentUpon>frmAeris.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HashCRC.cs" />
+    <Compile Include="ImageTools.cs" />
+    <Compile Include="Palette.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repair_fr_e.cs" />
+    <Compile Include="S4.cs" />
+    <Compile Include="S9.cs" />
+    <Compile Include="SwizzleBase.cs" />
+    <Compile Include="SwizzleHash.cs" />
+    <Compile Include="frmTileEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTileEditor.Designer.cs">
+      <DependentUpon>frmTileEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TileEditor.cs" />
+    <EmbeddedResource Include="frmAeris.resx">
+      <DependentUpon>frmAeris.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmBasePreview.resx">
+      <DependentUpon>frmBasePreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSwizzleHashesBatch.resx">
+      <DependentUpon>frmSwizzleHashesBatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSwizzleExternalHashImage.resx">
+      <DependentUpon>frmSwizzleExternalHashImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSwizzleExternalBaseImages.resx">
+      <DependentUpon>frmSwizzleExternalBaseImages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTextureImage.resx">
+      <DependentUpon>frmTextureImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmUnswizzleHashesBatch.resx">
+      <DependentUpon>frmUnswizzleHashesBatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmUnswizzleExternalHashTextures.resx">
+      <DependentUpon>frmUnswizzleExternalHashTextures.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="frmTileEditor.resx">
+      <DependentUpon>frmTileEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\cross_cursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\dropper_cursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\edit_cursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\hand_cursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\move_cursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\pencil_cursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Aeris.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 y x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
