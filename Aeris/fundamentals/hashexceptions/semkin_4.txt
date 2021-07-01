@@ -1,0 +1,8 @@
+# Hash Exceptions Match: Hash of First Texture, Texture of First Texture, Palette of First Texture, Param, State, Hash Exception Match of Other Texture, First TileID of the First Texture
+
+# 15_07 (17_07)
+8e59a31ea8237204,15,7,1,0,65cdd99a4a887d4e,0
+8e59a31ea8237204,15,7,1,1,65cdd99a4a887d4e,2
+8e59a31ea8237204,15,7,1,2,65cdd99a4a887d4e,4
+
+

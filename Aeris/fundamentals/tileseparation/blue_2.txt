@@ -1,0 +1,18 @@
+# This hash exception file is different from the rest, 
+# but we will treat this as Hash exception also.
+# Field "blue_2" has attached two different images, sunrays and water sparks,
+# but there is not known method to separate them unless is done tile by tile.
+# They have same Texture,Palette,Param,State and TileID.
+# This is the only field AFAIK that this must be done manually.
+# FORMAT: ! - Separation symbol hash exception
+#	        - Texture
+#			- Palette
+#		  | - Symbol where the tiles begin.
+#		    - Individual tiles separated by comma.
+
+
+# 15_5 (16_5) SET
+!16,5|391,397,402,411,417,425,431,438,442,456,462,467,471,475,479,486,492,497,500
+
+# 15_6 (16_6) SET
+!16,6|389,395,410,416,423,429,436,441,444,454,460,465,470,474,478,484,490,496,499,502,520,524

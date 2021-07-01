@@ -1,0 +1,19 @@
+# Hash Exceptions Match: Hash of First Texture, Texture of First Texture, Palette of First Texture, Param, State, Hash Exception Match of Other Texture, First TileID of the First Texture
+
+# 15_6 SET
+23bc1d910badecc2,15,6,1,1,2bfb3a6d6d31dfd1,136
+23bc1d910badecc2,15,6,1,2,2bfb3a6d6d31dfd1,136
+23bc1d910badecc2,15,6,2,0,2bfb3a6d6d31dfd1,136
+
+
+
+# 15_7 SET
+db26498c1043f59d,15,7,1,3,40f90ebf6fcaf981,136
+db26498c1043f59d,15,7,1,4,40f90ebf6fcaf981,136
+db26498c1043f59d,15,7,1,5,40f90ebf6fcaf981,136
+ffbeba855539fa8b,15,7,1,3,a3fb3824bf162e8b,136
+ffbeba855539fa8b,15,7,1,4,a3fb3824bf162e8b,136
+ffbeba855539fa8b,15,7,1,5,a3fb3824bf162e8b,136
+b881444218b9853c,15,7,1,3,ff7af7ffe9023980,136
+b881444218b9853c,15,7,1,4,ff7af7ffe9023980,136
+b881444218b9853c,15,7,1,5,ff7af7ffe9023980,136

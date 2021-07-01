@@ -1,0 +1,19 @@
+# Hash Exceptions Match: Hash of First Texture, Texture of First Texture, Palette of First Texture, Param, State, Hash Exception Match of Other Texture, First TileID of the First Texture
+
+*7ea6e28ce633aad3,17,1,63,1,5225406f33493042
+*7ea6e28ce633aad3,17,2,63,1,5225406f33493042
+*12ba7aa040d8aeab,17,1,63,1,caaaab25e976998
+*12ba7aa040d8aeab,17,2,63,1,caaaab25e976998
+
+f96efc4cf778079,15,1,63,1,13ffcd9d38c24019,4080
+e58dd39eb04c5177,15,1,63,1,404542f9f3fcc8cd,4080
+c05a82ff4bdb0ad1,15,1,63,1,5d70cdc3ca1aa95a,4080
+7ea6e28ce633aad3,15,1,63,1,5f0a38fb1ff9b224,4080
+f49879e1304a7ac,15,1,63,1,6021f2c676dd40ba,4080
+ef10e898c4f4d21a,15,1,63,1,64cfc8e9f3706bf4,4080
+a0770fb5ac8be24,15,1,63,1,6c154b9d4e703ae6,4080
+12ba7aa040d8aeab,15,1,63,1,91f25a532158187b,4080
+bf59cc8ea64225dc,15,1,63,1,a2291a11d61e2a6f,4080
+6dd91f1c691abf04,15,1,63,1,bac2158e8bc172dc,4080
+a0770fb5ac8be24,15,1,63,1,d2a840c5a041248b,4080
+e58dd39eb04c5177,15,1,63,1,f1db223c834c7e6,4080

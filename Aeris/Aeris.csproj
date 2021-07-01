@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publicar\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,7 +26,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -183,6 +183,25 @@
       <DependentUpon>frmTileEditor.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
+    <None Include="fundamentals\fieldsfixes\ealin_2_openeddoorsfix\ealin_2" />
+    <None Include="fundamentals\fieldsfixes\ealin_2_openeddoorsfix\ealin_2.dec" />
+    <None Include="fundamentals\fieldsfixes\fr_e_fixed\fr_e_spanishretranslation" />
+    <None Include="fundamentals\fieldsfixes\fr_e_fixed\fr_e_spanishretranslation.dec" />
+    <None Include="fundamentals\fieldsfixes\fr_e_fixed\fr_e_vanillaEnglish98" />
+    <None Include="fundamentals\fieldsfixes\fr_e_fixed\fr_e_vanillaEnglish98.dec" />
+    <None Include="fundamentals\fieldsfixes\las2_3_cutripple\las2_3" />
+    <None Include="fundamentals\fieldsfixes\las2_3_cutripple\las2_3.dec" />
+    <None Include="fundamentals\fieldsfixes\ncorel_tentfix\ncorel" />
+    <None Include="fundamentals\fieldsfixes\ncorel_tentfix\ncorel.dec" />
+    <None Include="fundamentals\fr_e_fixresources\section0.bin" />
+    <None Include="fundamentals\_ExportAllFieldsSwizzledTextures.bat" />
+    <None Include="fundamentals\_ExportOneFieldSwizzledTextures.bat" />
+    <None Include="fundamentals\_SwizzleAllBaseImagesToFieldsTextures.bat" />
+    <None Include="fundamentals\_SwizzleHashedImagesToBaseTextures.bat" />
+    <None Include="fundamentals\_SwizzleOneBaseImagesToFieldTextures.bat" />
+    <None Include="fundamentals\_UnswizzleAllFieldsTexturesToBaseImages.bat" />
+    <None Include="fundamentals\_UnswizzleHashedTexturesToBaseImages.bat" />
+    <None Include="fundamentals\_UnswizzleOneFieldTexturesToBaseImages.bat" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -218,6 +237,134 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Aeris.ico" />
+    <Content Include="fundamentals\BITemplates\ancnt2.txt" />
+    <Content Include="fundamentals\BITemplates\astage_a.txt" />
+    <Content Include="fundamentals\BITemplates\blin1.txt" />
+    <Content Include="fundamentals\BITemplates\blin2_i.txt" />
+    <Content Include="fundamentals\BITemplates\blin61.txt" />
+    <Content Include="fundamentals\BITemplates\blin65_2.txt" />
+    <Content Include="fundamentals\BITemplates\blin66_2.txt" />
+    <Content Include="fundamentals\BITemplates\blin66_5.txt" />
+    <Content Include="fundamentals\BITemplates\blin66_6.txt" />
+    <Content Include="fundamentals\BITemplates\blin67_3.txt" />
+    <Content Include="fundamentals\BITemplates\blin68_1.txt" />
+    <Content Include="fundamentals\BITemplates\blin68_2.txt" />
+    <Content Include="fundamentals\BITemplates\blin69_1.txt" />
+    <Content Include="fundamentals\BITemplates\blin70_1.txt" />
+    <Content Include="fundamentals\BITemplates\blin70_2.txt" />
+    <Content Include="fundamentals\BITemplates\blue_1.txt" />
+    <Content Include="fundamentals\BITemplates\blue_2.txt" />
+    <Content Include="fundamentals\BITemplates\chorace.txt" />
+    <Content Include="fundamentals\BITemplates\chorace2.txt" />
+    <Content Include="fundamentals\BITemplates\colne_6.txt" />
+    <Content Include="fundamentals\BITemplates\convil_4.txt" />
+    <Content Include="fundamentals\BITemplates\crcin_1.txt" />
+    <Content Include="fundamentals\BITemplates\crcin_2.txt" />
+    <Content Include="fundamentals\BITemplates\del1.txt" />
+    <Content Include="fundamentals\BITemplates\del12.txt" />
+    <Content Include="fundamentals\BITemplates\desert1.txt" />
+    <Content Include="fundamentals\BITemplates\desert2.txt" />
+    <Content Include="fundamentals\BITemplates\ealin_2.txt" />
+    <Content Include="fundamentals\BITemplates\eals_1.txt" />
+    <Content Include="fundamentals\BITemplates\elm_wa.txt" />
+    <Content Include="fundamentals\BITemplates\games_1.txt" />
+    <Content Include="fundamentals\BITemplates\games_2.txt" />
+    <Content Include="fundamentals\BITemplates\gldgate.txt" />
+    <Content Include="fundamentals\BITemplates\gonjun2.txt" />
+    <Content Include="fundamentals\BITemplates\hekiga.txt" />
+    <Content Include="fundamentals\BITemplates\hyou2.txt" />
+    <Content Include="fundamentals\BITemplates\hyou7.txt" />
+    <Content Include="fundamentals\BITemplates\jail4.txt" />
+    <Content Include="fundamentals\BITemplates\jailin1.txt" />
+    <Content Include="fundamentals\BITemplates\jtmpin1.txt" />
+    <Content Include="fundamentals\BITemplates\jtmpin2.txt" />
+    <Content Include="fundamentals\BITemplates\junbin22.txt" />
+    <Content Include="fundamentals\BITemplates\junbin5.txt" />
+    <Content Include="fundamentals\BITemplates\jundoc1a.txt" />
+    <Content Include="fundamentals\BITemplates\junele2.txt" />
+    <Content Include="fundamentals\BITemplates\junin1a.txt" />
+    <Content Include="fundamentals\BITemplates\junin7.txt" />
+    <Content Include="fundamentals\BITemplates\junone2.txt" />
+    <Content Include="fundamentals\BITemplates\junone3.txt" />
+    <Content Include="fundamentals\BITemplates\junone4.txt" />
+    <Content Include="fundamentals\BITemplates\junone6.txt" />
+    <Content Include="fundamentals\BITemplates\junone7.txt" />
+    <Content Include="fundamentals\BITemplates\junpb_1.txt" />
+    <Content Include="fundamentals\BITemplates\jun_w.txt" />
+    <Content Include="fundamentals\BITemplates\jun_wa.txt" />
+    <Content Include="fundamentals\BITemplates\kuro_3.txt" />
+    <Content Include="fundamentals\BITemplates\kuro_4.txt" />
+    <Content Include="fundamentals\BITemplates\kuro_8.txt" />
+    <Content Include="fundamentals\BITemplates\kuro_82.txt" />
+    <Content Include="fundamentals\BITemplates\las0_1.txt" />
+    <Content Include="fundamentals\BITemplates\las4_3.txt" />
+    <Content Include="fundamentals\BITemplates\las4_4.txt" />
+    <Content Include="fundamentals\BITemplates\las4_42.txt" />
+    <Content Include="fundamentals\BITemplates\losin1.txt" />
+    <Content Include="fundamentals\BITemplates\md8_6.txt" />
+    <Content Include="fundamentals\BITemplates\mds5_1.txt" />
+    <Content Include="fundamentals\BITemplates\mds5_5.txt" />
+    <Content Include="fundamentals\BITemplates\mtcrl_1.txt" />
+    <Content Include="fundamentals\BITemplates\mtnvl4.txt" />
+    <Content Include="fundamentals\BITemplates\nivl_b1.txt" />
+    <Content Include="fundamentals\BITemplates\nivl_b12.txt" />
+    <Content Include="fundamentals\BITemplates\nivl_b2.txt" />
+    <Content Include="fundamentals\BITemplates\nivl_b22.txt" />
+    <Content Include="fundamentals\BITemplates\nvdun3.txt" />
+    <Content Include="fundamentals\BITemplates\nvdun31.txt" />
+    <Content Include="fundamentals\BITemplates\nvmkin21.txt" />
+    <Content Include="fundamentals\BITemplates\nvmkin22.txt" />
+    <Content Include="fundamentals\BITemplates\nvmkin32.txt" />
+    <Content Include="fundamentals\BITemplates\onna_4.txt" />
+    <Content Include="fundamentals\BITemplates\pillar_1.txt" />
+    <Content Include="fundamentals\BITemplates\prisila.txt" />
+    <Content Include="fundamentals\BITemplates\psdun_3.txt" />
+    <Content Include="fundamentals\BITemplates\qd.txt" />
+    <Content Include="fundamentals\BITemplates\rckt3.txt" />
+    <Content Include="fundamentals\BITemplates\rckt32.txt" />
+    <Content Include="fundamentals\BITemplates\rcktbas1.txt" />
+    <Content Include="fundamentals\BITemplates\rcktbas2.txt" />
+    <Content Include="fundamentals\BITemplates\rcktin7.txt" />
+    <Content Include="fundamentals\BITemplates\rcktin8.txt" />
+    <Content Include="fundamentals\BITemplates\roadend.txt" />
+    <Content Include="fundamentals\BITemplates\ropest.txt" />
+    <Content Include="fundamentals\BITemplates\sbwy4_4.txt" />
+    <Content Include="fundamentals\BITemplates\sbwy4_6.txt" />
+    <Content Include="fundamentals\BITemplates\sinbil_1.txt" />
+    <Content Include="fundamentals\BITemplates\sinin1_2.txt" />
+    <Content Include="fundamentals\BITemplates\slfrst_1.txt" />
+    <Content Include="fundamentals\BITemplates\snow.txt" />
+    <Content Include="fundamentals\BITemplates\southmk1.txt" />
+    <Content Include="fundamentals\BITemplates\spipe_2.txt" />
+    <Content Include="fundamentals\BITemplates\tunnel_5.txt" />
+    <Content Include="fundamentals\BITemplates\uta_wa.txt" />
+    <Content Include="fundamentals\BITemplates\zcoal_1.txt" />
+    <Content Include="fundamentals\fr_e_fixresources\fr_e_16_00.png" />
+    <Content Include="fundamentals\fr_e_fixresources\fr_e_17_00.png" />
+    <Content Include="fundamentals\hashexceptions\ancnt2.txt" />
+    <Content Include="fundamentals\hashexceptions\anfrst_1.txt" />
+    <Content Include="fundamentals\hashexceptions\anfrst_2.txt" />
+    <Content Include="fundamentals\hashexceptions\anfrst_3.txt" />
+    <Content Include="fundamentals\hashexceptions\anfrst_4.txt" />
+    <Content Include="fundamentals\hashexceptions\blin68_2.txt" />
+    <Content Include="fundamentals\hashexceptions\crater_2.txt" />
+    <Content Include="fundamentals\hashexceptions\hyou5_2.txt" />
+    <Content Include="fundamentals\hashexceptions\las0_8.txt" />
+    <Content Include="fundamentals\hashexceptions\las2_1.txt" />
+    <Content Include="fundamentals\hashexceptions\las2_2.txt" />
+    <Content Include="fundamentals\hashexceptions\las2_3.txt" />
+    <Content Include="fundamentals\hashexceptions\mtnvl2.txt" />
+    <Content Include="fundamentals\hashexceptions\mtnvl3.txt" />
+    <Content Include="fundamentals\hashexceptions\mtnvl4.txt" />
+    <Content Include="fundamentals\hashexceptions\mtnvl5.txt" />
+    <Content Include="fundamentals\hashexceptions\nivl_b1.txt" />
+    <Content Include="fundamentals\hashexceptions\nivl_b12.txt" />
+    <Content Include="fundamentals\hashexceptions\psdun_4.txt" />
+    <Content Include="fundamentals\hashexceptions\sandun_1.txt" />
+    <Content Include="fundamentals\hashexceptions\semkin_4.txt" />
+    <Content Include="fundamentals\hashexceptions\semkin_8.txt" />
+    <Content Include="fundamentals\hashexceptions\trnad_1.txt" />
+    <Content Include="fundamentals\tileseparation\blue_2.txt" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">

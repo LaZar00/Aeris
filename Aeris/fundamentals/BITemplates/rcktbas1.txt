@@ -1,0 +1,4 @@
+UniqueSublayerID=64
+JoinSublayerIDs=16:32+544+548+552+696+704+708+896+3888+3904,80:96+852+880
+High15ByPal=
+Low15ByPal=

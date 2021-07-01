@@ -1,0 +1,4 @@
+UniqueSublayerID=1_01_01,1_02_01,1_03_01,1_04_01,1_05_01,1_06_01,1_07_01,4093,4094
+JoinSublayerIDs=
+High15ByPal=
+Low15ByPal=
