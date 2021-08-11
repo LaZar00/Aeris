@@ -24,3 +24,6 @@ Once you have the field extracted (you can import again with the previous mentio
 Well, I think that this is enough for working with backgrounds. Maybe there could be added some more things like open compressed fields (and save them compressed also), or even open the fields directly from flevel.lgp.
 
 I hope you enjoy this tool. ;)
+
+* Swizzle -> This is how the textures are stored inside the Background, all the tiles are mixed and they are not very understandable. We call the process from converting a visual image to one with mixed tiles swizzling. 
+* Unswizzle -> This is what we "see" in game or exporting the image after arranging the swizzled texture. We call the process from converting a swizzled texture to the unswizzled base image unswizzling.
