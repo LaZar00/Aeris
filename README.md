@@ -1,5 +1,5 @@
 # Aeris
-Aeris Tool for work with Final Fantasy VII (FF7) Backgrounds, old version (1998/Steam/SquareEnix Store)
+Aeris FF7 Background Tool is a tool thought for work with Final Fantasy VII (FF7) Backgrounds, old version (1998/Steam/SquareEnix Store)
 
 I decided to do this tool at the beginning to make available the upscaling of the hashes that outputs FFNx (https://github.com/julianxhokaxhiu/FFNx) driver for "emulate" the animated textures that the orignal game has.
 
