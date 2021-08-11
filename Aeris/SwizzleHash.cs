@@ -2111,6 +2111,32 @@ namespace Aeris
 
             switch (FileTools.strGlobalFieldName)
             {
+                case "ancnt2":
+                    {
+                        if (iSwizzleTexParam != 0)               // iSwizzleTexTileID > &HC00 is for blin2_i
+                        {
+                            sortZTexture = (from sortZItem in S9.Section9Z
+                                            where sortZItem.ZTexture == iSwizzleTexTexture &
+                                                  sortZItem.ZPalette == iSwizzleTexPalette &
+                                                  sortZItem.ZParam == iSwizzleTexParam &
+                                                  sortZItem.ZState == iSwizzleTexState
+                                            orderby sortZItem.ZTileID
+                                            select sortZItem).ToList();
+                        }
+                        else
+                        {
+                            sortZTexture = (from sortZItem in S9.Section9Z
+                                            where sortZItem.ZTexture == iSwizzleTexTexture &
+                                                  sortZItem.ZPalette == iSwizzleTexPalette &
+                                                  sortZItem.ZParam == iSwizzleTexParam &
+                                                  sortZItem.ZTileID == iSwizzleTexTileID
+                                            orderby sortZItem.ZTileID
+                                            select sortZItem).ToList();
+                        }
+
+                        break;
+                    }
+
                 case "blin2_i":
                     {
                         if (iSwizzleTexParam > 0 | iSwizzleTexTileID > 0xC00)               // iSwizzleTexTileID > &HC00 is for blin2_i
