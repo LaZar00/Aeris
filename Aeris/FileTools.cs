@@ -30,7 +30,7 @@ namespace Aeris
 
         public static STRUCT_FIELD Field;
 
-        public static string strGlobalPath, strGlobalFieldName, strFileFieldName, strGlobalPathFieldFolder;
+        public static string strGlobalPath, strGlobalFieldName, strFileFieldName, strGlobalPathFieldFolder, strGlobalPathSaveFieldFolder;
 
         public static string strGlobalUnswizzledBatchInput, strGlobalUnswizzledBatchOutput;
         public static string strGlobalSwizzledBatchInput, strGlobalSwizzledBatchOutput;

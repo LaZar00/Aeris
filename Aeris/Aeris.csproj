@@ -189,6 +189,8 @@
     <None Include="fundamentals\fieldsfixes\fr_e_fixed\fr_e_spanishretranslation.dec" />
     <None Include="fundamentals\fieldsfixes\fr_e_fixed\fr_e_vanillaEnglish98" />
     <None Include="fundamentals\fieldsfixes\fr_e_fixed\fr_e_vanillaEnglish98.dec" />
+    <None Include="fundamentals\fieldsfixes\gaiin_2_rockfix\gaiin_2" />
+    <None Include="fundamentals\fieldsfixes\gaiin_2_rockfix\gaiin_2.dec" />
     <None Include="fundamentals\fieldsfixes\las2_3_cutripple\las2_3" />
     <None Include="fundamentals\fieldsfixes\las2_3_cutripple\las2_3.dec" />
     <None Include="fundamentals\fieldsfixes\ncorel_tentfix\ncorel" />

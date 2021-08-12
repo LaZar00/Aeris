@@ -1550,11 +1550,21 @@ namespace Aeris
             // Set filter options and filter index.
             saveFile.Title = "Save Field As...";
             saveFile.Filter = "All files (*.*)|*.*";
-            saveFile.InitialDirectory = FileTools.strGlobalPathFieldFolder;
             saveFile.FilterIndex = 1;
             saveFile.FileName = null;
             try
             {
+
+                // Check Initial Directory
+                if (FileTools.strGlobalPathSaveFieldFolder != null)
+                {
+                    saveFile.InitialDirectory = FileTools.strGlobalPathSaveFieldFolder;
+                }
+                else
+                {
+                    saveFile.InitialDirectory = FileTools.strGlobalPathFieldFolder;
+                }
+
                 saveFile.FileName = FileTools.strFileFieldName;
                 if (saveFile.ShowDialog() == DialogResult.OK)
                 {
@@ -1569,6 +1579,10 @@ namespace Aeris
 
                             // Update Aeris Title
                             FileTools.bFieldModified = false;
+
+                            FileTools.strGlobalPathSaveFieldFolder = Path.GetDirectoryName(saveFile.FileName);
+                            FileTools.strFileFieldName = Path.GetFileName(saveFile.FileName);
+
                             Update_AerisTitle();
                         }
                         else
@@ -1683,12 +1697,23 @@ namespace Aeris
         {
             int iResult;
             string strSaveFileName;
-            saveFile.InitialDirectory = FileTools.strGlobalPath;
             saveFile.FilterIndex = 1;
             saveFile.FileName = null;
+
             try
             {
-                strSaveFileName = FileTools.strGlobalPathFieldFolder + "\\" + FileTools.strFileFieldName;
+                // Check Initial Directory
+                if (FileTools.strGlobalPathSaveFieldFolder != null)
+                {
+                    strSaveFileName = FileTools.strGlobalPathSaveFieldFolder;
+                }
+                else
+                {
+                    strSaveFileName = FileTools.strGlobalPathFieldFolder;
+                }
+
+                strSaveFileName += "\\" + FileTools.strFileFieldName;
+
                 if (strSaveFileName.Length > 0)
                 {
                     iResult = FileTools.Save_Field(strSaveFileName);
