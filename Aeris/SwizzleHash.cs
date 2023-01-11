@@ -2113,7 +2113,7 @@ namespace Aeris
             {
                 case "ancnt2":
                     {
-                        if (iSwizzleTexParam != 0)
+                        if (iSwizzleTexParam != 0)               // iSwizzleTexTileID > &HC00 is for blin2_i
                         {
                             sortZTexture = (from sortZItem in S9.Section9Z
                                             where sortZItem.ZTexture == iSwizzleTexTexture &
