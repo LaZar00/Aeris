@@ -163,7 +163,16 @@ namespace Aeris
 
                         pbSwizzledTexturePreview.Image = new Bitmap(bmpSwizzledTexture);
 
-                        btnUnswizzleHashTex.Enabled = true;
+                        // Check if the scale is 1 or greater
+                        if (bmpSwizzledTexture.Width / S9.TEXTURE_WIDTH > 1)
+                        {
+                            btnUnswizzleHashTex.Enabled = false;
+
+                            MessageBox.Show("It seems this textures has been upscaled. You can only unswizzle textures of vanilla scale.", "Information");
+                        }
+                        else
+                            btnUnswizzleHashTex.Enabled = true;
+
                         btnSaveHashImgs.Enabled = false;
 
                         FileTools.strGlobalLoadUnswizzleExternal = Path.GetDirectoryName(ofdTexture.FileName);
