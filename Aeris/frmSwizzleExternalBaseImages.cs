@@ -36,6 +36,9 @@ namespace Aeris
                 fbdEX.folderBrowser.RootFolder = Environment.SpecialFolder.MyComputer;
                 fbdEX.folderBrowser.ShowNewFolderButton = false;
 
+                if (txtInputFolder.Text != "")
+                    FileTools.strGlobalSwizzledBaseInput = txtInputFolder.Text;
+
                 if (FileTools.strGlobalSwizzledBaseInput != null)
                 {
                     fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalSwizzledBaseInput;
@@ -77,6 +80,9 @@ namespace Aeris
 
                 fbdEX.folderBrowser.RootFolder = Environment.SpecialFolder.MyComputer;
                 fbdEX.folderBrowser.ShowNewFolderButton = false;
+
+                if (txtOutputFolder.Text != "")
+                    FileTools.strGlobalUnswizzledBaseOutput = txtOutputFolder.Text;
 
                 if (FileTools.strGlobalUnswizzledBaseOutput != null)
                 {
