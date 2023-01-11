@@ -11,17 +11,22 @@ namespace Aeris
 {
     public partial class frmAeris : Form
     {
+
+        public const string strAerisVersion = " v1.4a";
+
         private frmTileEditor frmTileEditor;
         private frmBasePreview frmBasePreview;
         private frmTextureImage frmTextureImage;
         private frmSwizzleExternalHashImage frmSwizzleExternalHashImage;
         private frmSwizzleExternalBaseImages frmSwizzleExternalBaseImages;
         private frmSwizzleHashesBatch frmSwizzleHashesBatch;
+        private frmUnswizzleExternalBaseTextures frmUnswizzleExternalBaseTextures;
         private frmUnswizzleExternalHashTextures frmUnswizzleExternalHashTextures;
         private frmUnswizzleHashesBatch frmUnswizzleHashesBatch;
 
         public frmAeris()
         {
+
             InitializeComponent();
 
             frmTileEditor = new frmTileEditor(this);
@@ -30,8 +35,10 @@ namespace Aeris
             frmSwizzleExternalHashImage = new frmSwizzleExternalHashImage(this);
             frmSwizzleExternalBaseImages = new frmSwizzleExternalBaseImages(this);
             frmSwizzleHashesBatch = new frmSwizzleHashesBatch(this);
+            frmUnswizzleExternalBaseTextures = new frmUnswizzleExternalBaseTextures(this);
             frmUnswizzleExternalHashTextures = new frmUnswizzleExternalHashTextures(this);
             frmUnswizzleHashesBatch = new frmUnswizzleHashesBatch(this);
+
         }
 
 
@@ -51,6 +58,7 @@ namespace Aeris
 
         private void frmAeris_Load(object sender, EventArgs e)
         {
+
             // Load field IDs info.
             FieldIDs.PopulateFields();
 
@@ -402,9 +410,10 @@ namespace Aeris
 
         public void Update_AerisTitle()
         {
-            Text = "Field: (" + FileTools.strGlobalFieldName + " | " +
-                   FieldIDs.stFieldIDNameList.Find(x => x.FieldName.Contains(FileTools.strGlobalFieldName)).FieldID.ToString("000") + 
-                   ") - Aeris";
+            Text = "Aeris" + strAerisVersion + " - " +
+                   "Field: (" + FileTools.strGlobalFieldName + " | " +
+                   FieldIDs.stFieldIDNameList.Find(x => x.FieldName.Contains(FileTools.strGlobalFieldName)).FieldID.ToString("000") +
+                   ")";
 
             if (FileTools.bFieldModified)
             {
@@ -839,7 +848,7 @@ namespace Aeris
             {
                 // We must select the directory from where to read the files.
                 fbdEX.folderBrowser.Description = "Select Output Folder for Export All " +
-                                                                      "Swizzled Textures of the field:";
+                                                  "Swizzled Textures of the field:";
 
                 if (FileTools.strGlobalExportAllTextures != null)
                 {
@@ -1497,7 +1506,7 @@ namespace Aeris
 
         private void frmAeris_Resize(object sender, EventArgs e)
         {
-            if (this.Text.Length > 0 & this.Text != "Aeris")
+            if (this.Text.Length > 0 && this.Text != "Aeris" + strAerisVersion)
             {
                 Render_Layers();
             }
@@ -1874,5 +1883,9 @@ namespace Aeris
             Render_Layers();
         }
 
+        private void unswizzleAllExternalBaseTexturesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmUnswizzleExternalBaseTextures.ShowDialog(this);
+        }
     }
 }
