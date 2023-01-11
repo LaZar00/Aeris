@@ -1767,12 +1767,24 @@ namespace Aeris
 
         public static void Clear_TextureImages()
         {
-            for (int i = 0; i <= S9.MAX_NUM_TEXTURES - 1; i++)
+            for (int i = 0; i < S9.MAX_NUM_TEXTURES; i++)
                 if (textureImage[i] != null)
                 {
                     textureImage[i].Dispose();
                     textureImage[i] = null;
                 }
+        }
+
+        public static int GetNumRealTextures()
+        {
+            int iTexCounter = 0;
+
+            for (int i = 0; i < MAX_NUM_TEXTURES; i++)
+            {
+                if (textureImage[i] != null) iTexCounter++;
+            }
+
+            return iTexCounter;
         }
 
     }
