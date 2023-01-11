@@ -108,6 +108,12 @@
     <Compile Include="frmTextureImage.Designer.cs">
       <DependentUpon>frmTextureImage.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmUnswizzleExternalBaseTextures.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmUnswizzleExternalBaseTextures.Designer.cs">
+      <DependentUpon>frmUnswizzleExternalBaseTextures.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmUnswizzleHashesBatch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -163,6 +169,9 @@
     <EmbeddedResource Include="frmTextureImage.resx">
       <DependentUpon>frmTextureImage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmUnswizzleExternalBaseTextures.resx">
+      <DependentUpon>frmUnswizzleExternalBaseTextures.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmUnswizzleHashesBatch.resx">
       <DependentUpon>frmUnswizzleHashesBatch.cs</DependentUpon>
     </EmbeddedResource>
@@ -189,8 +198,6 @@
     <None Include="fundamentals\fieldsfixes\fr_e_fixed\fr_e_spanishretranslation.dec" />
     <None Include="fundamentals\fieldsfixes\fr_e_fixed\fr_e_vanillaEnglish98" />
     <None Include="fundamentals\fieldsfixes\fr_e_fixed\fr_e_vanillaEnglish98.dec" />
-    <None Include="fundamentals\fieldsfixes\gaiin_2_rockfix\gaiin_2" />
-    <None Include="fundamentals\fieldsfixes\gaiin_2_rockfix\gaiin_2.dec" />
     <None Include="fundamentals\fieldsfixes\las2_3_cutripple\las2_3" />
     <None Include="fundamentals\fieldsfixes\las2_3_cutripple\las2_3.dec" />
     <None Include="fundamentals\fieldsfixes\ncorel_tentfix\ncorel" />

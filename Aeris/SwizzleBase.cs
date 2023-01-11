@@ -86,7 +86,10 @@ namespace Aeris
 
         public static st_BI[] lstUnswizzledBaseImages;
         public static SortedList<string, Bitmap> lstSwizzledBaseTextures;
-        public static int iScaleFactorL0, iScaleFactorL2;
+        public static List<DirectBitmap> lstSwizzledExternalBaseTextures;
+
+        public static int iScaleFactorL0, iScaleFactorL2, iScaleFactor;
+        public static bool bIsExternal;
 
         public static void Initialize_lstUnswizzledBaseImages()
         {
@@ -113,13 +116,13 @@ namespace Aeris
 
             if (iLayer < 2)
             {
-                iLayerMaxWidthGlobal = S9.iLayersMaxWidthL0;
-                iLayerMaxHeightGlobal = S9.iLayersMaxHeightL0;
+                iLayerMaxWidthGlobal = S9.iLayersMaxWidthL0 * iScaleFactor;
+                iLayerMaxHeightGlobal = S9.iLayersMaxHeightL0 * iScaleFactor;
             }
             else
             {
-                iLayerMaxWidthGlobal = S9.iLayersMaxWidthL2;
-                iLayerMaxHeightGlobal = S9.iLayersMaxHeightL2;
+                iLayerMaxWidthGlobal = S9.iLayersMaxWidthL2 * iScaleFactor;
+                iLayerMaxHeightGlobal = S9.iLayersMaxHeightL2 * iScaleFactor;
             }
 
             if (lstUnswizzledBaseImages == null)
@@ -167,27 +170,43 @@ namespace Aeris
 
             if (itmZList.ZLayer < 2)
             {
-                iLayerbmpPosXGlobal = S9.iLayersbmpPosXL0;
-                iLayerbmpPosYGlobal = S9.iLayersbmpPosYL0;
+                iLayerbmpPosXGlobal = S9.iLayersbmpPosXL0 * iScaleFactor;
+                iLayerbmpPosYGlobal = S9.iLayersbmpPosYL0 * iScaleFactor;
             }
             else
             {
-                iLayerbmpPosXGlobal = S9.iLayersbmpPosXL2;
-                iLayerbmpPosYGlobal = S9.iLayersbmpPosYL2;
+                iLayerbmpPosXGlobal = S9.iLayersbmpPosXL2 * iScaleFactor;
+                iLayerbmpPosYGlobal = S9.iLayersbmpPosYL2 * iScaleFactor;
             }
 
             using (Graphics g = Graphics.FromImage(lstUnswizzledBaseImages[iIndexBI].bmpBaseImage))
             {
-                    g.DrawImage(S9.textureImage[itmZList.ZTexture].Bitmap,
-                                new Rectangle(iLayerbmpPosXGlobal + itmZList.ZDestX,
-                                              iLayerbmpPosYGlobal + itmZList.ZDestY,
-                                              itmZList.ZTileSize,
-                                              itmZList.ZTileSize),
-                                itmZList.ZSourceX,
-                                itmZList.ZSourceY,
-                                itmZList.ZTileSize,
-                                itmZList.ZTileSize,
+                if (bIsExternal)
+                {
+                    g.DrawImage(lstSwizzledExternalBaseTextures[itmZList.ZTexture].Bitmap,
+                                new Rectangle(iLayerbmpPosXGlobal + itmZList.ZDestX * iScaleFactor,
+                                              iLayerbmpPosYGlobal + itmZList.ZDestY * iScaleFactor,
+                                              itmZList.ZTileSize * iScaleFactor,
+                                              itmZList.ZTileSize * iScaleFactor),
+                                itmZList.ZSourceX * iScaleFactor,
+                                itmZList.ZSourceY * iScaleFactor,
+                                itmZList.ZTileSize * iScaleFactor,
+                                itmZList.ZTileSize * iScaleFactor,
                                 GraphicsUnit.Pixel);
+                }
+                else
+                {
+                    g.DrawImage(S9.textureImage[itmZList.ZTexture].Bitmap,
+                                new Rectangle(iLayerbmpPosXGlobal + itmZList.ZDestX * iScaleFactor,
+                                              iLayerbmpPosYGlobal + itmZList.ZDestY * iScaleFactor,
+                                              itmZList.ZTileSize * iScaleFactor,
+                                              itmZList.ZTileSize * iScaleFactor),
+                                itmZList.ZSourceX * iScaleFactor,
+                                itmZList.ZSourceY * iScaleFactor,
+                                itmZList.ZTileSize * iScaleFactor,
+                                itmZList.ZTileSize * iScaleFactor,
+                                GraphicsUnit.Pixel);
+                }
             }
 
             //using (Graphics g = Graphics.FromImage(lstUnswizzledBaseImages[iIndexBI].bmpBaseImage))
@@ -1093,6 +1112,9 @@ namespace Aeris
             lstTileSeparation = null;
             iSecondaryHigh15ByPal = 0;
             iSecondaryLow15ByPal = 0;
+
+            bIsExternal = false;
+            iScaleFactor = 1;
 
             try
             {
@@ -2938,6 +2960,376 @@ namespace Aeris
             frmTextureImage.pbTextureImage.Image = new Bitmap(bmpUnsIntTexture);
 
             bmpUnsIntTexture.Dispose();
+        }
+
+
+
+
+
+
+
+
+
+        // ------------------------------------------------------------------------------------------------
+        // 
+        // FROM SWIZZLED EXTERNAL TEXTURE TO UNSWIZZLED BASE IMAGE
+        // 
+        // ------------------------------------------------------------------------------------------------
+
+        public static int UnswizzleExternalFieldTexturesToBaseImages(string strOutputFolder, 
+                                                                     string strInputFolder,
+                                                                     ref RichTextBox rtbResult)
+        {
+
+            var sortZList = new List<S9.S9_ZList>();
+            var hsUniqueSublayerID = new HashSet<st_UniqueSublayerID>();
+            var hsJoinSublayerIDs = new HashSet<st_JoinSublayerIDs>();
+            var lstHigh15ByPal = new List<st_High15ByPal>();
+            var lstLow15ByPal = new List<st_Low15ByPal>();
+            List<st_TileSeparationLayer> lstTileSeparation;
+            st_UniqueSublayerID itmUniqueSublayerID;
+
+            int iResult;
+            int iLayer, iParam, iState, iTileID;
+            int iMainTileID, iMainHigh15ByPal, iSecondaryHigh15ByPal, iIndexHigh15ByPal;
+            int iMainLow15ByPal, iSecondaryLow15ByPal, iIndexLow15ByPal, iIndexTileSeparation;
+            int iDestX, iDestY, iDestXParam, iDestYParam;
+            int iDestXHigh15, iDestYHigh15, iDestXParamHigh15, iDestYParamHigh15;
+            int iDuplicateDest, iDuplicateDestHigh15, iDuplicateDestParam, iDuplicateDestParamHigh15;
+            int iTileAbs = 0;
+            DateTime TimeIn, TimeOut;
+            TimeSpan TimeDiff, TotalTime;
+
+            TotalTime = TimeSpan.Zero;
+
+            iResult = 0;
+            lstTileSeparation = null;
+            iSecondaryHigh15ByPal = 0;
+            iSecondaryLow15ByPal = 0;
+
+            bIsExternal = true;
+
+            try
+            {
+                Initialize_lstUnswizzledBaseImages();
+                TimeIn = DateTime.Now;
+
+                iResult = Read_BITemplates(ref hsUniqueSublayerID,
+                                           ref hsJoinSublayerIDs,
+                                           ref lstHigh15ByPal,
+                                           ref lstLow15ByPal,
+                                           ref lstTileSeparation);
+
+                if (iResult != 0) return iResult;
+
+
+                // Ok, here we will read the external files.
+                lstSwizzledExternalBaseTextures = new List<DirectBitmap>();
+
+                foreach (string strFile in Directory.GetFiles(strInputFolder, "*.png"))
+                {
+                    Bitmap tmpBmp = null;
+                    ImageTools.ReadBitmap(ref tmpBmp, strFile);
+
+                    lstSwizzledExternalBaseTextures.Add(new DirectBitmap(tmpBmp));
+                }
+
+                // Some file checks
+                // No files
+                if (lstSwizzledExternalBaseTextures.Count <= 0) return 2;
+                // Not all the textures for the field
+                if (lstSwizzledExternalBaseTextures.Count != S9.GetNumRealTextures()) return 3;
+
+
+                // Adjust iScaleFactor
+                iScaleFactor = lstSwizzledExternalBaseTextures[0].Bitmap.Width / 256;
+
+                sortZList = (from sortZItem in S9.Section9Z
+                             where (sortZItem.ZTexture < 0xF | sortZItem.ZTexture > 0x19) &
+                                   (sortZItem.ZDestX > -2500 & sortZItem.ZDestX < 5000)
+                             orderby sortZItem.ZLayer,
+                                     sortZItem.ZDestX,
+                                     sortZItem.ZDestY,
+                                     sortZItem.ZParam,
+                                     sortZItem.ZState
+                             select sortZItem).ToList();
+
+                sortZList = sortZList.Concat(from sortZItem in S9.Section9Z
+                                             where (sortZItem.ZTexture > 0xE & sortZItem.ZTexture < 0x1A) &
+                                                   (sortZItem.ZDestX > -2500 & sortZItem.ZDestX < 5000)
+                                             orderby sortZItem.ZLayer,
+                                                     sortZItem.ZDestX,
+                                                     sortZItem.ZDestY,
+                                                     sortZItem.ZParam,
+                                                     sortZItem.ZState
+                                             select sortZItem).ToList();
+
+
+                // We will export base images following the render background method.
+                // Get first values
+                iLayer = sortZList[0].ZLayer;
+                iParam = sortZList[0].ZParam;
+                iState = sortZList[0].ZState;
+                iTileID = sortZList[0].ZTileID;
+                iDuplicateDest = 0;
+                iDuplicateDestParam = 0;
+                iDuplicateDestHigh15 = 0;
+                iDuplicateDestParamHigh15 = 0;
+                iDestX = 9999;
+                iDestY = 9999;
+                iDestXHigh15 = 9999;
+                iDestYHigh15 = 9999;
+                iDestXParam = 9999;
+                iDestYParam = 9999;
+                iDestXParamHigh15 = 9999;
+                iDestYParamHigh15 = 9999;
+
+                foreach (S9.S9_ZList itmZList in sortZList)
+                {
+
+                    iTileAbs = itmZList.ZTileAbs;
+
+                    // We will extract some sublayers by TileID if needed
+                    // ...supposedly we have loaded them in hsUniqueSublayerID
+                    itmUniqueSublayerID.iUniqueSublayerID = itmZList.ZTileID;
+                    if (itmZList.ZParam == 0)
+                    {
+                        itmUniqueSublayerID.iParam = -1;
+                        itmUniqueSublayerID.iState = -1;
+                    }
+                    else
+                    {
+                        itmUniqueSublayerID.iParam = itmZList.ZParam;
+                        itmUniqueSublayerID.iState = itmZList.ZState;
+                    }
+
+                    // or Join TileIDs...
+                    // ...supposedly we have a list of the joined ones in hsJoinSublayerIDs
+                    if (itmZList.ZParam == 0)
+                    {
+                        iMainTileID = MustJoinTileID(itmZList, hsJoinSublayerIDs);
+                    }
+                    else
+                    {
+                        iMainTileID = -1;
+                    }
+
+                    // or High15 by Palette...
+                    // supposedly we have a list of the Palettes in lstHigh15ByPal
+                    iMainHigh15ByPal = -1;
+                    if (itmZList.ZTexture > 0xE & itmZList.ZTexture < 0x1A & lstHigh15ByPal.Count > 0)
+                    {
+                        iIndexHigh15ByPal = IsHigh15ByPal(itmZList, lstHigh15ByPal);
+                        if (iIndexHigh15ByPal > -1)
+                        {
+                            iMainHigh15ByPal = lstHigh15ByPal[iIndexHigh15ByPal].iMainPalette;
+                            iSecondaryHigh15ByPal = lstHigh15ByPal[iIndexHigh15ByPal].iSecondaryPalette;
+                        }
+                    }
+
+                    // or Low15 by Palette...
+                    // supposedly we have a list of the Palettes in lstLow15ByPal
+                    iMainLow15ByPal = -1;
+                    if (itmZList.ZLayer == 1 & itmZList.ZTexture < 0xF && lstLow15ByPal.Count > 0)
+                    {
+                        iIndexLow15ByPal = IsLow15ByPal(itmZList, lstLow15ByPal);
+                        if (iIndexLow15ByPal > -1)
+                        {
+                            iMainLow15ByPal = lstLow15ByPal[iIndexLow15ByPal].iMainPalette;
+                            iSecondaryLow15ByPal = lstLow15ByPal[iIndexLow15ByPal].iSecondaryPalette;
+                        }
+                    }
+
+                    // or TileSeparation...
+                    // supposedly we have a list of the Tiles that must be separated in lstTileSeparation
+                    iIndexTileSeparation = -1;
+                    if (lstTileSeparation != null)
+                    {
+                        iIndexTileSeparation = IsTileSeparation(itmZList, lstTileSeparation);
+                    }
+
+                    if (iIndexTileSeparation > -1)
+                    {
+
+                        // Update Tile in Base Image by TileSeparation
+                        UpdateTileByTileSeparationInBaseImage(itmZList, iIndexTileSeparation, lstTileSeparation);
+                    }
+                    else if (itmZList.ZLayer == 1 &&
+                             hsUniqueSublayerID.Count > 0 &&
+                             hsUniqueSublayerID.Contains(itmUniqueSublayerID))
+                    {
+
+                        // Update Tile in Base Image by Unique Sublayer ID
+                        if (itmZList.ZTexture > 0xE & itmZList.ZTexture < 0x1A)
+                        {
+                            UpdateTileByTileIDInBaseImageHigh15(itmZList);
+                        }
+                        else
+                        {
+                            UpdateTileByTileIDInBaseImage(itmZList);
+                        }
+                    }
+                    else if (iMainTileID > -1)
+                    {
+
+                        // Update Tile in Base Image Joining Sublayer IDs.
+                        UpdateTileByJoinTileIDInBaseImage(itmZList, iMainTileID);
+                    }
+                    else if (iMainHigh15ByPal > -1)
+                    {
+
+                        // Update Tile in Base Image with High15ByPal palette numbers for Tex>14.
+                        UpdateTileByPaletteInBaseImageHigh15(itmZList, iMainHigh15ByPal, iSecondaryHigh15ByPal);
+                    }
+                    else if (iMainLow15ByPal > -1)
+                    {
+
+                        // Update Tile in Base Image with High15ByPal palette numbers for Tex>14.
+                        UpdateTileByPaletteInBaseImageLow15(itmZList, iMainLow15ByPal, iSecondaryLow15ByPal);
+                    }
+                    else
+                    {
+                        if (itmZList.ZLayer != iLayer)
+                        {
+                            iDuplicateDest = 0;
+                            iDuplicateDestParam = 0;
+                            iDuplicateDestHigh15 = 0;
+                            iDuplicateDestParamHigh15 = 0;
+
+                            // Update vars
+                            iLayer = itmZList.ZLayer;
+                            iParam = itmZList.ZParam;
+                            iState = itmZList.ZState;
+                            iDestX = 9999;
+                            iDestY = 9999;
+                            iDestXHigh15 = 9999;
+                            iDestYHigh15 = 9999;
+                            iDestXParam = 9999;
+                            iDestYParam = 9999;
+                            iDestXParamHigh15 = 9999;
+                            iDestYParamHigh15 = 9999;
+                        }
+
+                        if (itmZList.ZParam == 0)
+                        {
+                            if (itmZList.ZTexture > 0xE & itmZList.ZTexture < 0x1A)
+                            {
+                                if (itmZList.ZDestX == iDestXHigh15 &
+                                    itmZList.ZDestY == iDestYHigh15)
+                                {
+                                    iDuplicateDestHigh15 = iDuplicateDestHigh15 + 1;
+                                    UpdateTileByLayerInBaseImageSameDestHigh15(itmZList, iDuplicateDestHigh15);
+                                }
+                                else
+                                {
+                                    iDuplicateDestHigh15 = 0;
+                                    UpdateTileByLayerInBaseImageHigh15(itmZList);
+                                }
+
+                                iDestXHigh15 = itmZList.ZDestX;
+                                iDestYHigh15 = itmZList.ZDestY;
+                            }
+                            else
+                            {
+                                if (itmZList.ZDestX == iDestX &
+                                    itmZList.ZDestY == iDestY)
+                                {
+                                    iDuplicateDest = iDuplicateDest + 1;
+                                    UpdateTileByLayerInBaseImageSameDest(itmZList, iDuplicateDest);
+                                }
+                                else
+                                {
+                                    iDuplicateDest = 0;
+                                    UpdateTileByLayerInBaseImage(itmZList);
+                                }
+
+                                iDestX = itmZList.ZDestX;
+                                iDestY = itmZList.ZDestY;
+                            }
+                        }
+                        else if (itmZList.ZTexture > 0xE & itmZList.ZTexture < 0x1A)
+                        {
+                            if (itmZList.ZDestX == iDestXParamHigh15 &
+                                itmZList.ZDestY == iDestYParamHigh15 &
+                                itmZList.ZParam == iParam &
+                                itmZList.ZState == iState)
+                            {
+                                iDuplicateDestParamHigh15 = iDuplicateDestParamHigh15 + 1;
+                                UpdateTileByParamInBaseImageSameDestHigh15(itmZList, iDuplicateDestParamHigh15);
+                            }
+                            else
+                            {
+                                iDuplicateDestParamHigh15 = 0;
+                                UpdateTileByParamInBaseImageHigh15(itmZList);
+                            }
+
+                            iDestXParamHigh15 = itmZList.ZDestX;
+                            iDestYParamHigh15 = itmZList.ZDestY;
+                            iParam = itmZList.ZParam;
+                            iState = itmZList.ZState;
+                        }
+                        else
+                        {
+                            if (itmZList.ZDestX == iDestXParam &
+                                itmZList.ZDestY == iDestYParam &
+                                itmZList.ZParam == iParam &
+                                itmZList.ZState == iState)
+                            {
+                                iDuplicateDestParam = iDuplicateDestParam + 1;
+                                UpdateTileByParamInBaseImageSameDest(itmZList, iDuplicateDestParam);
+                            }
+                            else
+                            {
+                                iDuplicateDestParam = 0;
+                                UpdateTileByParamInBaseImage(itmZList);
+                            }
+
+                            iDestXParam = itmZList.ZDestX;
+                            iDestYParam = itmZList.ZDestY;
+                            iParam = itmZList.ZParam;
+                            iState = itmZList.ZState;
+                        }
+                    }
+                }
+
+                // Now we will output of images of lstUnswizzledBaseImages
+                foreach (var itmBI in lstUnswizzledBaseImages)
+                    // Once we have some Base Image, output it. To do so, we will prepare the name
+                    // of the image with some reconigzable data. Then write the bitmap in .png format.
+                    ImageTools.WriteBitmap(itmBI.bmpBaseImage,
+                                           strOutputFolder + "\\" + itmBI.strFileName);
+
+
+                // Finally we will create the Texture/Palette/TileID links for All Base Images.
+                Write_BIInfo(strOutputFolder, lstTileSeparation);
+
+                // Dispose readed External Base Textures
+                foreach (DirectBitmap itmDB in lstSwizzledExternalBaseTextures)
+                {
+                    itmDB.Dispose();
+                }
+                lstSwizzledExternalBaseTextures.Clear();
+
+                // Some bit of info for parent window result text box
+                TimeOut = DateTime.Now;
+                TimeDiff = TimeOut - TimeIn;
+                TotalTime = TotalTime + TimeDiff;
+
+                logEvents.AddEventText("SWIZZLE FINISHED\t\tDuration: " + TotalTime.Minutes.ToString("00") + ":" +
+                                                TotalTime.Seconds.ToString("00") + "." +
+                                                TotalTime.Milliseconds.ToString("000") + " ms.",
+                                                rtbResult);
+            }
+            catch (Exception ex)
+            {
+                int iTileAbsError = 0;
+
+                iTileAbsError = iTileAbs;
+
+                iResult = -1;
+            }
+
+            return iResult;
         }
     }
 }
