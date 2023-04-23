@@ -12,7 +12,7 @@ namespace Aeris
     public partial class frmAeris : Form
     {
 
-        public const string strAerisVersion = " v1.4a";
+        public const string strAerisVersion = " v1.4b";
 
         private frmTileEditor frmTileEditor;
         private frmBasePreview frmBasePreview;
