@@ -3024,21 +3024,33 @@ namespace Aeris
 
 
                 // Ok, here we will read the external files.
+                string strFileName;
+                int iNumTexture, iTextureCount;
                 lstSwizzledExternalBaseTextures = new List<DirectBitmap>();
+                iTextureCount = 0;
+
+                // Initialize it with max number of textures
+                for (int i = 0; i < S9.MAX_NUM_TEXTURES; i++) 
+                    lstSwizzledExternalBaseTextures.Add(new DirectBitmap(1, 1));
 
                 foreach (string strFile in Directory.GetFiles(strInputFolder, "*.png"))
                 {
                     Bitmap tmpBmp = null;
                     ImageTools.ReadBitmap(ref tmpBmp, strFile);
 
-                    lstSwizzledExternalBaseTextures.Add(new DirectBitmap(tmpBmp));
+                    strFileName = Path.GetFileNameWithoutExtension(strFile);
+                    Int32.TryParse(strFileName.Substring(strFileName.Length - 5, 2), out iNumTexture);
+
+                    lstSwizzledExternalBaseTextures.Insert(iNumTexture, new DirectBitmap(tmpBmp));
+
+                    iTextureCount++;
                 }
 
                 // Some file checks
                 // No files
                 if (lstSwizzledExternalBaseTextures.Count <= 0) return 2;
                 // Not all the textures for the field
-                if (lstSwizzledExternalBaseTextures.Count != S9.GetNumRealTextures()) return 3;
+                if (iTextureCount != S9.GetNumRealTextures()) return 3;
 
 
                 // Adjust iScaleFactor
