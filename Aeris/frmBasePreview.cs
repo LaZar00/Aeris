@@ -4,19 +4,25 @@ using System.Windows.Forms;
 
 namespace Aeris
 {
-    public partial class frmBasePreview : Form
+
+    using static S9;
+
+    using static FileTools;
+
+    public partial class FrmBasePreview : Form
     {
 
-        private frmAeris frmAeris;
+        readonly private FrmAeris frmAeris;
 
-        public frmBasePreview(frmAeris frmAeris)
+        public FrmBasePreview(FrmAeris inFrmAeris)
         {
             InitializeComponent();
 
-            this.frmAeris = frmAeris;
+            this.frmAeris = inFrmAeris;
+            Owner = inFrmAeris;
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -25,9 +31,9 @@ namespace Aeris
         {
             DirectBitmap bmpBase;
 
-            bmpBase = new DirectBitmap(S9.iLayersMaxWidth, S9.iLayersMaxHeight);
+            bmpBase = new DirectBitmap(iLayersMaxWidth, iLayersMaxHeight);
 
-            S9.Render_S9BaseLayer(ref bmpBase, frmAeris);
+            Render_S9BaseLayer(ref bmpBase, frmAeris);
 
             if (pbBasePreview.Image != null) pbBasePreview.Image.Dispose();
 
@@ -36,13 +42,13 @@ namespace Aeris
             bmpBase.Dispose();
         }
 
-        private void frmBasePreview_Load(object sender, EventArgs e)
+        private void FrmBasePreview_Load(object sender, EventArgs e)
         {
             ImageTools.ClearPictureBox(pbBasePreview, 1, null);
             DrawBase();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void BtnSave_Click(object sender, EventArgs e)
         {
             try
             {
@@ -51,9 +57,9 @@ namespace Aeris
                     // Set filter options and filter index.
                     sfdSaveBasePreview.Title = "Save Base As .PNG";
                     sfdSaveBasePreview.Filter = ".PNG File|*.png";
-                    sfdSaveBasePreview.InitialDirectory = FileTools.strGlobalPath;
+                    sfdSaveBasePreview.InitialDirectory = strGlobalPath;
                     sfdSaveBasePreview.FilterIndex = 1;
-                    sfdSaveBasePreview.FileName = FileTools.strGlobalFieldName + "_Base";
+                    sfdSaveBasePreview.FileName = strGlobalFieldName + "_Base";
                     sfdSaveBasePreview.FilterIndex = 1;
                     if (sfdSaveBasePreview.ShowDialog() == DialogResult.OK)
                     {
@@ -71,6 +77,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error saving Base Image.", "Error");
             }
         }

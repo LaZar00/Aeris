@@ -11,6 +11,8 @@ using System.Windows.Forms;
 namespace Aeris
 {
 
+    using static FileTools;
+
     public static class Repair_fr_e
     {
         public partial struct ARGB_NEWPALETTE
@@ -52,18 +54,19 @@ namespace Aeris
                 if (iResult == 0)
                 {
                     // We read the section0.bin file.
-                    byteSection0 = File.ReadAllBytes(FileTools.strGlobalPath + "\\fr_e_fixresources\\section0.bin");
+                    byteSection0 = File.ReadAllBytes(strGlobalPath + "\\fr_e_fixresources\\section0.bin");
 
                     if (byteSection0.Length > 0)
                     {
-                        FileTools.Field.fieldSection[0].sectionSize = byteSection0.Length;
-                        FileTools.Field.fieldSection[0].sectionData = byteSection0;
+                        Field.fieldSection[0].sectionSize = byteSection0.Length;
+                        Field.fieldSection[0].sectionData = byteSection0;
                     }
                 }
 
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 iResult = 99;
             }
 
@@ -78,9 +81,9 @@ namespace Aeris
             iResult = 0;
 
             // Check if files for do the fix exists
-            if (!File.Exists(FileTools.strGlobalPath + "\\fr_e_fixresources\\fr_e_16_00.png") | 
-                !File.Exists(FileTools.strGlobalPath + "\\fr_e_fixresources\\fr_e_17_00.png") | 
-                !File.Exists(FileTools.strGlobalPath + "\\fr_e_fixresources\\section0.bin"))
+            if (!File.Exists(strGlobalPath + "\\fr_e_fixresources\\fr_e_16_00.png") | 
+                !File.Exists(strGlobalPath + "\\fr_e_fixresources\\fr_e_17_00.png") | 
+                !File.Exists(strGlobalPath + "\\fr_e_fixresources\\section0.bin"))
             {
                 iResult = 1;
             }
@@ -108,11 +111,11 @@ namespace Aeris
         {
             int iResult;
 
-            iResult = ImageTools.ImportTexture(FileTools.strGlobalPath + "\\fr_e_fixresources\\fr_e_16_00.png", 3, 16, true);
+            iResult = ImageTools.ImportTexture(strGlobalPath + "\\fr_e_fixresources\\fr_e_16_00.png", 3, 16, true);
 
             if (iResult == 0)
             {
-                iResult = ImageTools.ImportTexture(FileTools.strGlobalPath + "\\fr_e_fixresources\\fr_e_17_00.png", 3, 17, true);
+                iResult = ImageTools.ImportTexture(strGlobalPath + "\\fr_e_fixresources\\fr_e_17_00.png", 3, 17, true);
             }
 
             return iResult;

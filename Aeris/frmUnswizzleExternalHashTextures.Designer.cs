@@ -1,6 +1,6 @@
 ﻿namespace Aeris
 {
-    partial class frmUnswizzleExternalHashTextures
+    partial class FrmUnswizzleExternalHashTextures
     {
         /// <summary>
         /// Required designer variable.
@@ -99,7 +99,7 @@
             this.cbUnsTextures.Size = new System.Drawing.Size(224, 24);
             this.cbUnsTextures.TabIndex = 53;
             this.cbUnsTextures.Visible = false;
-            this.cbUnsTextures.SelectedIndexChanged += new System.EventHandler(this.cbUnsTextures_SelectedIndexChanged);
+            this.cbUnsTextures.SelectedIndexChanged += new System.EventHandler(this.CbUnsTextures_SelectedIndexChanged);
             // 
             // txtPalette
             // 
@@ -120,7 +120,7 @@
             this.btnSaveHashImgs.TabIndex = 51;
             this.btnSaveHashImgs.Text = "Save Hashed Images";
             this.btnSaveHashImgs.UseVisualStyleBackColor = true;
-            this.btnSaveHashImgs.Click += new System.EventHandler(this.btnSaveTexture_Click);
+            this.btnSaveHashImgs.Click += new System.EventHandler(this.BtnSaveTexture_Click);
             // 
             // txtHash
             // 
@@ -222,7 +222,7 @@
             this.btnUnswizzleHashTex.TabIndex = 50;
             this.btnUnswizzleHashTex.Text = "Unswizzle Hashed Texture";
             this.btnUnswizzleHashTex.UseVisualStyleBackColor = true;
-            this.btnUnswizzleHashTex.Click += new System.EventHandler(this.btnUnswizzle_Click);
+            this.btnUnswizzleHashTex.Click += new System.EventHandler(this.BtnUnswizzle_Click);
             // 
             // txtTextureHeight
             // 
@@ -308,7 +308,7 @@
             this.btnClose.TabIndex = 52;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // btnLoadSwizHashTexture
             // 
@@ -318,7 +318,7 @@
             this.btnLoadSwizHashTexture.TabIndex = 49;
             this.btnLoadSwizHashTexture.Text = "Load Swizzled Hashed Texture";
             this.btnLoadSwizHashTexture.UseVisualStyleBackColor = true;
-            this.btnLoadSwizHashTexture.Click += new System.EventHandler(this.btnLoadTexture_Click);
+            this.btnLoadSwizHashTexture.Click += new System.EventHandler(this.BtnLoadTexture_Click);
             // 
             // frmUnswizzleExternalHashTextures
             // 
@@ -357,7 +357,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Unswizzle External Hashed Texture";
-            this.Load += new System.EventHandler(this.frmUnswizzleExternal_Load);
+            this.Load += new System.EventHandler(this.FrmUnswizzleExternal_Load);
             this.panelSwizzledPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbSwizzledTexturePreview)).EndInit();
             this.ResumeLayout(false);

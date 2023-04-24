@@ -1,7 +1,7 @@
 ﻿
 namespace Aeris
 {
-    partial class frmUnswizzleExternalBaseTextures
+    partial class FrmUnswizzleExternalBaseTextures
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace Aeris
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmUnswizzleExternalBaseTextures));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmUnswizzleExternalBaseTextures));
             this.lbSelectOutputFolder = new System.Windows.Forms.Label();
             this.lbSelectInputFolder = new System.Windows.Forms.Label();
             this.lbNote = new System.Windows.Forms.Label();
@@ -94,7 +94,7 @@ namespace Aeris
             this.btnOutputFolder.TabIndex = 46;
             this.btnOutputFolder.Text = "...";
             this.btnOutputFolder.UseVisualStyleBackColor = true;
-            this.btnOutputFolder.Click += new System.EventHandler(this.btnOutputFolder_Click);
+            this.btnOutputFolder.Click += new System.EventHandler(this.BtnOutputFolder_Click);
             // 
             // txtOutputFolder
             // 
@@ -122,7 +122,7 @@ namespace Aeris
             this.btnClose.TabIndex = 47;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // btnRun
             // 
@@ -133,7 +133,7 @@ namespace Aeris
             this.btnRun.TabIndex = 45;
             this.btnRun.Text = "Run";
             this.btnRun.UseVisualStyleBackColor = true;
-            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+            this.btnRun.Click += new System.EventHandler(this.BtnRun_Click);
             // 
             // btnInputFolder
             // 
@@ -144,7 +144,7 @@ namespace Aeris
             this.btnInputFolder.TabIndex = 52;
             this.btnInputFolder.Text = "...";
             this.btnInputFolder.UseVisualStyleBackColor = true;
-            this.btnInputFolder.Click += new System.EventHandler(this.btnInputFolder_Click);
+            this.btnInputFolder.Click += new System.EventHandler(this.BtnInputFolder_Click);
             // 
             // frmUnswizzleExternalBaseTextures
             // 

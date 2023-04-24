@@ -4,9 +4,11 @@ using System.IO;
 
 namespace Aeris
 {
+
+    using static FileTools;
+
     public static class S4
     {
-
 
         public partial struct S4_PaletteBytes
         {
@@ -16,7 +18,7 @@ namespace Aeris
             public byte Mask;
         }
 
-        public partial struct dataPal
+        public partial struct DataPal
         {
             public S4_PaletteBytes[] Pal;
         }
@@ -29,7 +31,7 @@ namespace Aeris
             public ushort PalY;
             public ushort numColorsPalette;
             public ushort numPalettes;
-            public dataPal[] dataPalette;
+            public DataPal[] dataPalette;
         }
 
 
@@ -52,7 +54,7 @@ namespace Aeris
 
             // Read the pages with the palettes.
             // Prepare the palettes.
-            Section4.dataPalette = new dataPal[Section4.numPalettes];
+            Section4.dataPalette = new DataPal[Section4.numPalettes];
 
             for (int i = 0; i <= Section4.numPalettes - 1; i++)
                 Section4.dataPalette[i].Pal = new S4_PaletteBytes[Palette.MAX_PAL_COLORS];
@@ -88,7 +90,6 @@ namespace Aeris
         {
             byte[] palettesArray;
             int inumPal, inumColor;
-            palettesArray = null;
 
             // Now we will count the size of the array.
             // 4 (PalettesSize) + 2 (PalX) + 2 (PalY) + 2 (NumColors) + 2 (NumPalettes) +
@@ -118,7 +119,7 @@ namespace Aeris
             }
 
             // Finally we change the Section4 of the loaded field for this one.
-            FileTools.Field.fieldSection[3].sectionData = palettesArray;
+            Field.fieldSection[3].sectionData = palettesArray;
         }
 
 

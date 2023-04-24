@@ -8,23 +8,25 @@ using System.Collections.Generic;
 
 namespace Aeris
 {
-    public partial class frmUnswizzleHashesBatch : Form
-    {
-        private frmAeris frmAeris;
 
-        public frmUnswizzleHashesBatch(frmAeris frmAeris)
+    using static FileTools;
+
+    public partial class FrmUnswizzleHashesBatch : Form
+    {
+
+        public FrmUnswizzleHashesBatch(FrmAeris inFrmAeris)
         {
             InitializeComponent();
 
-            this.frmAeris = frmAeris;
+            this.Owner = inFrmAeris;
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void btnInputFolder_Click(object sender, EventArgs e)
+        private void BtnInputFolder_Click(object sender, EventArgs e)
         {
             FolderBrowserDialogEX fbdEX = new FolderBrowserDialogEX();
 
@@ -37,13 +39,13 @@ namespace Aeris
                 fbdEX.folderBrowser.RootFolder = Environment.SpecialFolder.MyComputer;
                 fbdEX.folderBrowser.ShowNewFolderButton = false;
 
-                if (FileTools.strGlobalUnswizzledBatchInput != null)
+                if (strGlobalUnswizzledBatchInput != null)
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalUnswizzledBatchInput;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalUnswizzledBatchInput;
                 }
                 else
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalPath;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalPath;
                 }
 
                 fbdEX.Tmr.Start();
@@ -52,8 +54,7 @@ namespace Aeris
                     if (fbdEX.folderBrowser.SelectedPath != "")
                     {
                         // Put Global folder for input swizzled.
-                        FileTools.strGlobalSwizzledBatchInput =
-                                        fbdEX.folderBrowser.SelectedPath;
+                        strGlobalSwizzledBatchInput = fbdEX.folderBrowser.SelectedPath;
 
                         txtInputFolder.Text = fbdEX.folderBrowser.SelectedPath;
                     }
@@ -63,11 +64,12 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error selecting Input folder.", "Error");
             }
         }
 
-        private void btnOutputFolder_Click(object sender, EventArgs e)
+        private void BtnOutputFolder_Click(object sender, EventArgs e)
         {
             FolderBrowserDialogEX fbdEX = new FolderBrowserDialogEX();
 
@@ -79,13 +81,13 @@ namespace Aeris
 
                 fbdEX.folderBrowser.RootFolder = Environment.SpecialFolder.MyComputer;
 
-                if (FileTools.strGlobalUnswizzledBatchOutput != null)
+                if (strGlobalUnswizzledBatchOutput != null)
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalUnswizzledBatchOutput;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalUnswizzledBatchOutput;
                 }
                 else
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalPath;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalPath;
                 }
 
                 fbdEX.Tmr.Start();
@@ -94,8 +96,7 @@ namespace Aeris
                     if (fbdEX.folderBrowser.SelectedPath != "")
                     {
                         // Put Global folder for output unswizzled.
-                        FileTools.strGlobalUnswizzledBatchOutput =
-                                        fbdEX.folderBrowser.SelectedPath;
+                        strGlobalUnswizzledBatchOutput = fbdEX.folderBrowser.SelectedPath;
 
                         txtOutputFolder.Text = fbdEX.folderBrowser.SelectedPath;
                     }
@@ -105,11 +106,12 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error selecting Output Folder.", "Error");
             }
         }
 
-        private void btnRun_Click(object sender, EventArgs e)
+        private void BtnRun_Click(object sender, EventArgs e)
         {
             Bitmap bmpInputTexture;
             string[] strFileList;
@@ -139,8 +141,8 @@ namespace Aeris
 
 
             // Let's load HashExceptions list (if exists).
-            strHashExceptionsFile = FileTools.strGlobalPath + "\\hashexceptions\\" + 
-                                    FileTools.strGlobalFieldName + ".txt";
+            strHashExceptionsFile = strGlobalPath + "\\hashexceptions\\" + 
+                                    strGlobalFieldName + ".txt";
 
             // Clear events
             logEvents.ClearEvents(rtbResult);
@@ -194,14 +196,14 @@ namespace Aeris
                     strHash = "";
                     strFileName = Path.GetFileNameWithoutExtension(strLongFileName);
 
-                    bIsHashed = FileTools.SplitFileNameAndCheckHash(strFileName, 
-                                                                    ref strFieldName, 
-                                                                    ref iTexture, 
-                                                                    ref iPalette, 
-                                                                    ref iParam, 
-                                                                    ref iState, 
-                                                                    ref iTileID, 
-                                                                    ref strHash);
+                    bIsHashed = SplitFileNameAndCheckHash(strFileName, 
+                                                          ref strFieldName, 
+                                                          ref iTexture, 
+                                                          ref iPalette, 
+                                                          ref iParam, 
+                                                          ref iState, 
+                                                          ref iTileID, 
+                                                          ref strHash);
 
 
                     // If not hashed will not process the file right now.
@@ -211,7 +213,7 @@ namespace Aeris
                                                ".png' not seems to be a hashed one.", rtbResult);
                     }
                     // Let's check that the field name of the texture matches the field opened of the tool.
-                    else if (!FileTools.ValidateFilewithField(strFieldName))
+                    else if (!ValidateFilewithField(strFieldName))
                     {
                         logEvents.AddEventText("WARNING: The file '" + strFileName + 
                                                ".png' is not of the loaded field.", rtbResult);
@@ -313,14 +315,14 @@ namespace Aeris
                                                strUnsFile;
 
                                 TimeDiff = TimeOut - TimeIn;
-                                TotalTime = TotalTime + TimeDiff;
+                                TotalTime += TimeDiff;
 
                                 logEvents.AddEventText("DONE: " + strFileName + ".png" + "\t\tDuration: " + 
                                                        TimeDiff.Seconds.ToString("00") + "." + 
                                                        TimeDiff.Milliseconds.ToString("000") + " ms.",
                                                        rtbResult);
 
-                                iCounter = iCounter + 1;
+                                iCounter++;
                             }
 
                             bmpInputTexture.Dispose();
@@ -340,11 +342,12 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error running the Unswizzle process.", "Error");
             }
         }
 
-        private void rtbResult_TextChanged(object sender, EventArgs e)
+        private void RtbResult_TextChanged(object sender, EventArgs e)
         {
             var rtbResult = sender as RichTextBox;
 

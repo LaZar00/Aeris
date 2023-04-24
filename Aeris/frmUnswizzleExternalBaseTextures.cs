@@ -5,24 +5,25 @@ using System.Windows.Forms;
 
 namespace Aeris
 {
-    public partial class frmUnswizzleExternalBaseTextures : Form
+
+    using static FileTools;
+
+    public partial class FrmUnswizzleExternalBaseTextures : Form
     {
 
-        private frmAeris frmAeris;
-
-        public frmUnswizzleExternalBaseTextures(frmAeris frmAeris)
+        public FrmUnswizzleExternalBaseTextures(FrmAeris inFrmAeris)
         {
             InitializeComponent();
 
-            this.frmAeris = frmAeris;
+            this.Owner = inFrmAeris;
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void btnInputFolder_Click(object sender, EventArgs e)
+        private void BtnInputFolder_Click(object sender, EventArgs e)
         {
             try
             {
@@ -37,15 +38,15 @@ namespace Aeris
                 fbdEX.folderBrowser.ShowNewFolderButton = false;
 
                 if (txtInputFolder.Text != "")
-                    FileTools.strGlobalSwizzledBaseInput = txtInputFolder.Text;
+                    strGlobalSwizzledBaseInput = txtInputFolder.Text;
 
-                if (FileTools.strGlobalSwizzledBaseInput != null)
+                if (strGlobalSwizzledBaseInput != null)
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalSwizzledBaseInput;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalSwizzledBaseInput;
                 }
                 else
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalPath;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalPath;
                 }
 
                 fbdEX.Tmr.Start();
@@ -54,7 +55,7 @@ namespace Aeris
                     if (fbdEX.folderBrowser.SelectedPath != "")
                     {
                         // Put Global folder for input unswizzled.
-                        FileTools.strGlobalSwizzledBaseInput = fbdEX.folderBrowser.SelectedPath;
+                        strGlobalSwizzledBaseInput = fbdEX.folderBrowser.SelectedPath;
                         txtInputFolder.Text = fbdEX.folderBrowser.SelectedPath;
                     }
                 }
@@ -63,11 +64,12 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error selecting Input folder.", "Error");
             }
         }
 
-        private void btnOutputFolder_Click(object sender, EventArgs e)
+        private void BtnOutputFolder_Click(object sender, EventArgs e)
         {
             try
             {
@@ -82,15 +84,15 @@ namespace Aeris
                 fbdEX.folderBrowser.ShowNewFolderButton = false;
 
                 if (txtOutputFolder.Text != "") 
-                    FileTools.strGlobalUnswizzledBaseOutput = txtOutputFolder.Text;
+                    strGlobalUnswizzledBaseOutput = txtOutputFolder.Text;
 
-                if (FileTools.strGlobalUnswizzledBaseOutput != null)
+                if (strGlobalUnswizzledBaseOutput != null)
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalUnswizzledBaseOutput;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalUnswizzledBaseOutput;
                 }
                 else
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalPath;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalPath;
                 }
 
                 fbdEX.Tmr.Start();
@@ -99,8 +101,7 @@ namespace Aeris
                     if (fbdEX.folderBrowser.SelectedPath != "")
                     {
                         // Put Global folder for input unswizzled.
-                        FileTools.strGlobalUnswizzledBaseOutput =
-                                    fbdEX.folderBrowser.SelectedPath;
+                        strGlobalUnswizzledBaseOutput = fbdEX.folderBrowser.SelectedPath;
 
                         txtOutputFolder.Text = fbdEX.folderBrowser.SelectedPath;
                     }
@@ -110,15 +111,15 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error selecting Output folder.", "Error");
             }
         }
 
-        private void btnRun_Click(object sender, EventArgs e)
+        private void BtnRun_Click(object sender, EventArgs e)
         {
 
             int iResult;
-            string strProcessFileName;
 
             if (txtInputFolder.Text.Length == 0 | txtOutputFolder.Text.Length == 0)
             {
@@ -136,7 +137,6 @@ namespace Aeris
             // Initial Vars
             // Clear the results RTB
             logEvents.ClearEvents(rtbResult);
-            strProcessFileName = "";
 
             try
             {
@@ -171,18 +171,19 @@ namespace Aeris
                                             "Warning");
                             break;
                         }
-                        //case 4:
-                        //    {
-                        //        MessageBox.Show("The size of the Unswizzled Base Image of the field does not " +
-                        //                        "correspond to the real size of the field. Maybe you are using " +
-                        //                        "another version of the images or the images have a non " +
-                        //                        "proportional scale.", "Warning");
-                        //        break;
-                        //    }
+                    case 4:
+                        {
+                            // Texture images has not the same proportional scale (multiple of 256 pixels)
+                            MessageBox.Show("The scale/proportion of some of the images is different to the other " +
+                                            "or it is not a multiple of 256 pixels. All the images must be a " +
+                                            "multiple of 256 pixels and must have the same scale.", "Warning");
+                            break;
+                        }
                 }
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error running the Unswizzle for All External Base Textures.", "Error");
             }
         }

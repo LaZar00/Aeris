@@ -1,6 +1,6 @@
 ﻿namespace Aeris
 {
-    partial class frmSwizzleExternalHashImage
+    partial class FrmSwizzleExternalHashImage
     {
         /// <summary>
         /// Required designer variable.
@@ -96,7 +96,7 @@
             this.btnSaveSwizzledTexture.TabIndex = 30;
             this.btnSaveSwizzledTexture.Text = "Save Swizzled Texture";
             this.btnSaveSwizzledTexture.UseVisualStyleBackColor = true;
-            this.btnSaveSwizzledTexture.Click += new System.EventHandler(this.btnSaveTexture_Click);
+            this.btnSaveSwizzledTexture.Click += new System.EventHandler(this.BtnSaveTexture_Click);
             // 
             // btnSwizzleHashFolder
             // 
@@ -106,7 +106,7 @@
             this.btnSwizzleHashFolder.TabIndex = 28;
             this.btnSwizzleHashFolder.Text = "Swizzle Hash Folder";
             this.btnSwizzleHashFolder.UseVisualStyleBackColor = true;
-            this.btnSwizzleHashFolder.Click += new System.EventHandler(this.btnSwizzleTextureHashFolder_Click);
+            this.btnSwizzleHashFolder.Click += new System.EventHandler(this.BtnSwizzleTextureHashFolder_Click);
             // 
             // txtHash
             // 
@@ -204,7 +204,7 @@
             this.btnSwizzleHashImg.TabIndex = 26;
             this.btnSwizzleHashImg.Text = "Swizzle Hashed Image";
             this.btnSwizzleHashImg.UseVisualStyleBackColor = true;
-            this.btnSwizzleHashImg.Click += new System.EventHandler(this.btnSwizzle_Click);
+            this.btnSwizzleHashImg.Click += new System.EventHandler(this.BtnSwizzle_Click);
             // 
             // txtTextureHeight
             // 
@@ -299,7 +299,7 @@
             this.btnLoadUnsHashImg.TabIndex = 25;
             this.btnLoadUnsHashImg.Text = "Load Unswizzled Hashed Image";
             this.btnLoadUnsHashImg.UseVisualStyleBackColor = true;
-            this.btnLoadUnsHashImg.Click += new System.EventHandler(this.btnLoadTexture_Click);
+            this.btnLoadUnsHashImg.Click += new System.EventHandler(this.BtnLoadTexture_Click);
             // 
             // frmSwizzleExternalHashImage
             // 

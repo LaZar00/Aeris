@@ -16,6 +16,10 @@ using System.Drawing.Imaging;
 
 namespace Aeris
 {
+
+    using static Palette;
+    using static FileTools;
+
     public static class S9
     {
 
@@ -84,7 +88,7 @@ namespace Aeris
 
 
         // Main Section 9 Structure
-        public partial struct dataTile
+        public partial struct DataTile
         {
             public ushort blank;
             public short destX;
@@ -138,10 +142,10 @@ namespace Aeris
             public ushort depth;
             public ushort blank;
             public ushort blank2;
-            public dataTile[] layerTiles;
+            public DataTile[] layerTiles;
         }
 
-        public partial struct st_Texture
+        public partial struct St_Texture
         {
             public ushort textureID;
             public ushort textureFlag;
@@ -168,7 +172,7 @@ namespace Aeris
             public Layer[] Layer;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 7)]
             public byte[] HDR_TEXTURE;
-            public st_Texture[] Textures;
+            public St_Texture[] Textures;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
             public byte[] ENDTag;
         }
@@ -312,8 +316,8 @@ namespace Aeris
 
 
             // We will put a frame for the stage.
-            iLayersMaxWidth = iLayersMaxWidth + SIZE_BORDERFRAME;
-            iLayersMaxHeight = iLayersMaxHeight + SIZE_BORDERFRAME;
+            iLayersMaxWidth += SIZE_BORDERFRAME;
+            iLayersMaxHeight += SIZE_BORDERFRAME;
             iLayersbmpPosX = iLayersMaxWidth / 2 + iShiftWidth;
             iLayersbmpPosY = iLayersMaxHeight / 2 + iShiftHeight;
 
@@ -409,7 +413,7 @@ namespace Aeris
                     }
 
                     // Read the Background Layer Data Tiles
-                    Section9.Layer[iLayer].layerTiles = new dataTile[Section9.Layer[iLayer].numTiles];
+                    Section9.Layer[iLayer].layerTiles = new DataTile[Section9.Layer[iLayer].numTiles];
                     Section9.Layer[iLayer].blank = fSection9.ReadUInt16();
 
                     for (i = 0; i < Section9.Layer[iLayer].numTiles; i++)
@@ -421,7 +425,7 @@ namespace Aeris
 
             // With the Base Info of Layers/Tiles we can construct the Palette.
             // Prepare ARGB Colors And List of Params.
-            Palette.Load_BASEARGB();
+            Load_BASEARGB();
             Prepare_ListParams();
         }
 
@@ -478,7 +482,7 @@ namespace Aeris
             }
         }
 
-        public static void ReadTile(BinaryReader fSection9, ref dataTile layerTile, int iTile, int iLayer)
+        public static void ReadTile(BinaryReader fSection9, ref DataTile layerTile, int iTile, int iLayer)
         {
             layerTile.blank = fSection9.ReadUInt16();
             layerTile.destX = fSection9.ReadInt16();
@@ -514,8 +518,7 @@ namespace Aeris
             }
 
             // This is for field "trnad_3"
-            if (layerTile.textureID2 > 0 & iLayer == 0 &
-                FileTools.strGlobalFieldName == "trnad_3")
+            if (layerTile.textureID2 > 0 & iLayer == 0 & strGlobalFieldName == "trnad_3")
             {
                 layerTile.textureID2 = 0;
             }
@@ -567,7 +570,7 @@ namespace Aeris
             {
 
                 if (Section9.Textures == null)
-                    Section9.Textures = new st_Texture[MAX_NUM_TEXTURES];
+                    Section9.Textures = new St_Texture[MAX_NUM_TEXTURES];
 
                 for (iTexture = 0; iTexture < MAX_NUM_TEXTURES; iTexture++)
                 {                  
@@ -613,7 +616,7 @@ namespace Aeris
             }
         }
 
-        public static void PreRender_IndexedTile(ref dataTile dataTile, 
+        public static void PreRender_IndexedTile(ref DataTile dataTile, 
                                                  int iTexture, 
                                                  int iSourceX, 
                                                  int iSourceY)
@@ -636,15 +639,15 @@ namespace Aeris
                         bytePixel = Section9.Textures[iTexture].textureMatrix[iSourceX + xTile,
                                                                               iSourceY + yTile];
 
-                        Palette.Set8bppIndexedPixel(ref dataTile.imgTile, xTile, yTile, bytePixel);
-                        tilePixelColor = Palette.ARGB_BASEPAL[iPalette].ARGB_COLORS[bytePixel];
+                        Set8bppIndexedPixel(ref dataTile.imgTile, xTile, yTile, bytePixel);
+                        tilePixelColor = ARGB_BASEPAL[iPalette].ARGB_COLORS[bytePixel];
 
                         if (S4.Section4.dataPalette[iPalette].Pal[bytePixel].Red == 0 &
                             S4.Section4.dataPalette[iPalette].Pal[bytePixel].Green == 0 &
                             S4.Section4.dataPalette[iPalette].Pal[bytePixel].Blue == 0 &
                             S4.Section4.dataPalette[iPalette].Pal[bytePixel].Mask == 0)
                         {
-                            tilePixelColor = Palette.ARGB_BASEPAL[iPalette].ARGB_COLORS[0];
+                            tilePixelColor = ARGB_BASEPAL[iPalette].ARGB_COLORS[0];
                         }
 
                         if (Section9.pal_ignoreFirstPixel[iPalette] == 1 & bytePixel == 0)
@@ -667,7 +670,7 @@ namespace Aeris
             dataTile.imgTile.Palette = tmpPal;
         }
 
-        public static void PreRender_DirectTile(ref dataTile dataTile, 
+        public static void PreRender_DirectTile(ref DataTile dataTile, 
                                                 int iTexture,
                                                 int iSourceX,
                                                 int iSourceY)
@@ -675,18 +678,14 @@ namespace Aeris
             Color cTextureDirectColor;
             int xTile, yTile;
 
-            cTextureDirectColor = Color.FromArgb(0, 0, 0, 0);
-            xTile = 0;
-            yTile = 0;
-
             for (yTile = 0; yTile <= dataTile.imgTile.Width - 1; yTile++)
             {
                 for (xTile = 0; xTile <= dataTile.imgTile.Height - 1; xTile++)
                 {
                     cTextureDirectColor = 
-                        Palette.Get16bitColor(Section9.Textures[iTexture].
-                                              textureMatrix2Bytes[dataTile.sourceX + xTile,
-                                              dataTile.sourceY + yTile]);
+                        Get16bitColor(Section9.Textures[iTexture].
+                                      textureMatrix2Bytes[dataTile.sourceX + xTile,
+                                      dataTile.sourceY + yTile]);
 
                     // Let's put the color in the image of the Tile with Direct color.
                     dataTile.imgTile.SetPixel(xTile, yTile, cTextureDirectColor);
@@ -771,7 +770,7 @@ namespace Aeris
 
         public static void AssignZDepthToLayerAsPerFLEVEL(ref S9_ZList ZItem)
         {
-            switch (FileTools.strGlobalFieldName)
+            switch (strGlobalFieldName)
             {
                 case "crater_1":
                     {
@@ -1056,7 +1055,7 @@ namespace Aeris
                                 ZItem.Z = 4096 - ZItem.ZTileID;
 
                             Section9Z.Add(ZItem);
-                            iTileCounter = iTileCounter + 1;
+                            iTileCounter++;
                         }
                     }
                 }
@@ -1104,7 +1103,7 @@ namespace Aeris
                 if (oldTexture == Section9Z[iTile].ZTexture)
                 {
                     ZItem.ZTileTex = iTileTexCounter;
-                    iTileTexCounter = iTileTexCounter + 1;
+                    iTileTexCounter++;
                 }
                 else
                 {
@@ -1137,7 +1136,7 @@ namespace Aeris
 
                     if (oldID < Section9Z[iTile].ZTileID)
                     {
-                        MaxSublayers = MaxSublayers + 1;
+                        MaxSublayers++;
                         oldID = Section9Z[iTile].ZTileID;
                     }
 
@@ -1146,19 +1145,19 @@ namespace Aeris
                 }
             }
 
-            if (MaxSublayers != -1) MaxSublayers = MaxSublayers + 1;
+            if (MaxSublayers != -1) MaxSublayers++;
 
 
             // ------ Let's leave the final Order by TileAbsolute value.
             Section9Z = Section9Z.OrderBy(x => x.ZTileAbs).ToList();
         }
 
-        public static bool CheckedSublayer(int ZSublayer, frmAeris frmAeris)
+        public static bool CheckedSublayer(int ZSublayer, FrmAeris frmAeris)
         {
             return (frmAeris.clbSublayers.GetItemCheckState(ZSublayer) == CheckState.Checked);
         }
 
-        public static void Render_S9Layers(frmAeris frmAeris)
+        public static void Render_S9Layers(FrmAeris frmAeris)
         {
             DirectBitmap bmpBgTile;
 
@@ -1308,7 +1307,7 @@ namespace Aeris
                 }
         }
 
-        public static void Render_S9BaseLayer(ref DirectBitmap bmpBase, frmAeris frmAeris)
+        public static void Render_S9BaseLayer(ref DirectBitmap bmpBase, FrmAeris frmAeris)
         {
             List<S9_ZList> sortZList = new List<S9_ZList>();
 
@@ -1363,7 +1362,6 @@ namespace Aeris
         {
             byte[] bgArray;       // Background Array
             int iByteDimension, inumLayer, inumTile;
-            bgArray = null;
 
             // Now we will get the size of the complete Background Array.
             iByteDimension = Redimension_BackgroundArray();
@@ -1482,11 +1480,11 @@ namespace Aeris
                 }
 
                 // Finally we change the Section9 of the loaded field for this one.
-                FileTools.Field.fieldSection[8].sectionData = bgArray;
+                Field.fieldSection[8].sectionData = bgArray;
             }
         }
 
-        public static void WriteTile(ref BinaryWriter bgWriter, dataTile stTile, int inumTile, int inumLayer)
+        public static void WriteTile(ref BinaryWriter bgWriter, DataTile stTile, int inumTile, int inumLayer)
         {
             bgWriter.Write(stTile.blank);
             bgWriter.Write(stTile.destX);
@@ -1535,7 +1533,7 @@ namespace Aeris
 
             // ' Background PALETTE HDR:
             // 7 + 20 + 4: "PALETTE" 7 + ignoreFirstPixel 20 + palzeroes 4
-            iByteDimension = iByteDimension + 31;
+            iByteDimension += 31;
 
             // Background LAYERS:
             for (inumLayer = 0; inumLayer < MAX_LAYERS; inumLayer++)
@@ -1552,7 +1550,7 @@ namespace Aeris
                 {
                     // Background Layer 1-3:
                     // 1:  layerFlag
-                    iByteDimension = iByteDimension + 1;
+                    iByteDimension++;
 
                     if (Section9.Layer[inumLayer].layerFlag == 1)
                     {
@@ -1567,14 +1565,14 @@ namespace Aeris
                         {
                             case 1:
                                 {
-                                    iByteDimension = iByteDimension + 16;
+                                    iByteDimension += 16;
                                     break;
                                 }
 
                             case 2:
                             case 3:
                                 {
-                                    iByteDimension = iByteDimension + 10;
+                                    iByteDimension += 10;
                                     break;
                                 }
                         }
@@ -1587,35 +1585,35 @@ namespace Aeris
             // depending on the Depth.
             // First we add the Texture Section HDR.
             // 7: "TEXTURE"
-            iByteDimension = iByteDimension + 7;
+            iByteDimension += 7;
 
             // For Each Texture (max = 42) we have:
             // 2: textureFlag
             for (inumTexture = 0; inumTexture <= MAX_NUM_TEXTURES - 1; inumTexture++)
             {
-                iByteDimension = iByteDimension + 2;
+                iByteDimension += 2;
 
                 // If textureFlag = 1 we add-> 2 + 2:  Size + Depth
                 if (Section9.Textures[inumTexture].textureFlag == 1)
                 {
-                    iByteDimension = iByteDimension + 4;
+                    iByteDimension += 4;
 
                     // We calculate here the Dimension of the Texture Data.
                     // All the Textures have 256 pixels Width * 256 pixels Height                
                     // It depends On Depth. If Depth < 1 Is Of 1 Byte, If Depth = 2, 2 bytes
                     if (Section9.Textures[inumTexture].Depth < 2)
                     {
-                        iByteDimension = iByteDimension + 0x10000;
+                        iByteDimension += 0x10000;
                     }
                     else
                     {
-                        iByteDimension = iByteDimension + 0x20000;
+                        iByteDimension += 0x20000;
                     }
                 }
             }
 
             // Finally we need to add the "END" Tag of Texture Section.
-            iByteDimension = iByteDimension + 3;
+            iByteDimension += 3;
 
             return iByteDimension;
         }
@@ -1668,7 +1666,7 @@ namespace Aeris
                     return 4;
                 }
 
-                Palette.GetIndexFirstBlack(iPalette);
+                GetIndexFirstBlack(iPalette);
 
                 while (yPosTile < iTileSize &
                        !bColorNotFound)
@@ -1684,7 +1682,7 @@ namespace Aeris
                         if (tmpColor.A == 0)
                             byteColor = 0;
                         else
-                            iResult = Palette.GetIndexOfColor(iPalette, tmpColor, ref byteColor);
+                            iResult = GetIndexOfColor(iPalette, tmpColor, ref byteColor);
 
                         if (iResult > 0)
                         {
@@ -1724,7 +1722,7 @@ namespace Aeris
         {
 
             int iResult;
-            int iNumTile, iNumListTile;
+            int iNumListTile;
             int xPosTile, yPosTile, iTileSize;
             int iSourceX, iSourceY;
 
@@ -1742,10 +1740,6 @@ namespace Aeris
 
             while (iNumListTile < lstTilesTexture.Count)
             {
-                xPosTile = 0;
-                yPosTile = 0;
-
-                iNumTile = lstTilesTexture[iNumListTile].ZTile;
                 iSourceX = lstTilesTexture[iNumListTile].ZSourceX;
                 iSourceY = lstTilesTexture[iNumListTile].ZSourceY;
 
@@ -1755,7 +1749,7 @@ namespace Aeris
                     {
                         // Put each color directly.
                         newtextureMatrix2Bytes[iSourceX + xPosTile, iSourceY + yPosTile] =
-                                 Palette.Put16bitColor(bmpInput.GetPixel(iSourceX + xPosTile, iSourceY + yPosTile));
+                                 Put16bitColor(bmpInput.GetPixel(iSourceX + xPosTile, iSourceY + yPosTile));
                     }
                 }
 
@@ -1767,7 +1761,7 @@ namespace Aeris
 
         public static void Clear_TextureImages()
         {
-            for (int i = 0; i < S9.MAX_NUM_TEXTURES; i++)
+            for (int i = 0; i < MAX_NUM_TEXTURES; i++)
                 if (textureImage[i] != null)
                 {
                     textureImage[i].Dispose();
@@ -1786,6 +1780,7 @@ namespace Aeris
 
             return iTexCounter;
         }
+
 
     }
 }

@@ -7,16 +7,18 @@ using System.Windows.Forms;
 namespace Aeris
 {
 
-    public partial class frmSwizzleExternalHashImage : Form
+    using static S9;
+
+    using static FileTools;
+
+    public partial class FrmSwizzleExternalHashImage : Form
     {
 
-        private frmAeris frmAeris;
-
-        public frmSwizzleExternalHashImage(frmAeris frmAeris)
+        public FrmSwizzleExternalHashImage(FrmAeris inFrmAeris)
         {
             InitializeComponent();
 
-            this.frmAeris = frmAeris;
+            this.Owner = inFrmAeris;
         }
 
         public Bitmap bmpUnsImage;
@@ -26,12 +28,12 @@ namespace Aeris
         public bool bHashedTexture;
         public string strHash;
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void btnLoadTexture_Click(object sender, EventArgs e)
+        private void BtnLoadTexture_Click(object sender, EventArgs e)
         {
             int iScaleFactor;
 
@@ -42,10 +44,10 @@ namespace Aeris
             ofdTexture.FilterIndex = 1;
             ofdTexture.FileName = null;
 
-            if (FileTools.strGlobalLoadSwizzleExernal != null)
-                ofdTexture.InitialDirectory = FileTools.strGlobalLoadSwizzleExernal;
+            if (strGlobalLoadSwizzleExernal != null)
+                ofdTexture.InitialDirectory = strGlobalLoadSwizzleExernal;
             else
-                ofdTexture.InitialDirectory = FileTools.strGlobalPath;
+                ofdTexture.InitialDirectory = strGlobalPath;
 
             try
             {
@@ -73,13 +75,13 @@ namespace Aeris
 
 
                         // Let's check if loaded fields equals field of texture.
-                        bHashedTexture = FileTools.SplitFileNameAndCheckHash(strSwizzleTexFileName,
-                                                                             ref strSwizzleTexFileField,
-                                                                             ref iSwizzleTexTexture, ref iSwizzleTexPalette,
-                                                                             ref iSwizzleTexParam, ref iSwizzleTexState,
-                                                                             ref iSwizzleTexTileID, ref strHash);
+                        bHashedTexture = SplitFileNameAndCheckHash(strSwizzleTexFileName,
+                                                                   ref strSwizzleTexFileField,
+                                                                   ref iSwizzleTexTexture, ref iSwizzleTexPalette,
+                                                                   ref iSwizzleTexParam, ref iSwizzleTexState,
+                                                                   ref iSwizzleTexTileID, ref strHash);
 
-                        if (!FileTools.ValidateFilewithField(strSwizzleTexFileField))
+                        if (!ValidateFilewithField(strSwizzleTexFileField))
                         {
                             MessageBox.Show("WARNING: " + "File: " + strSwizzleTexFileName +
                                             ".png is not from the loaded field in the tool.",
@@ -91,8 +93,8 @@ namespace Aeris
                         // Load Texture
                         ImageTools.ReadBitmap(ref bmpUnsImage, ofdTexture.FileName);
 
-                        //iScaleFactor = bmpLoadedTexture.Width / S9.iLayersMaxWidth;
-                        int iLayer = (from itmZList in S9.Section9Z
+                        //iScaleFactor = bmpLoadedTexture.Width / iLayersMaxWidth;
+                        int iLayer = (from itmZList in Section9Z
                                       where itmZList.ZTexture == iSwizzleTexTexture &
                                             itmZList.ZPalette == iSwizzleTexPalette
                                       select itmZList.ZLayer).Distinct().First();
@@ -102,18 +104,18 @@ namespace Aeris
                             if (iLayer < 2)
                             {
                                 // Prepare LayerMaxWidth for L0/L1
-                                SwizzleHash.iLayerMaxWidthGlobal = S9.iLayersMaxWidthL0;
-                                SwizzleHash.iLayerMaxHeightGlobal = S9.iLayersMaxHeightL0;
-                                SwizzleHash.iLayerbmpPosXGlobal = S9.iLayersbmpPosXL0;
-                                SwizzleHash.iLayerbmpPosYGlobal = S9.iLayersbmpPosYL0;
+                                SwizzleHash.iLayerMaxWidthGlobal = iLayersMaxWidthL0;
+                                SwizzleHash.iLayerMaxHeightGlobal = iLayersMaxHeightL0;
+                                SwizzleHash.iLayerbmpPosXGlobal = iLayersbmpPosXL0;
+                                SwizzleHash.iLayerbmpPosYGlobal = iLayersbmpPosYL0;
                             }
                             else
                             {
                                 // Prepare LayerMaxWidth for L2/L3
-                                SwizzleHash.iLayerMaxWidthGlobal = S9.iLayersMaxWidthL2;
-                                SwizzleHash.iLayerMaxHeightGlobal = S9.iLayersMaxHeightL2;
-                                SwizzleHash.iLayerbmpPosXGlobal = S9.iLayersbmpPosXL2;
-                                SwizzleHash.iLayerbmpPosYGlobal = S9.iLayersbmpPosYL2;
+                                SwizzleHash.iLayerMaxWidthGlobal = iLayersMaxWidthL2;
+                                SwizzleHash.iLayerMaxHeightGlobal = iLayersMaxHeightL2;
+                                SwizzleHash.iLayerbmpPosXGlobal = iLayersbmpPosXL2;
+                                SwizzleHash.iLayerbmpPosYGlobal = iLayersbmpPosYL2;
                             }
                         }
 
@@ -129,7 +131,7 @@ namespace Aeris
                         }
                         else
                         {
-                            iScaleFactor = bmpUnsImage.Width / S9.iLayersMaxWidthL0;                            
+                            iScaleFactor = bmpUnsImage.Width / iLayersMaxWidthL0;                            
                         }
 
 
@@ -163,17 +165,18 @@ namespace Aeris
 
                         btnSwizzleHashImg.Enabled = true;
 
-                        FileTools.strGlobalLoadSwizzleExernal = Path.GetDirectoryName(ofdTexture.FileName);
+                        strGlobalLoadSwizzleExernal = Path.GetDirectoryName(ofdTexture.FileName);
                     }
                 }
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error loading Unswizzled Texture.", "Error");
             }
         }
 
-        private void btnSwizzle_Click(object sender, EventArgs e)
+        private void BtnSwizzle_Click(object sender, EventArgs e)
         {
             try
             {
@@ -182,8 +185,8 @@ namespace Aeris
 
                 iScaleFactor = Int32.Parse(txtScaleFactor.Text);
 
-                bmpSwizzledTexture = new Bitmap(S9.TEXTURE_WIDTH * iScaleFactor, 
-                                                S9.TEXTURE_HEIGHT * iScaleFactor);
+                bmpSwizzledTexture = new Bitmap(TEXTURE_WIDTH * iScaleFactor, 
+                                                TEXTURE_HEIGHT * iScaleFactor);
 
                 SwizzleHash.SwizzleHashedImage(bmpUnsImage, ref bmpSwizzledTexture, 
                                                iSwizzleTexTexture, iSwizzleTexPalette, 
@@ -209,11 +212,12 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error trying to Swizzle the loaded Texture.", "Error");
             }
         }
 
-        private void btnSwizzleTextureHashFolder_Click(object sender, EventArgs e)
+        private void BtnSwizzleTextureHashFolder_Click(object sender, EventArgs e)
         {
             string strFileName;
             Bitmap bmpSwizzledCompleteTexture;
@@ -231,14 +235,13 @@ namespace Aeris
 
                 fbdEX.folderBrowser.ShowNewFolderButton = false;
 
-                if (FileTools.strGlobalLoadSwizzleExternalFolder != null)
+                if (strGlobalLoadSwizzleExternalFolder != null)
                 {
-                    fbdEX.folderBrowser.SelectedPath = 
-                                    FileTools.strGlobalLoadSwizzleExternalFolder;
+                    fbdEX.folderBrowser.SelectedPath =  strGlobalLoadSwizzleExternalFolder;
                 }
                 else
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalPath;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalPath;
                 }
 
                 fbdEX.Tmr.Start();
@@ -247,10 +250,9 @@ namespace Aeris
                     if (fbdEX.folderBrowser.SelectedPath != "")
                     {
                         // Put Global folder for load hashed textures.
-                        FileTools.strGlobalLoadSwizzleExternalFolder =
-                                        fbdEX.folderBrowser.SelectedPath;
+                        strGlobalLoadSwizzleExternalFolder = fbdEX.folderBrowser.SelectedPath;
 
-                        strHash = FileTools.strGlobalLoadSwizzleExternalFolder.Split(Path.DirectorySeparatorChar).Last();
+                        strHash = strGlobalLoadSwizzleExternalFolder.Split(Path.DirectorySeparatorChar).Last();
 
                         if (strHash.Length > 14 & strHash.Length < 20)
                         {
@@ -262,7 +264,7 @@ namespace Aeris
 
                             bmpSwizzledCompleteTexture = null;
 
-                            iResult = SwizzleHash.SwizzleHashedExternalImage(FileTools.strGlobalLoadSwizzleExternalFolder, 
+                            iResult = SwizzleHash.SwizzleHashedExternalImage(strGlobalLoadSwizzleExternalFolder, 
                                                                              null, 
                                                                              ref iSwizzleTexTexture, 
                                                                              ref iSwizzleTexPalette, 
@@ -296,7 +298,7 @@ namespace Aeris
                                             txtTextureID.Text = iSwizzleTexTexture.ToString();
                                             txtPalette.Text = iSwizzleTexPalette.ToString();
 
-                                            txtScaleFactor.Text = (bmpSwizzledCompleteTexture.Width / S9.TEXTURE_WIDTH).ToString();
+                                            txtScaleFactor.Text = (bmpSwizzledCompleteTexture.Width / TEXTURE_WIDTH).ToString();
 
                                             //ImageTools.ClearPictureBox(pbSwizzledTexturePreview, 1, panelSwizzledPreview);
 
@@ -333,11 +335,12 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error trying to Swizzle the Texture/s of Hash Folder.", "Error");
             }
         }
 
-        private void btnSaveTexture_Click(object sender, EventArgs e)
+        private void BtnSaveTexture_Click(object sender, EventArgs e)
         {
             Bitmap bmpSave;
 
@@ -347,7 +350,7 @@ namespace Aeris
                 sfdTexture.Title = "Save Texture As .PNG";
                 sfdTexture.Filter = ".PNG File|*.png";
                 sfdTexture.FilterIndex = 1;
-                sfdTexture.FileName = FileTools.strGlobalFieldName + "_" + 
+                sfdTexture.FileName = strGlobalFieldName + "_" + 
                                       iSwizzleTexTexture.ToString("00") + "_" + 
                                       iSwizzleTexPalette.ToString("00") + "_" + 
                                       iSwizzleTexParam.ToString("00") + "_" + 
@@ -355,13 +358,13 @@ namespace Aeris
                                       iSwizzleTexTileID.ToString("00") + "_" + 
                                       strHash + ".png";
 
-                if (FileTools.strGlobalSaveSwizzleExternal != null)
+                if (strGlobalSaveSwizzleExternal != null)
                 {
-                    sfdTexture.InitialDirectory = FileTools.strGlobalSaveSwizzleExternal;
+                    sfdTexture.InitialDirectory = strGlobalSaveSwizzleExternal;
                 }
                 else
                 {
-                    sfdTexture.InitialDirectory = FileTools.strGlobalPath;
+                    sfdTexture.InitialDirectory = strGlobalPath;
                 }
 
                 if (sfdTexture.ShowDialog() == DialogResult.OK)
@@ -376,7 +379,7 @@ namespace Aeris
 
                             MessageBox.Show("Texture exported in .PNG format.", "Information");
 
-                            FileTools.strGlobalSaveSwizzleExternal = Path.GetDirectoryName(sfdTexture.FileName);
+                            strGlobalSaveSwizzleExternal = Path.GetDirectoryName(sfdTexture.FileName);
 
                             bmpSave.Dispose();
                         }
@@ -385,6 +388,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error exporting Texture.", "Error");
             }
         }

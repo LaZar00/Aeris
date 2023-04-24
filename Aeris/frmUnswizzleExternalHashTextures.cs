@@ -7,15 +7,19 @@ using System.IO;
 
 namespace Aeris
 {
-    public partial class frmUnswizzleExternalHashTextures : Form
-    {
-        private frmAeris frmAeris;
 
-        public frmUnswizzleExternalHashTextures(frmAeris frmAeris)
+    using static S9;
+
+    using static FileTools;
+
+    public partial class FrmUnswizzleExternalHashTextures : Form
+    {
+
+        public FrmUnswizzleExternalHashTextures(FrmAeris inFrmAeris)
         {
             InitializeComponent();
 
-            this.frmAeris = frmAeris;
+            this.Owner = inFrmAeris;
         }
 
         public Bitmap bmpSwizzledTexture;
@@ -61,21 +65,21 @@ namespace Aeris
             ImageTools.ClearPictureBox(pbSwizzledTexturePreview, 1, panelSwizzledPreview);
         }
 
-        private void frmUnswizzleExternal_Load(object sender, EventArgs e)
+        private void FrmUnswizzleExternal_Load(object sender, EventArgs e)
         {
-            if (strUnswizzleTexFileName != FileTools.strGlobalFieldName)
+            if (strUnswizzleTexFileName != strGlobalFieldName)
             {
                 InitializeUnswizzleExternal();
-                strUnswizzleTexFileName = FileTools.strGlobalFieldName;
+                strUnswizzleTexFileName = strGlobalFieldName;
             }
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void btnLoadTexture_Click(object sender, EventArgs e)
+        private void BtnLoadTexture_Click(object sender, EventArgs e)
         {
 
             // Set filter options and filter index.
@@ -84,13 +88,13 @@ namespace Aeris
             ofdTexture.FilterIndex = 1;
             ofdTexture.FileName = null;
 
-            if (FileTools.strGlobalLoadUnswizzleExternal != null)
+            if (strGlobalLoadUnswizzleExternal != null)
             {
-                ofdTexture.InitialDirectory = FileTools.strGlobalLoadUnswizzleExternal;
+                ofdTexture.InitialDirectory = strGlobalLoadUnswizzleExternal;
             }
             else
             {
-                ofdTexture.InitialDirectory = FileTools.strGlobalPath;
+                ofdTexture.InitialDirectory = strGlobalPath;
             }
 
             try
@@ -108,16 +112,16 @@ namespace Aeris
                         strUnswizzleTexFileName = Path.GetFileNameWithoutExtension(ofdTexture.FileName);
 
                         // Let's check if loaded fields equals field of texture.
-                        bHashedTexture = FileTools.SplitFileNameAndCheckHash(strUnswizzleTexFileName, 
-                                                                             ref strUnswizzleTexFileField, 
-                                                                             ref iUnswizzleTexTexture, 
-                                                                             ref iUnswizzleTexPalette, 
-                                                                             ref iUnswizzleTexParam, 
-                                                                             ref iUnswizzleTexState, 
-                                                                             ref iUnswizzleTexTileID, 
-                                                                             ref strHash);
+                        bHashedTexture = SplitFileNameAndCheckHash(strUnswizzleTexFileName, 
+                                                                   ref strUnswizzleTexFileField, 
+                                                                   ref iUnswizzleTexTexture, 
+                                                                   ref iUnswizzleTexPalette, 
+                                                                   ref iUnswizzleTexParam, 
+                                                                   ref iUnswizzleTexState, 
+                                                                   ref iUnswizzleTexTileID, 
+                                                                   ref strHash);
 
-                        if (!FileTools.ValidateFilewithField(strUnswizzleTexFileField))
+                        if (!ValidateFilewithField(strUnswizzleTexFileField))
                         {
                             MessageBox.Show("WARNING: " + "File: " + strUnswizzleTexFileName + 
                                             ".png is not from the loaded field in the tool.", "Warning");
@@ -128,7 +132,7 @@ namespace Aeris
                         // Load Texture
                         ImageTools.ReadBitmap(ref bmpSwizzledTexture, ofdTexture.FileName);
 
-                        if (bmpSwizzledTexture.Width % S9.TEXTURE_WIDTH != 0)
+                        if (bmpSwizzledTexture.Width % TEXTURE_WIDTH != 0)
                         {
                             MessageBox.Show("WARNING: Probably you have loaded a non Swizzled Texture image. " +
                                             "This image will not be processed.", "Warning");
@@ -153,7 +157,7 @@ namespace Aeris
 
                         txtTextureWidth.Text = bmpSwizzledTexture.Width.ToString();
                         txtTextureHeight.Text = bmpSwizzledTexture.Height.ToString();
-                        txtScaleFactor.Text = (bmpSwizzledTexture.Width / S9.TEXTURE_WIDTH).ToString();
+                        txtScaleFactor.Text = (bmpSwizzledTexture.Width / TEXTURE_WIDTH).ToString();
 
                         ImageTools.ClearPictureBox(pbSwizzledTexturePreview, 1, panelSwizzledPreview);
 
@@ -164,7 +168,7 @@ namespace Aeris
                         pbSwizzledTexturePreview.Image = new Bitmap(bmpSwizzledTexture);
 
                         // Check if the scale is 1 or greater
-                        if (bmpSwizzledTexture.Width / S9.TEXTURE_WIDTH > 1)
+                        if (bmpSwizzledTexture.Width / TEXTURE_WIDTH > 1)
                         {
                             btnUnswizzleHashTex.Enabled = false;
 
@@ -175,17 +179,18 @@ namespace Aeris
 
                         btnSaveHashImgs.Enabled = false;
 
-                        FileTools.strGlobalLoadUnswizzleExternal = Path.GetDirectoryName(ofdTexture.FileName);
+                        strGlobalLoadUnswizzleExternal = Path.GetDirectoryName(ofdTexture.FileName);
                     }
                 }
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error opening Texture.", "Error");
             }
         }
 
-        private void btnUnswizzle_Click(object sender, EventArgs e)
+        private void BtnUnswizzle_Click(object sender, EventArgs e)
         {
             int iResult;
             int iUnswizzleTexLayer;
@@ -205,7 +210,7 @@ namespace Aeris
 
 
                 // Get the Layer.
-                iUnswizzleTexLayer = (from sZItem in S9.Section9Z
+                iUnswizzleTexLayer = (from sZItem in Section9Z
                                       where sZItem.ZTexture == iUnswizzleTexTexture &
                                             sZItem.ZPalette == iUnswizzleTexPalette
                                       orderby sZItem.ZParam
@@ -281,11 +286,12 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error trying to Unswizzle the loaded Texture.", "Error");
             }
         }
 
-        private void cbUnsTextures_SelectedIndexChanged(object sender, EventArgs e)
+        private void CbUnsTextures_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbUnsTextures.SelectedIndex < SwizzleHash.lstUnswizzledImagesList.Count())
             {
@@ -315,7 +321,7 @@ namespace Aeris
             }
         }
 
-        private void btnSaveTexture_Click(object sender, EventArgs e)
+        private void BtnSaveTexture_Click(object sender, EventArgs e)
         {
             FolderBrowserDialogEX fbdEX = new FolderBrowserDialogEX();
 
@@ -328,15 +334,13 @@ namespace Aeris
                 fbdEX.folderBrowser.RootFolder = 
                             Environment.SpecialFolder.MyComputer;
 
-                if (FileTools.strGlobalSaveUnswizzleExternal != null)
+                if (strGlobalSaveUnswizzleExternal != null)
                 {
-                    fbdEX.folderBrowser.SelectedPath = 
-                            FileTools.strGlobalSaveUnswizzleExternal;
+                    fbdEX.folderBrowser.SelectedPath =  strGlobalSaveUnswizzleExternal;
                 }
                 else
                 {
-                    fbdEX.folderBrowser.SelectedPath = 
-                            FileTools.strGlobalPath;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalPath;
                 }
 
                 fbdEX.Tmr.Start();
@@ -345,8 +349,7 @@ namespace Aeris
                     if (fbdEX.folderBrowser.SelectedPath != "")
                     {
                         // Put Global folder for export all unswizzled images.
-                        FileTools.strGlobalSaveUnswizzleExternal =
-                            fbdEX.folderBrowser.SelectedPath;
+                        strGlobalSaveUnswizzleExternal = fbdEX.folderBrowser.SelectedPath;
 
                         for (int i = 0, loopTo = SwizzleHash.lstUnswizzledImagesList.Count() - 1; i <= loopTo; i++)
                         {
@@ -356,8 +359,8 @@ namespace Aeris
                                 //                       cbUnsTextures.Items[i] + ".png");
 
                                 SwizzleHash.lstUnswizzledImagesList[i].bmpUnswizzledImages.Save(
-                                    FileTools.strGlobalSaveUnswizzleExternal + "\\" + 
-                                    cbUnsTextures.Items[i] + ".png");
+                                            strGlobalSaveUnswizzleExternal + "\\" + 
+                                            cbUnsTextures.Items[i] + ".png");
                             }
                         }
                     }
@@ -369,6 +372,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error saving Unswizzled Textures in the Folder.", "Error");
             }
         }

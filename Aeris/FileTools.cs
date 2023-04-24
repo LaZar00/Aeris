@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Aeris
 {
+
+    using static S9;
+
     public static class FileTools
     {
 
@@ -40,6 +43,8 @@ namespace Aeris
         public static string strGlobalSaveUnswizzleExternal, strGlobalSaveSwizzleExternal;
 
         public static string strGlobalUnswizzleAllBaseTextures, strGlobalSwizzledBaseInput, strGlobalUnswizzledBaseOutput;
+
+        public static string strExceptionVar;
 
         public static bool bFieldModified;
 
@@ -141,6 +146,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 iResult = -1;
             }
 
@@ -243,13 +249,14 @@ namespace Aeris
                     {
                         using (var sectionReader = new BinaryReader(sectionMemory))
                         {
-                            S9.Load_Section9(sectionReader);
+                            Load_Section9(sectionReader);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 iResult = -1;
             }
 
@@ -327,6 +334,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 iResult = -1;
             }
 
@@ -347,7 +355,7 @@ namespace Aeris
                 iByteDimension = iByteDimension + 4 + Field.fieldSection[i].sectionSize;
 
             // Finally redimension the Byte Array for the FF7 Tag.
-            iByteDimension = iByteDimension + 14;
+            iByteDimension += 14;
             fieldSaveArray = new byte[iByteDimension];
         }
 

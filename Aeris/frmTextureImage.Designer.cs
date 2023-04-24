@@ -1,6 +1,6 @@
 ﻿namespace Aeris
 {
-    partial class frmTextureImage
+    partial class FrmTextureImage
     {
         /// <summary>
         /// Required designer variable.
@@ -45,7 +45,7 @@
             this.btnClose.TabIndex = 1;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // panelTextureImage
             // 

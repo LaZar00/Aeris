@@ -11,6 +11,8 @@ using System.Windows.Forms;
 namespace Aeris
 {
 
+    using static S9;
+
     public class Palette
     {
 
@@ -75,8 +77,10 @@ namespace Aeris
             // Prepare Palettes
             for (iPalette = 0; iPalette < S4.Section4.numPalettes; iPalette++)
             {
-                APAL = new ARGB_PALETTE();
-                APAL.ARGB_COLORS = new List<Color>();
+                APAL = new ARGB_PALETTE()
+                {
+                    ARGB_COLORS = new List<Color>(),
+                };
 
                 // Add each color to the ARGB_COLORS
                 for (iColor = 0; iColor < MAX_PAL_COLORS; iColor++)
@@ -193,8 +197,8 @@ namespace Aeris
         }
 
 
-        //public static void Render_Tile(ref Bitmap bmpBgTile, Bitmap bmpBlendTile, S9.dataTile dataTile)
-        public static void Render_Tile(ref DirectBitmap bmpBgTile, Bitmap bmpBlendTile, S9.dataTile dataTile)
+        //public static void Render_Tile(ref Bitmap bmpBgTile, Bitmap bmpBlendTile, dataTile dataTile)
+        public static void Render_Tile(ref DirectBitmap bmpBgTile, Bitmap bmpBlendTile, DataTile dataTile)
         {
             int xTile, yTile;
             Color tilePixelColor, bgPixelColor;
@@ -324,7 +328,7 @@ namespace Aeris
                 iResult = 2;
             else
             {
-                if (S9.Section9.pal_ignoreFirstPixel[iPalette] == 1)
+                if (Section9.pal_ignoreFirstPixel[iPalette] == 1)
                     if (iNumColor == 0)
                             iNumColor = indexFirstBlack;
 
@@ -397,7 +401,7 @@ namespace Aeris
 
         public static void ExportGIMPPAL(string FileName, int PaletteID)
         {
-            FileStream fs = null;
+            FileStream fs;
             fs = new FileStream(FileName, FileMode.Create);
             using (var writer = new StreamWriter(fs, Encoding.ASCII))
             {

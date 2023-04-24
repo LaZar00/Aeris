@@ -5,16 +5,21 @@ using System.Windows.Forms;
 
 namespace Aeris
 {
+
+    using static S9;
+
+    using static Palette;
+    using static FileTools;
+
     public static class TileEditor
     {
-
 
         public const int TETILESIZE_WIDTH = 257;
         public const int TETILESIZE_HEIGHT = 257;
 
         public static bool bIsDirectTile, bActivateIFP;
         public static bool bPALInfoColorPALTEMouseMove, bPALInfoColorTEMouseMove;
-        public static S9.dataTile dataTileTE, dataTileTEBackup;
+        public static DataTile dataTileTE, dataTileTEBackup;
         public static byte[,] TileMatrix;
         public static ushort[,] TileMatrix2Bytes;
         public static int iTELayer, iTETexture, iTEPalette;
@@ -30,7 +35,7 @@ namespace Aeris
             for (yPos = 0; yPos < iTETileSize; yPos++)
             {
                 for (xPos = 0; xPos < iTETileSize; xPos++)
-                    TileMatrix[xPos, yPos] = S9.Section9.Textures[iTETexture].
+                    TileMatrix[xPos, yPos] = Section9.Textures[iTETexture].
                                                     textureMatrix[iTESourceX + xPos, iTESourceY + yPos];
             }
         }
@@ -44,160 +49,23 @@ namespace Aeris
             for (yPos = 0; yPos < iTETileSize; yPos++)
             {
                 for (xPos = 0; xPos < iTETileSize; xPos++)
-                    TileMatrix2Bytes[xPos, yPos] = S9.Section9.Textures[iTETexture].
-                                                    textureMatrix2Bytes[iTESourceX + xPos, iTESourceY + yPos];
+                    TileMatrix2Bytes[xPos, yPos] = Section9.Textures[iTETexture].
+                                                   textureMatrix2Bytes[iTESourceX + xPos, iTESourceY + yPos];
             }
         }
 
-        public static void UpdatePickedColorValues(frmTileEditor frmTileEditor)
-        {
-            int indexPAL;
 
-            if (!bIsDirectTile)
-            {
-                indexPAL = iIndexPickedColor;
-
-                if (frmTileEditor.cbActivateIFP.Enabled)
-                {
-                    if (frmTileEditor.cbActivateIFP.Checked)
-                    {
-                        if (Palette.indexFirstBlack == indexPAL) indexPAL = 0;
-                    }
-                    else
-                    {
-                        if (indexPAL == 0) indexPAL = Palette.indexFirstBlack;
-                    }
-                }
-
-                frmTileEditor.txtIdx.Text = indexPAL.ToString();
-
-                frmTileEditor.txtR.Text = S4.Section4.dataPalette[iTEPalette].Pal[indexPAL].Red.ToString();
-                frmTileEditor.txtG.Text = S4.Section4.dataPalette[iTEPalette].Pal[indexPAL].Green.ToString();
-                frmTileEditor.txtB.Text = S4.Section4.dataPalette[iTEPalette].Pal[indexPAL].Blue.ToString();
-                frmTileEditor.txtM.Text = S4.Section4.dataPalette[iTEPalette].Pal[indexPAL].Mask.ToString();
-
-                frmTileEditor.btnColor.BackColor = Palette.GetPalColor(iTEPalette, indexPAL);
-            }
-        }
-
-        public static void InitializeTILEINFO(frmTileEditor frmTileEditor, frmAeris frmAeris)
-        {
-            frmTileEditor.txtTileLayer.Text = frmAeris.txtLayer.Text;
-            frmTileEditor.txtTileNum.Text = frmAeris.txtTile.Text;
-
-            iTELayer = Int32.Parse(frmAeris.txtLayer.Text);
-            iTETileNum = Int32.Parse(frmAeris.txtTile.Text);
-            iTEAbsTileNum = Int32.Parse(frmAeris.txtTileTex.Text);
-
-            dataTileTE = S9.Section9.Layer[Int32.Parse(frmTileEditor.txtTileLayer.Text)].
-                                    layerTiles[Int32.Parse(frmTileEditor.txtTileNum.Text)];
-            dataTileTEBackup = dataTileTE;
-
-            frmTileEditor.txtID.Text = dataTileTE.ID.ToString();
-            frmTileEditor.txtPaletteID.Text = dataTileTE.paletteID.ToString();
-
-            iTEPalette = Int32.Parse(frmTileEditor.txtPaletteID.Text);
-
-            if (iTEPalette > S4.Section4.numPalettes - 1)
-            {
-                iTEPalette = 0;
-            }
-
-            frmTileEditor.txtWidth.Text = dataTileTE.Width.ToString();
-            frmTileEditor.txtHeight.Text = dataTileTE.Height.ToString();
-            frmTileEditor.txtDestX.Text = dataTileTE.destX.ToString();
-            frmTileEditor.txtDestY.Text = dataTileTE.destY.ToString();
-            frmTileEditor.txtDepth.Text = dataTileTE.depth.ToString();
-            frmTileEditor.txtBlending.Text = dataTileTE.blending.ToString();
-            frmTileEditor.txtBlendMode.Text = dataTileTE.BlendMode.ToString();
-            frmTileEditor.txtParam.Text = dataTileTE.param.ToString();
-            frmTileEditor.txtState.Text = dataTileTE.state.ToString();
-            frmTileEditor.txtTextureID.Text = dataTileTE.textureID.ToString();
-            frmTileEditor.txtSourceX.Text = dataTileTE.sourceX.ToString();
-            frmTileEditor.txtSourceY.Text = dataTileTE.sourceY.ToString();
-
-            iTETexture = Int32.Parse(frmTileEditor.txtTextureID.Text);
-            iTESourceX = Int32.Parse(frmTileEditor.txtSourceX.Text);
-            iTESourceY = Int32.Parse(frmTileEditor.txtSourceY.Text);
-
-            frmTileEditor.txtTextureID2.Text = dataTileTE.textureID2.ToString();
-            frmTileEditor.txtSourceX2.Text = dataTileTE.sourceX2.ToString();
-            frmTileEditor.txtSourceY2.Text = dataTileTE.sourceY2.ToString();
-
-            if (dataTileTE.textureID2 > 0)
-            {
-                iTETexture = Int32.Parse(frmTileEditor.txtTextureID2.Text);
-                iTESourceX = Int32.Parse(frmTileEditor.txtSourceX2.Text);
-                iTESourceY = Int32.Parse(frmTileEditor.txtSourceY2.Text);
-            }
-
-            frmTileEditor.txtBigID.Text = dataTileTE.bigID.ToString();
-            frmTileEditor.txtSourceXBigID.Text = dataTileTE.sourceXBig.ToString();
-            frmTileEditor.txtSourceYBigID.Text = dataTileTE.sourceYBig.ToString();
-
-            // Let's initialize some global vars for use in Tile Editor
-            // Get TileSize, 16 or 32.
-            // Normally, 32x32 pixels tiles are in Layer 2-3.
-            // iTETileSize -> Has the real value of TileSize (16 or 32)
-            // iTETileSizeFill -> Has the value \ 4 for calculate some x,y positions
-            // like fill pictureboxes zoomed pixels or get points x/y with mouse.
-            if (iTELayer < 2)
-            {
-                iTETileSize = 16;
-                iTETileSizeFill = 16;
-            }
-            else
-            {
-                iTETileSize = 32;
-                iTETileSizeFill = 8;
-            }
-
-            if (S9.Section9.Textures[iTETexture].Depth > 1)
-            {
-                bIsDirectTile = true;
-                Load_TileMatrix2Bytes();
-            }
-            else
-            {
-                bIsDirectTile = false;
-                Load_TileMatrix();
-            }
-
-            iIndexPickedColor = 0;
-            UpdatePickedColorValues(frmTileEditor);
-        }
-
-        public static void InitializeTILEIMAGE(frmTileEditor frmTileEditor)
-        {
-            if (bIsDirectTile)
-            {
-                // Initialize Tile Image in PictureBox (for TileSize 32)
-                Draw_TileDirect(ref frmTileEditor.pbTileEdit);
-
-                frmTileEditor.txtPaletteID.Enabled = false;
-            }
-            else
-            {
-                // Initialize Palette PictureBox colors of Tile Editor
-                ImageTools.ClearPictureBox(frmTileEditor.pbPalette, 1, null);
-                Palette.Refresh_Palette(ref frmTileEditor.pbPalette, iTEPalette);
-
-                // Initialize Tile Image in PictureBox (for TileSize 16)
-                Draw_Tile(ref frmTileEditor.pbTileEdit, frmTileEditor);
-                frmTileEditor.txtPaletteID.Enabled = true;
-            }
-        }
-
-        public static void Draw_Tile(ref PictureBox pbInputTile, frmTileEditor frmTileEditor)
+        public static void Draw_Tile(ref PictureBox pbInputTile, bool bActivateIFP)
         {
             int x, y, indexPAL;
             SolidBrush sBrush = new SolidBrush(Color.Empty);
 
             // Dim BMP As Bitmap = New Bitmap(pbInputTile.Size.Width - 4, pbInputTile.Size.Height - 4)
             Bitmap tileBitmap = new Bitmap(TETILESIZE_WIDTH, TETILESIZE_HEIGHT);
-            Pen p = new Pen(Brushes.Black);
-
-            p.Color = Color.Black;
+            Pen p = new Pen(Brushes.Black)
+            {
+                Color = Color.Black,
+            };
 
             // Create Image
             using (var g = Graphics.FromImage(tileBitmap))
@@ -210,19 +78,19 @@ namespace Aeris
                         {
                             // Get the Palette's Fill Color
                             indexPAL = TileMatrix[x, y];
-                            sBrush.Color = Palette.ARGB_BASEPAL[iTEPalette].ARGB_COLORS[indexPAL];
+                            sBrush.Color = ARGB_BASEPAL[iTEPalette].ARGB_COLORS[indexPAL];
 
-                            if (frmTileEditor.cbActivateIFP.Checked)
+                            if (bActivateIFP)
                             {
                                 if (S4.Section4.dataPalette[iTEPalette].Pal[indexPAL].Red == 0 &
                                     S4.Section4.dataPalette[iTEPalette].Pal[indexPAL].Green == 0 &
                                     S4.Section4.dataPalette[iTEPalette].Pal[indexPAL].Blue == 0 &
                                     S4.Section4.dataPalette[iTEPalette].Pal[indexPAL].Mask == 0)
                                 {
-                                    sBrush.Color = Palette.ARGB_BASEPAL[iTEPalette].ARGB_COLORS[0];
+                                    sBrush.Color = ARGB_BASEPAL[iTEPalette].ARGB_COLORS[0];
                                 }
 
-                                if (S9.Section9.pal_ignoreFirstPixel[iTEPalette] == 1 & indexPAL == 0)
+                                if (Section9.pal_ignoreFirstPixel[iTEPalette] == 1 & indexPAL == 0)
                                 {
                                     sBrush.Color = Color.FromArgb(0, sBrush.Color.R, sBrush.Color.G, sBrush.Color.B);
                                 }
@@ -263,9 +131,10 @@ namespace Aeris
 
             // Dim BMP As Bitmap = New Bitmap(pbInputTile.Size.Width - 4, pbInputTile.Size.Height - 4)
             Bitmap tileBMP = new Bitmap(TETILESIZE_WIDTH, TETILESIZE_HEIGHT);
-            Pen p = new Pen(Brushes.Black);
-
-            p.Color = Color.Black;
+            Pen p = new Pen(Brushes.Black)
+            {
+                Color = Color.Black,
+            };
 
             // Create Image
             using (var g = Graphics.FromImage(tileBMP))
@@ -277,7 +146,7 @@ namespace Aeris
                         if (x < iTETileSize & y < iTETileSize)
                         {
                             // Get the Palette's Fill Color
-                            sBrush.Color = Palette.Get16bitColor(TileMatrix2Bytes[x, y]);
+                            sBrush.Color = Get16bitColor(TileMatrix2Bytes[x, y]);
 
                             // Draw Rectangle as per Palette
                             g.FillRectangle(sBrush, x * iTETileSizeFill, 
@@ -309,16 +178,15 @@ namespace Aeris
             MessageBox.Show(strMessage, "Information", MessageBoxButtons.OK);
         }
 
-        public static bool TECommitINFO(frmTileEditor frmTileEditor, frmAeris frmAeris)
+        public static bool TECommitINFO(FrmTileEditor frmTileEditor, FrmAeris frmAeris)
         {
-            int iValue = 0;
-            string strcbTextures = "";
+            string strcbTextures;
 
             // We need here to check the values before do the Commit.
             // Some values have some reasonable restrictions.
 
             // Check ID
-            if (int.TryParse(frmTileEditor.txtID.Text, out iValue))
+            if (int.TryParse(frmTileEditor.txtID.Text, out int iValue))
             {
                 if (iValue < 0 | iValue > 4096)
                 {
@@ -465,9 +333,9 @@ namespace Aeris
             // Check TextureID
             if (int.TryParse(frmTileEditor.txtTextureID.Text, out iValue))
             {
-                if (iValue < 0 | iValue > S9.MAX_NUM_TEXTURES)
+                if (iValue < 0 | iValue > MAX_NUM_TEXTURES)
                 {
-                    StringMessage("The TextureID value can only be 0..." + S9.MAX_NUM_TEXTURES + ".");
+                    StringMessage("The TextureID value can only be 0..." + MAX_NUM_TEXTURES + ".");
                     frmTileEditor.txtTextureID.Text = dataTileTEBackup.textureID.ToString();
                     return false;
                 }
@@ -482,9 +350,9 @@ namespace Aeris
             // Check TextureID2
             if (int.TryParse(frmTileEditor.txtTextureID2.Text, out iValue))
             {
-                if (iValue < 0 | iValue > S9.MAX_NUM_TEXTURES)
+                if (iValue < 0 | iValue > MAX_NUM_TEXTURES)
                 {
-                    StringMessage("The TextureID2 value can only be 0..." + S9.MAX_NUM_TEXTURES + ".");
+                    StringMessage("The TextureID2 value can only be 0..." + MAX_NUM_TEXTURES + ".");
                     frmTileEditor.txtTextureID2.Text = dataTileTEBackup.textureID2.ToString();
                     return false;
                 }
@@ -716,15 +584,15 @@ namespace Aeris
 
             // Now that we have verified the values, we need to update
             // the original Tile of Section9.
-            S9.Section9.Layer[iTELayer].layerTiles[iTETileNum] = dataTileTE;
+            Section9.Layer[iTELayer].layerTiles[iTETileNum] = dataTileTE;
 
             // Update Aeris Title
-            FileTools.bFieldModified = true;
+            bFieldModified = true;
             frmAeris.Update_AerisTitle();
             return true;
         }
 
-        public static bool TECommitIMAGE(frmAeris frmAeris)
+        public static bool TECommitIMAGE(FrmAeris frmAeris)
         {
             int ixPos, iyPos, ixSource, iySource, iTexture;
             try
@@ -746,17 +614,18 @@ namespace Aeris
                 for (iyPos = 0; iyPos < iTETileSize; iyPos++)
                 {
                     for (ixPos = 0; ixPos < iTETileSize; ixPos++)
-                        S9.Section9.Textures[iTexture].
+                        Section9.Textures[iTexture].
                                     textureMatrix[ixSource + ixPos, iySource + iyPos] = TileMatrix[ixPos, iyPos];
                 }
 
                 // Update Aeris Title
-                FileTools.bFieldModified = true;
+                bFieldModified = true;
 
                 frmAeris.Update_AerisTitle();
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 return false;
             }
 

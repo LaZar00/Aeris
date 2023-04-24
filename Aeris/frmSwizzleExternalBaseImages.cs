@@ -5,24 +5,25 @@ using System.Windows.Forms;
 
 namespace Aeris
 {
-    public partial class frmSwizzleExternalBaseImages : Form
+
+    using static FileTools;
+
+    public partial class FrmSwizzleExternalBaseImages : Form
     {
 
-        private frmAeris frmAeris;
-
-        public frmSwizzleExternalBaseImages(frmAeris frmAeris)
+        public FrmSwizzleExternalBaseImages(FrmAeris inFrmAeris)
         {
             InitializeComponent();
 
-            this.frmAeris = frmAeris;
+            this.Owner = inFrmAeris;
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void btnInputFolder_Click(object sender, EventArgs e)
+        private void BtnInputFolder_Click(object sender, EventArgs e)
         {
             try
             {
@@ -37,15 +38,15 @@ namespace Aeris
                 fbdEX.folderBrowser.ShowNewFolderButton = false;
 
                 if (txtInputFolder.Text != "")
-                    FileTools.strGlobalSwizzledBaseInput = txtInputFolder.Text;
+                    strGlobalSwizzledBaseInput = txtInputFolder.Text;
 
-                if (FileTools.strGlobalSwizzledBaseInput != null)
+                if (strGlobalSwizzledBaseInput != null)
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalSwizzledBaseInput;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalSwizzledBaseInput;
                 }
                 else
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalPath;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalPath;
                 }
 
                 fbdEX.Tmr.Start();
@@ -54,7 +55,7 @@ namespace Aeris
                     if (fbdEX.folderBrowser.SelectedPath != "")
                     {
                         // Put Global folder for input unswizzled.
-                        FileTools.strGlobalSwizzledBaseInput = fbdEX.folderBrowser.SelectedPath;
+                        strGlobalSwizzledBaseInput = fbdEX.folderBrowser.SelectedPath;
                         txtInputFolder.Text = fbdEX.folderBrowser.SelectedPath;
                     }
                 }
@@ -63,11 +64,12 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error selecting Input folder.", "Error");
             }
         }
 
-        private void btnOutputFolder_Click(object sender, EventArgs e)
+        private void BtnOutputFolder_Click(object sender, EventArgs e)
         {
             try
             {
@@ -82,15 +84,15 @@ namespace Aeris
                 fbdEX.folderBrowser.ShowNewFolderButton = false;
 
                 if (txtOutputFolder.Text != "")
-                    FileTools.strGlobalUnswizzledBaseOutput = txtOutputFolder.Text;
+                    strGlobalUnswizzledBaseOutput = txtOutputFolder.Text;
 
-                if (FileTools.strGlobalUnswizzledBaseOutput != null)
+                if (strGlobalUnswizzledBaseOutput != null)
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalUnswizzledBaseOutput;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalUnswizzledBaseOutput;
                 }
                 else
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalPath;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalPath;
                 }
 
                 fbdEX.Tmr.Start();
@@ -99,8 +101,7 @@ namespace Aeris
                     if (fbdEX.folderBrowser.SelectedPath != "")
                     {
                         // Put Global folder for input unswizzled.
-                        FileTools.strGlobalUnswizzledBaseOutput =
-                                    fbdEX.folderBrowser.SelectedPath;
+                        strGlobalUnswizzledBaseOutput = fbdEX.folderBrowser.SelectedPath;
 
                         txtOutputFolder.Text = fbdEX.folderBrowser.SelectedPath;
                     }
@@ -110,11 +111,12 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error selecting Output folder.", "Error");
             }
         }
 
-        private void btnRun_Click(object sender, EventArgs e)
+        private void BtnRun_Click(object sender, EventArgs e)
         {
             int iResult;
             string strProcessFileName;
@@ -160,7 +162,7 @@ namespace Aeris
                     case 3:
                         {
                             // File <field_BI.txt> does not exists.
-                            MessageBox.Show("The file '" + FileTools.strGlobalFieldName +
+                            MessageBox.Show("The file '" + strGlobalFieldName +
                                             "_BI.txt' does not exists in the selected " + "folder.",
                                             "Warning");
                             break;
@@ -177,11 +179,12 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error running the Swizzle for All the Base Images.", "Error");
             }
         }
 
-        private void rtbResult_TextChanged(object sender, EventArgs e)
+        private void RtbResult_TextChanged(object sender, EventArgs e)
         {
 
             RichTextBox rtbResult = sender as RichTextBox;

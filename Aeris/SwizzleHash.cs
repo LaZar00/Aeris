@@ -9,6 +9,9 @@ using System.Windows.Forms;
 
 namespace Aeris
 {
+
+    using static FileTools;
+
     public static class SwizzleHash
     {
 
@@ -22,7 +25,7 @@ namespace Aeris
             public bool Unique;
         }
 
-        public struct st_TileSeparation
+        public struct St_TileSeparation
         {
             public int Texture;
             public int Palette;
@@ -78,7 +81,7 @@ namespace Aeris
 
         public static List<TextureLink> lstTextureLinks = new List<TextureLink>();
         public static List<HashExceptions> lstHashExceptions = new List<HashExceptions>();
-        public static List<st_TileSeparation> lstTileSeparation = new List<st_TileSeparation>();
+        public static List<St_TileSeparation> lstTileSeparation = new List<St_TileSeparation>();
         public static List<UnswizzledImagesList> lstUnswizzledImagesList;
         public static bool bTextureLinks, bHashExceptions, bTileSeparation;
 
@@ -129,7 +132,7 @@ namespace Aeris
         // iType = 10 This type is for Export All Base Images (layer 1). 
         // We will check if there is a Texture < &HE with same Texture and Param = 0 only.
 
-        public static void lstUnswizzledImagesListAddEntry(Bitmap bmpUnsImage, 
+        public static void LstUnswizzledImagesListAddEntry(Bitmap bmpUnsImage, 
                                                     List<S9.S9_ZList> sortZList, 
                                                     int TileIDAddTileSeparation, int iType)
         {
@@ -142,9 +145,8 @@ namespace Aeris
             ParamsStates stParamsStates;
             stParamsStates = new ParamsStates();
 
-            int iUnsLayer, iUnsTexture, iUnsPalette, iUnsParam, iUnsState, iUnsTileID;
+            int iUnsTexture, iUnsPalette, iUnsParam, iUnsState, iUnsTileID;
 
-            iUnsLayer = sortZList[0].ZLayer;
             iUnsTexture = sortZList[0].ZTexture;
             iUnsPalette = sortZList[0].ZPalette;
             iUnsParam = sortZList[0].ZParam;
@@ -167,7 +169,7 @@ namespace Aeris
                             }
                             else
                             {
-                                iIndexKey = iIndexKey + 1;
+                                iIndexKey++;
                             }
                         }
 
@@ -188,7 +190,7 @@ namespace Aeris
                                 }
                                 else
                                 {
-                                    iIndexKey = iIndexKey + 1;
+                                    iIndexKey++;
                                 }
                             }
                         }
@@ -222,7 +224,7 @@ namespace Aeris
                                 }
                                 else
                                 {
-                                    iIndexKey = iIndexKey + 1;
+                                    iIndexKey++;
                                 }
                             }
                         }
@@ -256,7 +258,7 @@ namespace Aeris
                                 }
                                 else
                                 {
-                                    iIndexKey = iIndexKey + 1;
+                                    iIndexKey++;
                                 }
                             }
                         }
@@ -289,7 +291,7 @@ namespace Aeris
                                 }
                                 else
                                 {
-                                    iIndexKey = iIndexKey + 1;
+                                    iIndexKey++;
                                 }
                             }
                         }
@@ -322,12 +324,12 @@ namespace Aeris
                                     }
                                     else
                                     {
-                                        iIndexKey = iIndexKey + 1;
+                                        iIndexKey++;
                                     }
                                 }
                                 else
                                 {
-                                    iIndexKey = iIndexKey + 1;
+                                    iIndexKey++;
                                 }
                             }
                         }
@@ -369,7 +371,7 @@ namespace Aeris
                                 }
                                 else
                                 {
-                                    iIndexKey = iIndexKey + 1;
+                                    iIndexKey++;
                                 }
                             }
                         }
@@ -400,7 +402,7 @@ namespace Aeris
                                 }
                                 else
                                 {
-                                    iIndexKey = iIndexKey + 1;
+                                    iIndexKey++;
                                 }
                             }
                         }
@@ -433,7 +435,7 @@ namespace Aeris
                                 }
                                 else
                                 {
-                                    iIndexKey = iIndexKey + 1;
+                                    iIndexKey++;
                                 }
                             }
                         }
@@ -458,11 +460,16 @@ namespace Aeris
                 stParamsStates.Param = iUnsParam;
                 stParamsStates.State = iUnsState;
 
-                stParamsStates.TileID = new SortedList<int, string>();
-                stParamsStates.TileID.Add(iUnsTileID, iUnsTexture.ToString("00") + "_" + 
-                                          iUnsPalette.ToString("00") + "_" + 
-                                          iUnsParam.ToString("00") + "_" + 
-                                          iUnsState.ToString("00"));
+                stParamsStates.TileID = new SortedList<int, string>
+                {
+                    {
+                        iUnsTileID,
+                        iUnsTexture.ToString("00") + "_" +
+                                iUnsPalette.ToString("00") + "_" +
+                                iUnsParam.ToString("00") + "_" +
+                                iUnsState.ToString("00")
+                    }
+                };
 
                 stUnswizzledImages.bmpUnswizzledImages = new Bitmap(bmpUnsImage);
 
@@ -536,7 +543,7 @@ namespace Aeris
                         // The most difficult case is to check values for Param = 0 (State = 0).
                         // There are fields that I prefer to check standalone.
 
-                        switch (FileTools.strGlobalFieldName)
+                        switch (strGlobalFieldName)
                         {
                             case "blin68_2":
                                 {
@@ -765,7 +772,7 @@ namespace Aeris
 
                             // If first TileID is TileID = 0 and Count = 1 and Param = 0 and State = 0 we will get second TileID
                             // This is an exception for those Fields that has only 1 tile (and is transparent) like "whitein" Field.
-                            switch (FileTools.strGlobalFieldName)
+                            switch (strGlobalFieldName)
                             {
                                 case "whitein":
                                     {
@@ -868,7 +875,7 @@ namespace Aeris
                                             }
                                             else
                                             {
-                                                iPaletteCounter = iPaletteCounter + 1;
+                                                iPaletteCounter++;
                                             }
                                         }
 
@@ -1052,7 +1059,7 @@ namespace Aeris
                                             }
                                             else
                                             {
-                                                iTextureCounter = iTextureCounter + 1;
+                                                iTextureCounter++;
                                             }
                                         }
 
@@ -1072,7 +1079,7 @@ namespace Aeris
                                 {
                                     // This is the most difficult case. Multiple textures, with multiple ids, with multiple palettes.
                                     // Due the difficulty of this case, we will detect it manually. This means, we will use the Field Name to select some values.
-                                    switch (FileTools.strGlobalFieldName)
+                                    switch (strGlobalFieldName)
                                     {
                                         case "ancnt2":
                                             {
@@ -1131,7 +1138,7 @@ namespace Aeris
                 case 2:
                 case 3:
                     {
-                        switch (FileTools.strGlobalFieldName)
+                        switch (strGlobalFieldName)
                         {
                             case "trnad_3":
                                 {
@@ -1356,7 +1363,7 @@ namespace Aeris
 
                             if (iNumTileIDs.Count == 1)
                             {
-                                if (FileTools.strGlobalFieldName == "crater_2")
+                                if (strGlobalFieldName == "crater_2")
                                 {
                                     querylstImagesRGBColors = (from itmImage in ImageTools.lstImagesRGBColors
                                                                where itmImage.FirstTileID == iFirstTileID &
@@ -1401,7 +1408,7 @@ namespace Aeris
 
                             if (iNumTileIDs.Count == 1)
                             {
-                                if (FileTools.strGlobalFieldName == "crater_2")
+                                if (strGlobalFieldName == "crater_2")
                                 {
                                     querylstImagesRGBColors = (from itmImage in ImageTools.lstImagesRGBColors
                                                                where itmImage.FirstTileID == iFirstTileID &
@@ -1726,8 +1733,8 @@ namespace Aeris
                         // The third two condition are for fix this code for semkin_4.
 
                         if ((iUnsTileID == 0x100 | iUnsTileID == 0x120) | 
-                            (FileTools.strGlobalFieldName == "psdun_4" & iUnsTileID == 0xFFE) |
-                             FileTools.strGlobalFieldName == "crater_2")
+                            (strGlobalFieldName == "psdun_4" & iUnsTileID == 0xFFE) |
+                             strGlobalFieldName == "crater_2")
                         {
                             bUseSameRGBColorForList = false;
                             strBaseFileRGBColor = "";
@@ -1845,7 +1852,7 @@ namespace Aeris
 
                             if (queryHashExceptionT3.Count == 0)
                             {
-                                bNextHashDetection = bNextHashDetection | false;
+                                bNextHashDetection |= false;
                             }
                             else
                             {
@@ -2060,6 +2067,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 iResult = 1;
             }
 
@@ -2091,7 +2099,7 @@ namespace Aeris
                 bHasSeparateTile = false;
                 if (iSwizzleTexTileID > 6666)
                 {
-                    iSwizzleTexTileID = iSwizzleTexTileID - 6666;
+                    iSwizzleTexTileID -= 6666;
                     bIsSpecialSeparateTileFile = true;
                 }
 
@@ -2104,12 +2112,12 @@ namespace Aeris
                     }
                     else
                     {
-                        iIdxHashExceptionTileSeparation = iIdxHashExceptionTileSeparation + 1;
+                        iIdxHashExceptionTileSeparation++;
                     }
                 }
             }
 
-            switch (FileTools.strGlobalFieldName)
+            switch (strGlobalFieldName)
             {
                 case "ancnt2":
                     {
@@ -2273,14 +2281,13 @@ namespace Aeris
                 // 2. Process each Swizzled Texture and output the different TextureIDs
                 foreach (var strHashedUnsTexFile in strListHashedUnsTexFiles)
                 {
-                    bHashedTexture = FileTools.
-                                     SplitFileNameAndCheckHash(Path.GetFileNameWithoutExtension(strHashedUnsTexFile),
+                    bHashedTexture = SplitFileNameAndCheckHash(Path.GetFileNameWithoutExtension(strHashedUnsTexFile),
                                                                ref strFileField, 
                                                                ref iSwizzleTexTexture, ref iSwizzleTexPalette, 
                                                                ref iSwizzleTexParam, ref iSwizzleTexState, 
                                                                ref iSwizzleTexTileID, ref strHash);
 
-                    if (!FileTools.ValidateFilewithField(strFileField))
+                    if (!ValidateFilewithField(strFileField))
                     {
                         strFileField = Path.GetFileNameWithoutExtension(strHashedUnsTexFile);
                         return 0;
@@ -2360,6 +2367,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error when processing the Individual Texture for Swizzle."+
                                 "\n\rTexture: " + iSwizzleTexTexture.ToString() + 
                                 "\n\rPalette: " + iSwizzleTexPalette.ToString() +
@@ -2432,15 +2440,15 @@ namespace Aeris
                 // -------------------------------------------------------------------------
                 foreach (var strHashedUnsTexFile in strListHashedUnsTexFiles)
                 {
-                    bHashedTexture = FileTools.SplitFileNameAndCheckHash(
-                                                  Path.GetFileNameWithoutExtension(strHashedUnsTexFile), 
-                                                  ref strFileField, ref iSwizzleTexTexture, ref iSwizzleTexPalette,
-                                                  ref iSwizzleTexParam, ref iSwizzleTexState, 
-                                                  ref iSwizzleTexTileID, ref strHash);
+                    bHashedTexture = SplitFileNameAndCheckHash(
+                                        Path.GetFileNameWithoutExtension(strHashedUnsTexFile), 
+                                        ref strFileField, ref iSwizzleTexTexture, ref iSwizzleTexPalette,
+                                        ref iSwizzleTexParam, ref iSwizzleTexState, 
+                                        ref iSwizzleTexTileID, ref strHash);
 
 
                     // Check if it is from the loaded field
-                    if (!FileTools.ValidateFilewithField(strFileField))
+                    if (!ValidateFilewithField(strFileField))
                     {
                         strProcessFileName = Path.GetFileNameWithoutExtension(strHashedUnsTexFile);
                         return 0;
@@ -2559,7 +2567,7 @@ namespace Aeris
                 // -------------------------------------------------------------------------------------------
                 foreach (var strHashedUnsTexFile in strListHashedUnsTexFiles)
                 {
-                    bHashedTexture = FileTools.SplitFileNameAndCheckHash(
+                    bHashedTexture = SplitFileNameAndCheckHash(
                                             Path.GetFileNameWithoutExtension(strHashedUnsTexFile), 
                                             ref strFileField, ref iSwizzleTexTexture, ref iSwizzleTexPalette,
                                             ref iSwizzleTexParam, ref iSwizzleTexState, 
@@ -2567,7 +2575,7 @@ namespace Aeris
 
 
                     // Check if it is from the loaded field
-                    if (!FileTools.ValidateFilewithField(strFileField))
+                    if (!ValidateFilewithField(strFileField))
                     {
                         strProcessFileName = Path.GetFileNameWithoutExtension(strHashedUnsTexFile);
                         return 0;
@@ -2575,12 +2583,12 @@ namespace Aeris
 
                     // Get the Texture and Palette of the Path. We will do the search of the Links with
                     // the First Texture and Palette.
-                    FileTools.GetPathTexturePalette(Path.GetDirectoryName(strHashedUnsTexFile), 
-                                                    ref strFileHash, 
-                                                    ref iSwizzledPathTexture, 
-                                                    ref iSwizzledPathPalette);
+                    GetPathTexturePalette(Path.GetDirectoryName(strHashedUnsTexFile), 
+                                            ref strFileHash, 
+                                            ref iSwizzledPathTexture, 
+                                            ref iSwizzledPathPalette);
 
-                    switch (FileTools.strGlobalFieldName)
+                    switch (strGlobalFieldName)
                     {
                         case "icedun_2":
                         case "las2_1":
@@ -2741,6 +2749,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 return 0;
             }
 
@@ -2909,16 +2918,19 @@ namespace Aeris
                             select itmTextureLink).Count();
             if (iCounter == 0)
             {
-                var stTextureLink = new TextureLink();
-                stTextureLink.FirstTextureID = FirstTexture;
-                stTextureLink.FirstPalette = FirstPalette;
-                stTextureLink.FirstTextureHash = FirstTextureHash;
-                stTextureLink.Texture = Texture;
-                stTextureLink.Palette = Palette;
-                stTextureLink.Param = Param;
-                stTextureLink.State = State;
-                stTextureLink.TileID = TileID;
-                stTextureLink.MatchTextureHash = MatchTextureHash;
+                var stTextureLink = new TextureLink()
+                {
+                    FirstTextureID = FirstTexture,
+                    FirstPalette = FirstPalette,
+                    FirstTextureHash = FirstTextureHash,
+                    Texture = Texture,
+                    Palette = Palette,
+                    Param = Param,
+                    State = State,
+                    TileID = TileID,
+                    MatchTextureHash = MatchTextureHash,
+                };
+
                 lstTextureLinks.Add(stTextureLink);
             }
         }
@@ -3002,7 +3014,7 @@ namespace Aeris
         {
             string strLine;
             string[] strLineSplit, strTilesSplit;
-            st_TileSeparation stTileSeparation = new st_TileSeparation();
+            St_TileSeparation stTileSeparation = new St_TileSeparation();
 
             lstTileSeparation.Clear();
 
@@ -3089,7 +3101,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIdxHashExceptionTileSeparation = iIdxHashExceptionTileSeparation + 1;
+                        iIdxHashExceptionTileSeparation++;
                     }
                 }
             }
@@ -3131,7 +3143,7 @@ namespace Aeris
                                     sortZTile.ZSourceX, sortZTile.ZSourceY, sortZTile.ZTileSize, sortZTile.ZTileSize,
                                     GraphicsUnit.Pixel);
 
-                        iTileCounter = iTileCounter + 1;
+                        iTileCounter++;
                     }
                 }
             }
@@ -3140,7 +3152,7 @@ namespace Aeris
 
             // Let's check for those images with only 1 tile (like whitin) if it is Alpha all the pixels.
             // If so, we will not add the image to the list.
-            switch (FileTools.strGlobalFieldName)
+            switch (strGlobalFieldName)
             {
                 case "whitein":
                     {
@@ -3149,13 +3161,13 @@ namespace Aeris
                             if (!ImageTools.CheckImageAlpha(bmpUnswizzledTexture))
                             {
                                 // Add to the list.
-                                lstUnswizzledImagesListAddEntry(bmpUnswizzledTexture, sortZList, 0, iType);
+                                LstUnswizzledImagesListAddEntry(bmpUnswizzledTexture, sortZList, 0, iType);
                             }
                         }
                         else
                         {
                             // Add to the list.
-                            lstUnswizzledImagesListAddEntry(bmpUnswizzledTexture, sortZList, 0, iType);
+                            LstUnswizzledImagesListAddEntry(bmpUnswizzledTexture, sortZList, 0, iType);
                         }
 
                         break;
@@ -3164,7 +3176,7 @@ namespace Aeris
                 default:
                     {
                         // Add to the list.
-                        lstUnswizzledImagesListAddEntry(bmpUnswizzledTexture, sortZList, 0, iType);
+                        LstUnswizzledImagesListAddEntry(bmpUnswizzledTexture, sortZList, 0, iType);
                         break;
                     }
             }
@@ -3196,11 +3208,11 @@ namespace Aeris
                                     individualZTile.ZTileSize, individualZTile.ZTileSize,
                                     GraphicsUnit.Pixel);
 
-                        iTileCounter = iTileCounter + 1;
+                        iTileCounter++;
                     }
 
                     // Add to the list.
-                    lstUnswizzledImagesListAddEntry(bmpUnswizzledTexture, sortZList, 6666, iType);
+                    LstUnswizzledImagesListAddEntry(bmpUnswizzledTexture, sortZList, 6666, iType);
                 }
             }
         }
@@ -3438,7 +3450,7 @@ namespace Aeris
                                                             }
                                                         }
 
-                                                        iPaletteCounter = iPaletteCounter + 1;
+                                                        iPaletteCounter++;
                                                     }
                                                 }
                                             }
@@ -3471,7 +3483,7 @@ namespace Aeris
                                                                          bmpInputUnswizzledTexture, 5);
                                                     }
                                                     else if (itmTileID.Key.ZTileID > 0x800 &
-                                                             FileTools.strGlobalFieldName != "whitein")
+                                                             strGlobalFieldName != "whitein")
                                                     {
                                                         Draw_HashedImage(sortZList, iLayer,
                                                                          bmpInputUnswizzledTexture, 0);
@@ -3503,7 +3515,7 @@ namespace Aeris
 
                                         if (lstStates.Count() > 0)
                                         {
-                                            if (FileTools.strGlobalFieldName == "blue_2")
+                                            if (strGlobalFieldName == "blue_2")
                                             {
                                                 foreach (var itmState in lstStates)
                                                 {
@@ -3710,7 +3722,7 @@ namespace Aeris
                     case 3:
                         {
                             // Layer 3
-                            switch (FileTools.strGlobalFieldName)
+                            switch (strGlobalFieldName)
                             {
                                 case "trnad_3":
                                     {
@@ -3772,6 +3784,8 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
+
                 if (CommandLine.bCmd)
                 {
                     Console.WriteLine("Error while doing Obtain Hashed Texture process." + "Layer: " +

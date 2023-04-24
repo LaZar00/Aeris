@@ -6,17 +6,25 @@ using System.Windows.Forms;
 namespace Aeris
 {
 
-    public partial class frmTileEditor : Form
-    {
-        private frmAeris frmAeris;
+    using static S4;
+    using static S9;
 
-        public frmTileEditor(frmAeris frmAeris)
+    using static TileEditor;
+    using static Palette;
+
+    public partial class FrmTileEditor : Form
+    {
+
+        readonly private FrmAeris frmAeris;
+
+
+        public FrmTileEditor(FrmAeris inFrmAeris)
         {
             InitializeComponent();
 
-            this.frmAeris = frmAeris;
+            this.frmAeris = inFrmAeris;
+            Owner = inFrmAeris;
         }
-
 
         public static Bitmap bmpPALInfoColorPALTE = new Bitmap(68, 66);
         public static Rectangle rectPALInfoColorPALTE;
@@ -24,15 +32,15 @@ namespace Aeris
         public static Rectangle rectPALInfoColorTE;
 
 
-        private void frmTileEditor_Load(object sender, EventArgs e)
+        private void FrmTileEditor_Load(object sender, EventArgs e)
         {
             btnCommitALL.Enabled = false;
             btnCommitIMAGE.Enabled = false;
             btnCommitINFO.Enabled = false;
-            TileEditor.bActivateIFP = true;
+            bActivateIFP = true;
         }
 
-        private void frmTileEditor_Shown(object sender, EventArgs e)
+        private void FrmTileEditor_Shown(object sender, EventArgs e)
         {
             // Here we will initialize some things of the Tile Editor with the Tile pressed
             // and populate the Form with the Tile INFO and IMAGE.
@@ -40,19 +48,19 @@ namespace Aeris
             CheckNextPrevTileButtons();
 
             if (cbActivateIFP.Enabled)
-                Palette.GetIndexFirstBlack(Int32.Parse(txtPaletteID.Text));
+                GetIndexFirstBlack(Int32.Parse(txtPaletteID.Text));
         }
 
         public void PopulateTE()
         {
 
             // Initialize INFO part.
-            TileEditor.InitializeTILEINFO(this, frmAeris);
+            InitializeTILEINFO();
 
             // Initialize GRAPHIC part.
-            TileEditor.InitializeTILEIMAGE(this);
+            InitializeTILEIMAGE();
 
-            if (TileEditor.bIsDirectTile)
+            if (bIsDirectTile)
             {
                 cbActivateIFP.Checked = false;
                 cbActivateIFP.Enabled = false;
@@ -66,9 +74,9 @@ namespace Aeris
             }
             else
             {
-                if (S9.Section9.pal_ignoreFirstPixel[TileEditor.iTEPalette] == 1)
+                if (Section9.pal_ignoreFirstPixel[iTEPalette] == 1)
                 {
-                    cbActivateIFP.Checked = TileEditor.bActivateIFP;
+                    cbActivateIFP.Checked = bActivateIFP;
                     cbActivateIFP.Enabled = true;
                 }
                 else
@@ -87,18 +95,18 @@ namespace Aeris
             }
         }
 
-        private void cbActivateIFP_CheckedChanged(object sender, EventArgs e)
+        private void CbActivateIFP_CheckedChanged(object sender, EventArgs e)
         {
-            TileEditor.bActivateIFP = cbActivateIFP.Checked;
-            TileEditor.InitializeTILEIMAGE(this);
+            bActivateIFP = cbActivateIFP.Checked;
+            InitializeTILEIMAGE();
 
             // Change selected color
-            TileEditor.UpdatePickedColorValues(this);
+            UpdatePickedColorValues();
         }
 
-        private void pbPalette_MouseMove(object sender, MouseEventArgs e)
+        private void PbPalette_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!btnInfo.Checked | TileEditor.bIsDirectTile)
+            if (!btnInfo.Checked | bIsDirectTile)
             {
                 return;
             }
@@ -153,7 +161,7 @@ namespace Aeris
                                                     7, p);
                 }
 
-                cColor = Palette.ARGB_BASEPAL[TileEditor.iTEPalette].ARGB_COLORS[iColor];
+                cColor = ARGB_BASEPAL[iTEPalette].ARGB_COLORS[iColor];
 
                 g.DrawString("Idx: " + iColor.ToString("000") + 
                              "\n\r R: " + cColor.R.ToString("000") +
@@ -167,38 +175,38 @@ namespace Aeris
             // Define Rectangle Part
             rectPALInfoColorPALTE = new Rectangle(xCursor, yCursor, bmpPALInfoColorPALTE.Width, bmpPALInfoColorPALTE.Height);
             bmpPALInfoColorPALTE = ImageTools.ChangeOpacity(bmpPALInfoColorPALTE, 0.8f);
-            TileEditor.bPALInfoColorPALTEMouseMove = true;
+            bPALInfoColorPALTEMouseMove = true;
             pbPalette.Invalidate();
         }
 
-        private void pbPalette_MouseLeave(object sender, EventArgs e)
+        private void PbPalette_MouseLeave(object sender, EventArgs e)
         {
-            if (!btnInfo.Checked | TileEditor.bIsDirectTile)
+            if (!btnInfo.Checked | bIsDirectTile)
             {
                 return;
             }
 
-            Palette.Refresh_Palette(ref pbPalette, TileEditor.iTEPalette);
-            TileEditor.bPALInfoColorPALTEMouseMove = false;
+            Refresh_Palette(ref pbPalette, iTEPalette);
+            bPALInfoColorPALTEMouseMove = false;
             pbPalette.Invalidate();
         }
 
-        private void pbPalette_Paint(object sender, PaintEventArgs e)
+        private void PbPalette_Paint(object sender, PaintEventArgs e)
         {
             if (!btnInfo.Checked)
             {
                 return;
             }
 
-            if (TileEditor.bPALInfoColorPALTEMouseMove)
+            if (bPALInfoColorPALTEMouseMove)
             {
                 e.Graphics.DrawImage(bmpPALInfoColorPALTE, rectPALInfoColorPALTE);
             }
         }
 
-        private void pbTileEdit_MouseMove(object sender, MouseEventArgs e)
+        private void PbTileEdit_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!btnInfo.Checked | TileEditor.bIsDirectTile)
+            if (!btnInfo.Checked | bIsDirectTile)
             {
                 return;
             }
@@ -213,12 +221,12 @@ namespace Aeris
             if (e.X > 255) xCursor = 255;
             if (e.Y > 255) yCursor = 255;
 
-            iColor = TileEditor.TileMatrix[xCursor / TileEditor.iTETileSizeFill,
-                                           yCursor / TileEditor.iTETileSizeFill];
+            iColor = TileMatrix[xCursor / iTETileSizeFill,
+                                yCursor / iTETileSizeFill];
 
             if (cbActivateIFP.Enabled &&
                 cbActivateIFP.Checked &&
-                iColor == Palette.indexFirstBlack)
+                iColor == indexFirstBlack)
                             iColor = 0;
 
             using (Graphics g = Graphics.FromImage(bmpPALInfoColorTE))
@@ -259,7 +267,7 @@ namespace Aeris
                                                     7, p);
                 }
 
-                cColor = Palette.ARGB_BASEPAL[TileEditor.iTEPalette].ARGB_COLORS[iColor];
+                cColor = ARGB_BASEPAL[iTEPalette].ARGB_COLORS[iColor];
 
                 g.DrawString("Idx: " + iColor.ToString("000") + 
                              "\n\r R: " + cColor.R.ToString("000") +
@@ -274,47 +282,47 @@ namespace Aeris
             rectPALInfoColorTE = new Rectangle(xCursor, yCursor, bmpPALInfoColorTE.Width, bmpPALInfoColorTE.Height);
             bmpPALInfoColorTE = ImageTools.ChangeOpacity(bmpPALInfoColorTE, 0.8f);
 
-            TileEditor.bPALInfoColorTEMouseMove = true;
+            bPALInfoColorTEMouseMove = true;
 
             pbTileEdit.Invalidate();
         }
 
-        private void pbTileEdit_MouseLeave(object sender, EventArgs e)
+        private void PbTileEdit_MouseLeave(object sender, EventArgs e)
         {
-            if (!btnInfo.Checked | TileEditor.bIsDirectTile)
+            if (!btnInfo.Checked | bIsDirectTile)
             {
                 return;
             }
 
-            TileEditor.Draw_Tile(ref pbTileEdit, this);
-            TileEditor.bPALInfoColorTEMouseMove = false;
+            Draw_Tile(ref pbTileEdit, cbActivateIFP.Checked);
+            bPALInfoColorTEMouseMove = false;
             pbTileEdit.Invalidate();
         }
 
-        private void pbTileEdit_Paint(object sender, PaintEventArgs e)
+        private void PbTileEdit_Paint(object sender, PaintEventArgs e)
         {
-            if (!btnInfo.Checked | TileEditor.bIsDirectTile)
+            if (!btnInfo.Checked | bIsDirectTile)
             {
                 return;
             }
 
-            if (TileEditor.bPALInfoColorTEMouseMove)
+            if (bPALInfoColorTEMouseMove)
             {
                 e.Graphics.DrawImage(bmpPALInfoColorTE, rectPALInfoColorTE);
             }
         }
 
-        private void btnPickColor_Click(object sender, EventArgs e)
+        private void BtnPickColor_Click(object sender, EventArgs e)
         {
             DrawButtons_Checker();
         }
 
-        private void btnDraw_Click(object sender, EventArgs e)
+        private void BtnDraw_Click(object sender, EventArgs e)
         {
             DrawButtons_Checker();
         }
 
-        private void btnInfo_CheckedChanged(object sender, EventArgs e)
+        private void BtnInfo_CheckedChanged(object sender, EventArgs e)
         {
             DrawButtons_Checker();
         }
@@ -341,7 +349,7 @@ namespace Aeris
             }
         }
 
-        private void pbPalette_MouseDown(object sender, MouseEventArgs e)
+        private void PbPalette_MouseDown(object sender, MouseEventArgs e)
         {
             if (btnPickColor.Checked)
             {
@@ -353,17 +361,17 @@ namespace Aeris
                 if (e.X > 255) xCursor = 255;
                 if (e.Y > 255) yCursor = 255;
 
-                TileEditor.iIndexPickedColor = xCursor / TileEditor.iTETileSize +
-                                               ((yCursor / TileEditor.iTETileSize) * TileEditor.iTETileSize); ;
+                iIndexPickedColor = xCursor / iTETileSize +
+                                    ((yCursor / iTETileSize) * iTETileSize); ;
 
-                TileEditor.UpdatePickedColorValues(this);
+                UpdatePickedColorValues();
             }
         }
 
-        private void pbTileEdit_MouseDown(object sender, MouseEventArgs e)
+        private void PbTileEdit_MouseDown(object sender, MouseEventArgs e)
         {
             int xCursor, yCursor;
-            if (TileEditor.bIsDirectTile)
+            if (bIsDirectTile)
             {
                 return;
             }
@@ -378,134 +386,134 @@ namespace Aeris
             {
                 if (cbActivateIFP.Enabled)
                 {
-                    if (TileEditor.iIndexPickedColor != 0)
+                    if (iIndexPickedColor != 0)
                     {
-                        TileEditor.TileMatrix[xCursor / TileEditor.iTETileSizeFill,
-                                              yCursor / TileEditor.iTETileSizeFill] = (byte)TileEditor.iIndexPickedColor;
+                        TileMatrix[xCursor / iTETileSizeFill,
+                                   yCursor / iTETileSizeFill] = (byte)iIndexPickedColor;
                     }
                     else
                     {
-                        TileEditor.TileMatrix[xCursor / TileEditor.iTETileSizeFill,
-                                              yCursor / TileEditor.iTETileSizeFill] = (byte)Palette.indexFirstBlack;
+                        TileMatrix[xCursor / iTETileSizeFill,
+                                   yCursor / iTETileSizeFill] = (byte)indexFirstBlack;
                     }
                 }
                 else
                 {
-                    TileEditor.TileMatrix[xCursor / TileEditor.iTETileSizeFill,
-                                          yCursor / TileEditor.iTETileSizeFill] = (byte)TileEditor.iIndexPickedColor;
+                    TileMatrix[xCursor / iTETileSizeFill,
+                               yCursor / iTETileSizeFill] = (byte)iIndexPickedColor;
                 }
 
-                TileEditor.InitializeTILEIMAGE(this);
+                InitializeTILEIMAGE();
 
                 btnCommitIMAGE.Enabled = true;
                 CheckCommitButtons();
             }
             else if (btnPickColor.Checked)
             {
-                TileEditor.iIndexPickedColor = TileEditor.TileMatrix[xCursor / TileEditor.iTETileSizeFill,
-                                                                     yCursor / TileEditor.iTETileSizeFill];
+                iIndexPickedColor = TileMatrix[xCursor / iTETileSizeFill,
+                                               yCursor / iTETileSizeFill];
 
-                TileEditor.UpdatePickedColorValues(this);
+                UpdatePickedColorValues();
             }
         }
 
-        private void txtID_TextChanged(object sender, EventArgs e)
+        private void TxtID_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtPaletteID_TextChanged(object sender, EventArgs e)
+        private void TxtPaletteID_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtDestX_TextChanged(object sender, EventArgs e)
+        private void TxtDestX_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtDestY_TextChanged(object sender, EventArgs e)
+        private void TxtDestY_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtBlending_TextChanged(object sender, EventArgs e)
+        private void TxtBlending_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtBlendMode_TextChanged(object sender, EventArgs e)
+        private void TxtBlendMode_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtParam_TextChanged(object sender, EventArgs e)
+        private void TxtParam_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtState_TextChanged(object sender, EventArgs e)
+        private void TxtState_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtTextureID_TextChanged(object sender, EventArgs e)
+        private void TxtTextureID_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtSourceX_TextChanged(object sender, EventArgs e)
+        private void TxtSourceX_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtSourceY_TextChanged(object sender, EventArgs e)
+        private void TxtSourceY_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtTextureID2_TextChanged(object sender, EventArgs e)
+        private void TxtTextureID2_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtSourceX2_TextChanged(object sender, EventArgs e)
+        private void TxtSourceX2_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtSourceY2_TextChanged(object sender, EventArgs e)
+        private void TxtSourceY2_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtBigID_TextChanged(object sender, EventArgs e)
+        private void TxtBigID_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtSourceXBigID_TextChanged(object sender, EventArgs e)
+        private void TxtSourceXBigID_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
         }
 
-        private void txtSourceYBigID_TextChanged(object sender, EventArgs e)
+        private void TxtSourceYBigID_TextChanged(object sender, EventArgs e)
         {
             btnCommitINFO.Enabled = true;
             CheckCommitButtons();
@@ -526,11 +534,11 @@ namespace Aeris
 
                 if (mbResult == DialogResult.Yes)
                 {
-                    TileEditor.TECommitINFO(this, frmAeris);
-                    TileEditor.TECommitIMAGE(frmAeris);
+                    TECommitINFO(this, frmAeris);
+                    TECommitIMAGE(frmAeris);
 
                     // Refresh Texture and Background
-                    frmAeris.RefreshBackground(TileEditor.iTETexture);
+                    frmAeris.RefreshBackground(iTETexture);
                 }
             }
             else
@@ -544,10 +552,10 @@ namespace Aeris
 
                     if (mbResult == DialogResult.Yes)
                     {
-                        TileEditor.TECommitINFO(this, frmAeris);
+                        TECommitINFO(this, frmAeris);
 
                         // Refresh Texture and Background
-                        frmAeris.RefreshBackground(TileEditor.iTETexture);
+                        frmAeris.RefreshBackground(iTETexture);
                     }
                 }
 
@@ -560,10 +568,10 @@ namespace Aeris
 
                     if (mbResult == DialogResult.Yes)
                     {
-                        TileEditor.TECommitIMAGE(frmAeris);
+                        TECommitIMAGE(frmAeris);
 
                         // Refresh Texture and Background
-                        frmAeris.RefreshBackground(TileEditor.iTETexture);
+                        frmAeris.RefreshBackground(iTETexture);
                     }
                 }
             }
@@ -575,27 +583,27 @@ namespace Aeris
         {
             btnNextTile.Enabled = true;
             btnPrevTile.Enabled = true;
-            if (TileEditor.iTEAbsTileNum == 0)
+            if (iTEAbsTileNum == 0)
             {
                 btnPrevTile.Enabled = false;
                 btnNextTile.Enabled = true;
             }
 
             // Let's check we don't go lower than Tile 0 and higher than Tile 256 or max tile.
-            if (TileEditor.iTEAbsTileNum == S9.Section9.Textures[TileEditor.iTETexture].MaxTiles)
+            if (iTEAbsTileNum == Section9.Textures[iTETexture].MaxTiles)
             {
                 btnPrevTile.Enabled = true;
                 btnNextTile.Enabled = false;
             }
 
-//            TileEditor.iTEAbsTileNum = Int32.Parse(ufrmAeris.txtTileTex.Text);
+//            iTEAbsTileNum = Int32.Parse(ufrmAeris.txtTileTex.Text);
 
             btnCommitALL.Enabled = false;
             btnCommitINFO.Enabled = false;
             btnCommitIMAGE.Enabled = false;
         }
 
-        private void btnPrevTile_Click(object sender, EventArgs e)
+        private void BtnPrevTile_Click(object sender, EventArgs e)
         {
             DialogResult mbResult;
 
@@ -605,12 +613,12 @@ namespace Aeris
                 return;
             }
 
-            frmAeris.btnTileLeft_Click(sender, new EventArgs());
+            frmAeris.BtnTileLeft_Click(sender, new EventArgs());
             PopulateTE();
             CheckNextPrevTileButtons();
         }
 
-        private void btnNextTile_Click(object sender, EventArgs e)
+        private void BtnNextTile_Click(object sender, EventArgs e)
         {
             DialogResult mbResult;
 
@@ -620,12 +628,12 @@ namespace Aeris
                 return;
             }
 
-            frmAeris.btnTileRight_Click(sender, new EventArgs());
+            frmAeris.BtnTileRight_Click(sender, new EventArgs());
             PopulateTE();
             CheckNextPrevTileButtons();
         }
 
-        private void frmTileEditor_FormClosing(object sender, FormClosingEventArgs e)
+        private void FrmTileEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
             DialogResult mbResult;
 
@@ -639,7 +647,7 @@ namespace Aeris
             }
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -656,9 +664,9 @@ namespace Aeris
             }
         }
 
-        private void btnCommitINFO_Click(object sender, EventArgs e)
+        private void BtnCommitINFO_Click(object sender, EventArgs e)
         {
-            if (TileEditor.TECommitINFO(this, frmAeris))
+            if (TECommitINFO(this, frmAeris))
             {
                 PopulateTE();
 
@@ -666,13 +674,13 @@ namespace Aeris
                 CheckCommitButtons();
 
                 // Refresh Texture and Background
-                frmAeris.RefreshBackground(TileEditor.iTETexture);
+                frmAeris.RefreshBackground(iTETexture);
             }
         }
 
-        private void btnCommitIMAGE_Click(object sender, EventArgs e)
+        private void BtnCommitIMAGE_Click(object sender, EventArgs e)
         {
-            if (TileEditor.TECommitIMAGE(frmAeris))
+            if (TECommitIMAGE(frmAeris))
             {
                 PopulateTE();
 
@@ -680,15 +688,15 @@ namespace Aeris
                 CheckCommitButtons();
 
                 // Refresh Texture and Background
-                frmAeris.RefreshBackground(TileEditor.iTETexture);
+                frmAeris.RefreshBackground(iTETexture);
             }
         }
 
-        private void btnCommitALL_Click(object sender, EventArgs e)
+        private void BtnCommitALL_Click(object sender, EventArgs e)
         {
-            if (TileEditor.TECommitINFO(this, frmAeris))
+            if (TECommitINFO(this, frmAeris))
             {
-                if (TileEditor.TECommitIMAGE(frmAeris))
+                if (TECommitIMAGE(frmAeris))
                 {
                     PopulateTE();
 
@@ -697,9 +705,154 @@ namespace Aeris
                     btnCommitALL.Enabled = false;
 
                     // Refresh Texture and Background
-                    frmAeris.RefreshBackground(TileEditor.iTETexture);
+                    frmAeris.RefreshBackground(iTETexture);
                 }
             }
         }
+
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        /// Initialization Public procedures
+        ////////////////////////////////////////////////////////////////////////////////////
+        public void InitializeTILEIMAGE()
+        {
+            if (bIsDirectTile)
+            {
+                // Initialize Tile Image in PictureBox (for TileSize 32)
+                Draw_TileDirect(ref pbTileEdit);
+
+                txtPaletteID.Enabled = false;
+            }
+            else
+            {
+                // Initialize Palette PictureBox colors of Tile Editor
+                ImageTools.ClearPictureBox(pbPalette, 1, null);
+                Refresh_Palette(ref pbPalette, iTEPalette);
+
+                // Initialize Tile Image in PictureBox (for TileSize 16)
+                Draw_Tile(ref pbTileEdit, cbActivateIFP.Checked);
+                txtPaletteID.Enabled = true;
+            }
+        }
+
+        public void InitializeTILEINFO()
+        {
+            txtTileLayer.Text = frmAeris.GetLayer();
+            txtTileNum.Text = frmAeris.GetTile();
+
+            iTELayer = Int32.Parse(txtTileLayer.Text);
+            iTETileNum = Int32.Parse(txtTileNum.Text);
+            iTEAbsTileNum = Int32.Parse(frmAeris.GetTileTexture());
+
+            dataTileTE = Section9.Layer[Int32.Parse(txtTileLayer.Text)].
+                                    layerTiles[Int32.Parse(txtTileNum.Text)];
+            dataTileTEBackup = dataTileTE;
+
+            txtID.Text = dataTileTE.ID.ToString();
+            txtPaletteID.Text = dataTileTE.paletteID.ToString();
+
+            iTEPalette = Int32.Parse(txtPaletteID.Text);
+
+            if (iTEPalette > Section4.numPalettes - 1)
+            {
+                iTEPalette = 0;
+            }
+
+            txtWidth.Text = dataTileTE.Width.ToString();
+            txtHeight.Text = dataTileTE.Height.ToString();
+            txtDestX.Text = dataTileTE.destX.ToString();
+            txtDestY.Text = dataTileTE.destY.ToString();
+            txtDepth.Text = dataTileTE.depth.ToString();
+            txtBlending.Text = dataTileTE.blending.ToString();
+            txtBlendMode.Text = dataTileTE.BlendMode.ToString();
+            txtParam.Text = dataTileTE.param.ToString();
+            txtState.Text = dataTileTE.state.ToString();
+            txtTextureID.Text = dataTileTE.textureID.ToString();
+            txtSourceX.Text = dataTileTE.sourceX.ToString();
+            txtSourceY.Text = dataTileTE.sourceY.ToString();
+
+            iTETexture = Int32.Parse(txtTextureID.Text);
+            iTESourceX = Int32.Parse(txtSourceX.Text);
+            iTESourceY = Int32.Parse(txtSourceY.Text);
+
+            txtTextureID2.Text = dataTileTE.textureID2.ToString();
+            txtSourceX2.Text = dataTileTE.sourceX2.ToString();
+            txtSourceY2.Text = dataTileTE.sourceY2.ToString();
+
+            if (dataTileTE.textureID2 > 0)
+            {
+                iTETexture = Int32.Parse(txtTextureID2.Text);
+                iTESourceX = Int32.Parse(txtSourceX2.Text);
+                iTESourceY = Int32.Parse(txtSourceY2.Text);
+            }
+
+            txtBigID.Text = dataTileTE.bigID.ToString();
+            txtSourceXBigID.Text = dataTileTE.sourceXBig.ToString();
+            txtSourceYBigID.Text = dataTileTE.sourceYBig.ToString();
+
+            // Let's initialize some global vars for use in Tile Editor
+            // Get TileSize, 16 or 32.
+            // Normally, 32x32 pixels tiles are in Layer 2-3.
+            // iTETileSize -> Has the real value of TileSize (16 or 32)
+            // iTETileSizeFill -> Has the value \ 4 for calculate some x,y positions
+            // like fill pictureboxes zoomed pixels or get points x/y with mouse.
+            if (iTELayer < 2)
+            {
+                iTETileSize = 16;
+                iTETileSizeFill = 16;
+            }
+            else
+            {
+                iTETileSize = 32;
+                iTETileSizeFill = 8;
+            }
+
+            if (Section9.Textures[iTETexture].Depth > 1)
+            {
+                bIsDirectTile = true;
+                Load_TileMatrix2Bytes();
+            }
+            else
+            {
+                bIsDirectTile = false;
+                Load_TileMatrix();
+            }
+
+            iIndexPickedColor = 0;
+            UpdatePickedColorValues();
+        }
+
+        public void UpdatePickedColorValues()
+        {
+            int indexPAL;
+
+            if (!bIsDirectTile)
+            {
+                indexPAL = iIndexPickedColor;
+
+                if (cbActivateIFP.Enabled)
+                {
+                    if (cbActivateIFP.Checked)
+                    {
+                        if (indexFirstBlack == indexPAL) indexPAL = 0;
+                    }
+                    else
+                    {
+                        if (indexPAL == 0) indexPAL = indexFirstBlack;
+                    }
+                }
+
+                txtIdx.Text = indexPAL.ToString();
+
+                txtR.Text = Section4.dataPalette[iTEPalette].Pal[indexPAL].Red.ToString();
+                txtG.Text = Section4.dataPalette[iTEPalette].Pal[indexPAL].Green.ToString();
+                txtB.Text = Section4.dataPalette[iTEPalette].Pal[indexPAL].Blue.ToString();
+                txtM.Text = Section4.dataPalette[iTEPalette].Pal[indexPAL].Mask.ToString();
+
+                btnColor.BackColor = GetPalColor(iTEPalette, indexPAL);
+            }
+        }
+
+
     }
 }

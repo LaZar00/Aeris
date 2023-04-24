@@ -10,6 +10,12 @@ using System.Windows.Forms;
 
 namespace Aeris
 {
+
+    using static S9;
+
+    using static Palette;
+    using static FileTools;
+
     public static class ImageTools
     {
 
@@ -159,17 +165,17 @@ namespace Aeris
                         }
                         else
                         {
-                            iUpdateTileIndex = iUpdateTileIndex + 1;
+                            iUpdateTileIndex++;
                         }
                     }
                     else
                     {
-                        iUpdateTileIndex = iUpdateTileIndex + 1;
+                        iUpdateTileIndex++;
                     }
                 }
 
                 if (!bUpdate)
-                    iUpdateIndex = iUpdateIndex + 1;
+                    iUpdateIndex = iUpdateIndex++;
             }
 
             if (bUpdate)
@@ -233,7 +239,8 @@ namespace Aeris
             int indexofRGBColor;
 
             // Let's search the RGBColor to mark as used by its strUnsFile (original).
-            indexofRGBColor = lstImagesRGBColors.IndexOf(lstImagesRGBColors.Single(x => (x.strFile == strUnsFile)));
+            indexofRGBColor = lstImagesRGBColors.IndexOf(
+                            lstImagesRGBColors.Single(x => (x.strFile == strUnsFile)));
             stImageRGBColors = lstImagesRGBColors[indexofRGBColor];
 
             if (iLayer < 2)
@@ -262,7 +269,7 @@ namespace Aeris
                 {
                     if (listedImageiRGB.Contains(iRGBColor))
                     {
-                        iCountedMatchedColors = iCountedMatchedColors + 1;
+                        iCountedMatchedColors++;
                     }
                 }
             }
@@ -272,7 +279,7 @@ namespace Aeris
                 {
                     if (iRGB.Contains(iRGBColor))
                     {
-                        iCountedMatchedColors = iCountedMatchedColors + 1;
+                        iCountedMatchedColors++;
                     }
                 }
             }
@@ -323,7 +330,6 @@ namespace Aeris
             iMaxUnswizzledMatchedColors = 0;
 
             iNumTexture = 0;
-            iBestTexture = 9999;
 
             GetListOfColors(bmpUnswizzledTexture, ref iRGBUnswizzled);
             GetListOfColors(bmpSwizzledTexture, ref iRGBSwizzled);
@@ -386,7 +392,7 @@ namespace Aeris
                     }
                 }
 
-                iNumTexture = iNumTexture + 1;
+                iNumTexture++;
             }
 
 
@@ -444,10 +450,10 @@ namespace Aeris
             strHash = "";
 
             // First let's get the hash and texture/palette of the file. This will be the same.
-            FileTools.GetPathTexturePalette(Path.GetDirectoryName(strBaseFileRGBColor), 
-                                            ref strHash,
-                                            ref iFolderTexture,
-                                            ref iFolderPalette);
+            GetPathTexturePalette(Path.GetDirectoryName(strBaseFileRGBColor), 
+                                  ref strHash,
+                                  ref iFolderTexture,
+                                  ref iFolderPalette);
 
             // Let's Check if the Texture_Palette subfolder corresponds to the one of the strBaseFileRGBColor.
             if (iFolderTexture == iFirstTexture & iFolderPalette == iFirstPalette)
@@ -455,7 +461,7 @@ namespace Aeris
                 strBaseFile = Path.GetFileNameWithoutExtension(strBaseFileRGBColor).Split('_');
 
                 strBaseFileRGBColor = Path.GetDirectoryName(strBaseFileRGBColor) + "\\" +
-                                      FileTools.strGlobalFieldName + "_" +
+                                      strGlobalFieldName + "_" +
                                       strBaseFile[strBaseFile.Count() - 5] + "_" +
                                       strBaseFile[strBaseFile.Count() - 4] + "_" +
                                       iUnsParam.ToString("00") + "_" +
@@ -463,7 +469,7 @@ namespace Aeris
 
                 // Used this for semkin_4
                 // Used this (strBaseFile(strBaseFile.Count - 1)) for blin68_2 example and all other fields.
-                switch (FileTools.strGlobalFieldName)
+                switch (strGlobalFieldName)
                 {
                     case "semkin_4":
                     case "woa_3":
@@ -634,14 +640,14 @@ namespace Aeris
             }
         }
 
-        private static ImageCodecInfo GetEncoderInfo(string mimeType)
-        {
-            foreach (ImageCodecInfo codec in ImageCodecInfo.GetImageEncoders())
-                if (codec.MimeType == mimeType)
-                    return codec;
+        //private static ImageCodecInfo GetEncoderInfo(string mimeType)
+        //{
+        //    foreach (ImageCodecInfo codec in ImageCodecInfo.GetImageEncoders())
+        //        if (codec.MimeType == mimeType)
+        //            return codec;
 
-            return null;
-        }
+        //    return null;
+        //}
 
         public static void WriteBitmap(Bitmap bmpTexture, string strFile)
         {
@@ -791,7 +797,7 @@ namespace Aeris
         {
             int iResult;
             byte[,] newTextureMatrix;
-            List<S9.S9_ZList> lstTilesTexture = new List<S9.S9_ZList>();
+            List<S9_ZList> lstTilesTexture = new List<S9_ZList>();
 
             // Let's check first if all the colors are in the palette(s).
             iResult = GetListTilesOfTexture(iTexture, ref lstTilesTexture);
@@ -800,9 +806,9 @@ namespace Aeris
             {
                 // Now we need to update the TextureMatrix of this Texture with the indexes
                 // of the colors for the imported texture.
-                newTextureMatrix = new byte[S9.TEXTURE_WIDTH, S9.TEXTURE_HEIGHT];
+                newTextureMatrix = new byte[TEXTURE_WIDTH, TEXTURE_HEIGHT];
 
-                iResult = S9.Create_TextureMatrix(ref newTextureMatrix,
+                iResult = Create_TextureMatrix(ref newTextureMatrix,
                                                   bmpImported, 
                                                   lstTilesTexture);
 
@@ -822,7 +828,7 @@ namespace Aeris
         {
             int iResult;
             ushort[,] newTextureMatrix2Bytes;
-            List<S9.S9_ZList> lstTilesTexture = new List<S9.S9_ZList>();
+            List<S9_ZList> lstTilesTexture = new List<S9_ZList>();
 
             // Let's check first if all the colors are in the palette(s).
             iResult = GetListTilesOfTexture(iTexture, ref lstTilesTexture);
@@ -831,23 +837,23 @@ namespace Aeris
             {
                 // Now we need to update the TextureMatrix of this Texture with the indexes
                 // of the colors for the imported texture.
-                newTextureMatrix2Bytes = new ushort[S9.TEXTURE_WIDTH, S9.TEXTURE_HEIGHT];
+                newTextureMatrix2Bytes = new ushort[TEXTURE_WIDTH, TEXTURE_HEIGHT];
 
-                iResult = S9.Create_TextureMatrix2Bytes(ref newTextureMatrix2Bytes,
+                iResult = Create_TextureMatrix2Bytes(ref newTextureMatrix2Bytes,
                                                         bmpImported,
                                                         lstTilesTexture);
 
                 // iResult = 0, texture Matrix updated correctly
                 if (iResult == 0)
                     // We now can update the textureMatrix of Section9.
-                    S9.Section9.Textures[iTexture].textureMatrix2Bytes = newTextureMatrix2Bytes;
+                    Section9.Textures[iTexture].textureMatrix2Bytes = newTextureMatrix2Bytes;
             }
 
             return iResult;
         }
 
         public static int GetListTilesOfTexture(int iTexture,
-                                                ref List<S9.S9_ZList> lstTilesTexture)
+                                                ref List<S9_ZList> lstTilesTexture)
         {
             // With this function we will check if the colors of the input image exists
             // in the palette(s) assigned to the diferent tiles.
@@ -858,7 +864,7 @@ namespace Aeris
 
             // Let's retrieve the list of tiles of this texture.
             // We will make this faster if we check the textureID from the beginning.
-            lstTilesTexture = (from itmZList in S9.Section9Z
+            lstTilesTexture = (from itmZList in Section9Z
                                where itmZList.ZTexture == iTexture
                                select itmZList).ToList();
 
@@ -1030,8 +1036,7 @@ namespace Aeris
             }
         }
 
-        public void DrawTextureTileToBackgroundTile(S9.dataTile inputBaseDataTile,
-                                                    int iTexture, int iSrcX, int iSrcY)
+        public void DrawTextureTileToBackgroundTile(int iTexture, int iSrcX, int iSrcY)
         {
             int xTile, yTile;
 
@@ -1039,11 +1044,11 @@ namespace Aeris
             {
                 for (xTile = 0; xTile < Width; xTile++)
                     Bits[xTile + (yTile * Width)] =
-                        S9.textureImage[iTexture].Bits[(iSrcX + xTile) + ((iSrcY + yTile) * S9.TEXTURE_WIDTH)];
+                        textureImage[iTexture].Bits[(iSrcX + xTile) + ((iSrcY + yTile) * TEXTURE_WIDTH)];
             }
         }
 
-        public void Render_Tile(S9.dataTile inputDataTile)
+        public void Render_Tile(DataTile inputDataTile)
         {
             int xTile, yTile, iTexture, iSrcX, iSrcY;
 
@@ -1070,14 +1075,14 @@ namespace Aeris
                     for (xTile = 0; xTile < Width; xTile++)
                     {
                         bgtilePixel = GetPixel(xTile, yTile);
-                        textilePixel = S9.textureImage[iTexture].GetPixel(iSrcX + xTile, iSrcY + yTile);
+                        textilePixel = textureImage[iTexture].GetPixel(iSrcX + xTile, iSrcY + yTile);
 
                         if (bgtilePixel.A != 0)
                             // Put the Color in the tile image of the background
                             if (textilePixel.A != 0)
-                                SetPixel(xTile, yTile, Palette.BlendColor(bgtilePixel,
-                                                                          textilePixel,
-                                                                          inputDataTile.BlendMode));
+                                SetPixel(xTile, yTile, BlendColor(bgtilePixel,
+                                                                  textilePixel,
+                                                                  inputDataTile.BlendMode));
                             else
                                 SetPixel(xTile, yTile, bgtilePixel);
                         else
@@ -1087,7 +1092,7 @@ namespace Aeris
             }
             else
             {
-                DrawTextureTileToBackgroundTile(inputDataTile, iTexture, iSrcX, iSrcY);
+                DrawTextureTileToBackgroundTile(iTexture, iSrcX, iSrcY);
             }
         }
 

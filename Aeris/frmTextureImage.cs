@@ -10,18 +10,17 @@ using System.Windows.Forms;
 
 namespace Aeris
 {
-    public partial class frmTextureImage : Form
+    public partial class FrmTextureImage : Form
     {
-        private frmAeris frmAeris;
 
-        public frmTextureImage(frmAeris frmAeris)
+        public FrmTextureImage(FrmAeris inFrmAeris)
         {
             InitializeComponent();
 
-            this.frmAeris = frmAeris;
+            this.Owner = inFrmAeris;
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             Close();
         }

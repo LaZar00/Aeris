@@ -9,6 +9,11 @@ using System.Collections.Generic;
 
 namespace Aeris
 {
+
+    using static S9;
+
+    using static FileTools;
+
     public class Win32
     {
         [DllImport("kernel32.dll")]
@@ -80,7 +85,7 @@ namespace Aeris
        {
             var strArgs = Environment.GetCommandLineArgs();
           
-            FileTools.strGlobalPath = Application.StartupPath;
+            strGlobalPath = Application.StartupPath;
             iWorkType = 0;
 
             if (strArgs.Count() > 1)
@@ -103,7 +108,7 @@ namespace Aeris
                 bCmd = false;
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new frmAeris());
+                Application.Run(new FrmAeris());
             }
 
             // SendKeys.Send("{ENTER}")
@@ -179,12 +184,12 @@ namespace Aeris
             if (File.Exists(strArgs[2]))
             {
                 // Load Field Into Memory.
-                FileTools.strFileFieldName = Path.GetFileName(strArgs[2]);
-                FileTools.strGlobalFieldName = Path.GetFileNameWithoutExtension(strArgs[2]);
+                strFileFieldName = Path.GetFileName(strArgs[2]);
+                strGlobalFieldName = Path.GetFileNameWithoutExtension(strArgs[2]);
 
                 if (bVerbose)
                     Console.WriteLine("Loading PC Uncompressed Field `" +
-                                               FileTools.strGlobalFieldName + "´.");
+                                               strGlobalFieldName + "´.");
 
                 // LOAD FIELD
                 if (Convert.ToBoolean(LoadFieldCmd(strArgs[2])))
@@ -218,7 +223,7 @@ namespace Aeris
                         {
                             if (bVerbose)
                                 Console.WriteLine("Unswizzle process of All Base Images for Field `" +
-                                    FileTools.strGlobalFieldName + "´ DONE.");
+                                    strGlobalFieldName + "´ DONE.");
                         }
                         else if (iResult == -4)
                         {
@@ -228,7 +233,7 @@ namespace Aeris
                         else
                         {
                             Console.WriteLine("ERROR: The Unswizzle process of All Base Images for Field `" +
-                                FileTools.strGlobalFieldName + "´ has failed.");
+                                strGlobalFieldName + "´ has failed.");
                         }
                     }
                     // 5 Export All Base Textures of the field
@@ -236,12 +241,12 @@ namespace Aeris
                     {
                         if (bVerbose)
                             Console.WriteLine("Export process of All Base Textures for Field `" +
-                                FileTools.strGlobalFieldName + "´ DONE.");
+                                strGlobalFieldName + "´ DONE.");
                     }
                     else
                     {
                         Console.WriteLine("ERROR: The Export process of All Base Textures for Field `" +
-                            FileTools.strGlobalFieldName + "´ has failed.");
+                            strGlobalFieldName + "´ has failed.");
                     }
                 }
                 else
@@ -279,12 +284,12 @@ namespace Aeris
                     {
                         if (bVerbose)
                             Console.WriteLine("Swizzle process for Field `" +
-                                FileTools.strGlobalFieldName + "´ DONE.");
+                                strGlobalFieldName + "´ DONE.");
                     }
                     else
                     {
                         Console.WriteLine("ERROR: The Swizzle process for Field `" +
-                            FileTools.strGlobalFieldName + "´ has failed.");
+                            strGlobalFieldName + "´ has failed.");
                     }
                 }
                 else if (iWorkType == 2)
@@ -294,12 +299,12 @@ namespace Aeris
                     {
                         if (bVerbose)
                             Console.WriteLine("Unswizzle process for Field `" +
-                                FileTools.strGlobalFieldName + "´ DONE.");
+                                strGlobalFieldName + "´ DONE.");
                     }
                     else
                     {
                         Console.WriteLine("ERROR: The Unswizzle process for Field `" +
-                            FileTools.strGlobalFieldName + "´ has failed.");
+                            strGlobalFieldName + "´ has failed.");
                     }
                 }
                 // 4 Swizzle All Base Images of the field (external)
@@ -308,12 +313,12 @@ namespace Aeris
                 {
                     if (bVerbose)
                         Console.WriteLine("Swizzle process of All Base Images for Field `" +
-                            FileTools.strGlobalFieldName + "´ DONE.");
+                            strGlobalFieldName + "´ DONE.");
                 }
                 else
                 {
                     Console.WriteLine("ERROR: Swizzle process of All Base Images for Field `" +
-                        FileTools.strGlobalFieldName + "´ has failed.");
+                        strGlobalFieldName + "´ has failed.");
                 }
             }
         }
@@ -322,18 +327,17 @@ namespace Aeris
         {
             try
             {
-                FileTools.Load_Field(strFileField);
+                Load_Field(strFileField);
 
                 // Prepare ZList.
-                S9.Load_ZList(null);
+                Load_ZList(null);
 
                 // Load TileSeparation File if there is any.
-                if (File.Exists(FileTools.strGlobalPath + "\\tileseparation\\" +
-                                FileTools.strGlobalFieldName + ".txt"))
+                if (File.Exists(strGlobalPath + "\\tileseparation\\" + strGlobalFieldName + ".txt"))
                 {
-                    SwizzleHash.Read_TileSeparation(FileTools.strGlobalPath +
-                                                                 "\\tileseparation\\" +
-                                                                 FileTools.strGlobalFieldName + ".txt");
+                    SwizzleHash.Read_TileSeparation(strGlobalPath +
+                                                    "\\tileseparation\\" +
+                                                    strGlobalFieldName + ".txt");
 
                     if (bVerbose)
                     {
@@ -345,6 +349,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 return 0;
             }
         }
@@ -395,9 +400,9 @@ namespace Aeris
 
                 foreach (var strFolderTexPalPath in strFoldersTexPalList)
                 {
-                    iResult = FileTools.GetPathTexturePalette(strFolderTexPalPath, 
-                                                              ref strHash, 
-                                                              ref iTexture, ref iPalette);
+                    iResult = GetPathTexturePalette(strFolderTexPalPath, 
+                                                    ref strHash, 
+                                                    ref iTexture, ref iPalette);
 
                     strFolderName = strHash;
 
@@ -458,7 +463,7 @@ namespace Aeris
                                     case 1:
                                         {
                                             TimeDiff = TimeOut - TimeIn;
-                                            TotalTime = TotalTime + TimeDiff;
+                                            TotalTime += TimeDiff;
                                             if (bVerbose)
                                             {
                                                 string strPrint = string.Format("DONE: {0,-40}" + 
@@ -469,7 +474,7 @@ namespace Aeris
                                                 Console.WriteLine(strPrint);
                                             }
 
-                                            iCounter = iCounter + 1;
+                                            iCounter++;
                                             break;
                                         }
 
@@ -499,6 +504,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 iResult = -1;
             }
 
@@ -526,8 +532,7 @@ namespace Aeris
 
 
             // Let's load HashExceptions list (if exists).
-            strHashExceptionsFile = FileTools.strGlobalPath + "\\hashexceptions\\" +
-                                    FileTools.strGlobalFieldName + ".txt";
+            strHashExceptionsFile = strGlobalPath + "\\hashexceptions\\" + strGlobalFieldName + ".txt";
 
             if (File.Exists(strHashExceptionsFile))
             {
@@ -579,14 +584,14 @@ namespace Aeris
                     strHash = "";
                     strFileName = Path.GetFileNameWithoutExtension(strLongFileName);
 
-                    bIsHashed = FileTools.SplitFileNameAndCheckHash(strFileName, 
-                                                                    ref strFieldName,
-                                                                    ref iTexture,
-                                                                    ref iPalette,
-                                                                    ref iParam,
-                                                                    ref iState,
-                                                                    ref iTileID,
-                                                                    ref strHash);
+                    bIsHashed = SplitFileNameAndCheckHash(strFileName, 
+                                                          ref strFieldName,
+                                                          ref iTexture,
+                                                          ref iPalette,
+                                                          ref iParam,
+                                                          ref iState,
+                                                          ref iTileID,
+                                                          ref strHash);
 
 
                     // If not hashed will not process the file right now.
@@ -596,7 +601,7 @@ namespace Aeris
                                           ".png´ not seems to be a hashed one.");
                     }
                     // Let's check that the field name of the texture matches the field opened of the tool.
-                    else if (!FileTools.ValidateFilewithField(strFieldName))
+                    else if (!ValidateFilewithField(strFieldName))
                     {
                         Console.WriteLine("WARNING: The file `" + strFileName + 
                                           ".png´ is not of the loaded field.");
@@ -700,7 +705,7 @@ namespace Aeris
                                                strUnsFile;
 
                                 TimeDiff = TimeOut - TimeIn;
-                                TotalTime = TotalTime + TimeDiff;
+                                TotalTime += TimeDiff;
 
                                 if (bVerbose)
                                 {
@@ -710,7 +715,7 @@ namespace Aeris
                                     Console.WriteLine(strPrint);
                                 }
 
-                                iCounter = iCounter + 1;
+                                iCounter++;
                             }
 
                             bmpInputTexture.Dispose();
@@ -734,6 +739,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 iResult = -1;
             }
 
@@ -743,7 +749,6 @@ namespace Aeris
         public static int UnswizzleAllInternalBaseTextures()
         {
             int iResult;
-            iResult = 0;
 
             try
             {
@@ -751,6 +756,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 iResult = -1;
             }
 
@@ -767,21 +773,22 @@ namespace Aeris
 
             try
             {
-                for (iNumTexture = 0; iNumTexture < S9.MAX_NUM_TEXTURES; iNumTexture++)
+                for (iNumTexture = 0; iNumTexture < MAX_NUM_TEXTURES; iNumTexture++)
                 {
-                    if (S9.textureImage[iNumTexture] != null)
+                    if (textureImage[iNumTexture] != null)
                     {
                         strTextureFile = strOutputFolder + "\\" +
-                                         FileTools.strGlobalFieldName + "_" + 
+                                         strGlobalFieldName + "_" + 
                                          iNumTexture.ToString("00") + "_00.png";
 
-                        ImageTools.WriteBitmap(S9.textureImage[iNumTexture].Bitmap,
+                        ImageTools.WriteBitmap(textureImage[iNumTexture].Bitmap,
                                                strTextureFile);
                     }
                 }
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 iResult = -1;
             }
 
@@ -794,7 +801,6 @@ namespace Aeris
             string strProcessFileName;
             RichTextBox rtbresult = null;
 
-            iResult = 0;
             strProcessFileName = "";
 
             try
@@ -821,7 +827,7 @@ namespace Aeris
                             }
                         case 3:
                             {
-                                Console.WriteLine("The file '" + FileTools.strGlobalFieldName +
+                                Console.WriteLine("The file '" + strGlobalFieldName +
                                                   "_BI.txt' does not exists in the selected " + "folder.");
                                 break;
                             }
@@ -837,6 +843,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 iResult = -1;
             }
 

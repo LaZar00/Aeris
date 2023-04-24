@@ -26,12 +26,17 @@ using System.Windows.Forms;
 
 namespace Aeris
 {
+
+    using static S9;
+
+    using static FileTools;
+
     public static class SwizzleBase
     {
 
         // Structure to help create Unswizzled Base Images when Exporting All Base Images (BI) process and
         // reverse process to create Swizzled Base Textures from these Unswizzled Base Images.
-        public partial struct st_BI
+        public partial struct St_BI
         {
             public string strFileName;                    // This is only useful for the Swizzle
             public int iLayer;
@@ -43,7 +48,7 @@ namespace Aeris
             public int iSecondaryLow15ByPal;
             public bool bHigh15;
             public int iUniqueSublayerID;
-            public HashSet<st_JoinSublayerIDs> hsJoinSublayerIDs;
+            public HashSet<St_JoinSublayerIDs> hsJoinSublayerIDs;
             public bool bTileSeparation;
             public int iIndexTileSeparation;
             public Bitmap bmpBaseImage;
@@ -53,38 +58,38 @@ namespace Aeris
             public int iDuplicateDestParamHigh15;     // We will use this to know the level of duplication by Param for Tex > 14
         }
 
-        public partial struct st_UniqueSublayerID
+        public partial struct St_UniqueSublayerID
         {
             public int iUniqueSublayerID;
             public int iParam;
             public int iState;
         }
 
-        public partial struct st_JoinSublayerIDs
+        public partial struct St_JoinSublayerIDs
         {
             public int iMainTileID;
             public HashSet<int> hsSecondaryTileIDs;
         }
 
-        public partial struct st_High15ByPal
+        public partial struct St_High15ByPal
         {
             public int iMainPalette;
             public int iSecondaryPalette;
         }
 
-        public partial struct st_Low15ByPal
+        public partial struct St_Low15ByPal
         {
             public int iMainPalette;
             public int iSecondaryPalette;
         }
 
-        public partial struct st_TileSeparationLayer
+        public partial struct St_TileSeparationLayer
         {
             public int iLayer;
             public List<int> lstTilesSeparated;  // This is for fields like "blue_2", and the detach process.
         }
 
-        public static st_BI[] lstUnswizzledBaseImages;
+        public static St_BI[] lstUnswizzledBaseImages;
         public static SortedList<string, Bitmap> lstSwizzledBaseTextures;
         public static List<DirectBitmap> lstSwizzledExternalBaseTextures;
 
@@ -109,20 +114,20 @@ namespace Aeris
             }
         }
 
-        public static void lstUnswizzledBaseImages_NewEntry(bool bInitializeBitmap, int iLayer)
+        public static void LstUnswizzledBaseImages_NewEntry(bool bInitializeBitmap, int iLayer)
         {
             // Vars to unify PosX/PosX of Global Layer position            
             int iLayerMaxWidthGlobal, iLayerMaxHeightGlobal;
 
             if (iLayer < 2)
             {
-                iLayerMaxWidthGlobal = S9.iLayersMaxWidthL0 * iScaleFactor;
-                iLayerMaxHeightGlobal = S9.iLayersMaxHeightL0 * iScaleFactor;
+                iLayerMaxWidthGlobal = iLayersMaxWidthL0 * iScaleFactor;
+                iLayerMaxHeightGlobal = iLayersMaxHeightL0 * iScaleFactor;
             }
             else
             {
-                iLayerMaxWidthGlobal = S9.iLayersMaxWidthL2 * iScaleFactor;
-                iLayerMaxHeightGlobal = S9.iLayersMaxHeightL2 * iScaleFactor;
+                iLayerMaxWidthGlobal = iLayersMaxWidthL2 * iScaleFactor;
+                iLayerMaxHeightGlobal = iLayersMaxHeightL2 * iScaleFactor;
             }
 
             if (lstUnswizzledBaseImages == null)
@@ -164,19 +169,19 @@ namespace Aeris
         // 
         // ------------------------------------------------------------------------------------------------
 
-        public static void DrawTileInBaseImage(S9.S9_ZList itmZList, int iIndexBI)
+        public static void DrawTileInBaseImage(S9_ZList itmZList, int iIndexBI)
         {
             int iLayerbmpPosXGlobal, iLayerbmpPosYGlobal;
 
             if (itmZList.ZLayer < 2)
             {
-                iLayerbmpPosXGlobal = S9.iLayersbmpPosXL0 * iScaleFactor;
-                iLayerbmpPosYGlobal = S9.iLayersbmpPosYL0 * iScaleFactor;
+                iLayerbmpPosXGlobal = iLayersbmpPosXL0 * iScaleFactor;
+                iLayerbmpPosYGlobal = iLayersbmpPosYL0 * iScaleFactor;
             }
             else
             {
-                iLayerbmpPosXGlobal = S9.iLayersbmpPosXL2 * iScaleFactor;
-                iLayerbmpPosYGlobal = S9.iLayersbmpPosYL2 * iScaleFactor;
+                iLayerbmpPosXGlobal = iLayersbmpPosXL2 * iScaleFactor;
+                iLayerbmpPosYGlobal = iLayersbmpPosYL2 * iScaleFactor;
             }
 
             using (Graphics g = Graphics.FromImage(lstUnswizzledBaseImages[iIndexBI].bmpBaseImage))
@@ -196,7 +201,7 @@ namespace Aeris
                 }
                 else
                 {
-                    g.DrawImage(S9.textureImage[itmZList.ZTexture].Bitmap,
+                    g.DrawImage(textureImage[itmZList.ZTexture].Bitmap,
                                 new Rectangle(iLayerbmpPosXGlobal + itmZList.ZDestX * iScaleFactor,
                                               iLayerbmpPosYGlobal + itmZList.ZDestY * iScaleFactor,
                                               itmZList.ZTileSize * iScaleFactor,
@@ -211,13 +216,13 @@ namespace Aeris
 
             //using (Graphics g = Graphics.FromImage(lstUnswizzledBaseImages[iIndexBI].bmpBaseImage))
             //{
-            //    g.DrawImage(S9.Section9.Layer[itmZList.ZLayer].layerTiles[itmZList.ZTile].imgTile,
-            //                S9.iLayersbmpPosX + itmZList.ZDestX,
-            //                S9.iLayersbmpPosY + itmZList.ZDestY);
+            //    g.DrawImage(Section9.Layer[itmZList.ZLayer].layerTiles[itmZList.ZTile].imgTile,
+            //                iLayersbmpPosX + itmZList.ZDestX,
+            //                iLayersbmpPosY + itmZList.ZDestY);
             //}
         }
 
-        public static void UpdateTileByLayerInBaseImage(S9.S9_ZList itmZList)
+        public static void UpdateTileByLayerInBaseImage(S9_ZList itmZList)
         {
             bool bFound;
             int iIndexBI;
@@ -246,7 +251,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -254,11 +259,11 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") +
                                                                 itmZList.ZTexture.ToString("00") +
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -272,7 +277,7 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByLayerInBaseImageHigh15(S9.S9_ZList itmZList)
+        public static void UpdateTileByLayerInBaseImageHigh15(S9_ZList itmZList)
         {
             bool bFound;
             int iIndexBI;
@@ -301,7 +306,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -309,14 +314,14 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add special tile data
                 lstUnswizzledBaseImages[iIndexBI].bHigh15 = true;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") +
                                                                 itmZList.ZTexture.ToString("00") +
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -330,7 +335,7 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByParamInBaseImage(S9.S9_ZList itmZList)
+        public static void UpdateTileByParamInBaseImage(S9_ZList itmZList)
         {
             bool bFound;
             int iIndexBI;
@@ -360,7 +365,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -369,11 +374,11 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") +
                                                                 itmZList.ZTexture.ToString("00") +
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -388,7 +393,7 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByParamInBaseImageHigh15(S9.S9_ZList itmZList)
+        public static void UpdateTileByParamInBaseImageHigh15(S9_ZList itmZList)
         {
             bool bFound;
             int iIndexBI;
@@ -419,7 +424,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -427,14 +432,14 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add special tile data
                 lstUnswizzledBaseImages[iIndexBI].bHigh15 = true;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") +
                                                                 itmZList.ZTexture.ToString("00") +
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -449,7 +454,7 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByLayerInBaseImageSameDest(S9.S9_ZList itmZList, int iDuplicateDest)
+        public static void UpdateTileByLayerInBaseImageSameDest(S9_ZList itmZList, int iDuplicateDest)
         {
             bool bFound;
             int iIndexBI;
@@ -479,7 +484,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -487,14 +492,14 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add special tile data
                 lstUnswizzledBaseImages[iIndexBI].iDuplicateDest = iDuplicateDest;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") +
                                                                 itmZList.ZTexture.ToString("00") +
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -509,7 +514,7 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByLayerInBaseImageSameDestHigh15(S9.S9_ZList itmZList, int iDuplicateDest)
+        public static void UpdateTileByLayerInBaseImageSameDestHigh15(S9_ZList itmZList, int iDuplicateDest)
         {
             bool bFound;
             int iIndexBI;
@@ -539,7 +544,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -547,7 +552,7 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add special tile data
@@ -555,7 +560,7 @@ namespace Aeris
                 lstUnswizzledBaseImages[iIndexBI].iDuplicateDestHigh15 = iDuplicateDest;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") +
                                                                 itmZList.ZTexture.ToString("00") +
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -570,7 +575,7 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByParamInBaseImageSameDest(S9.S9_ZList itmZList, int iDuplicateDest)
+        public static void UpdateTileByParamInBaseImageSameDest(S9_ZList itmZList, int iDuplicateDest)
         {
             bool bFound;
             int iIndexBI;
@@ -601,7 +606,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -609,14 +614,14 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add special tile data
                 lstUnswizzledBaseImages[iIndexBI].iDuplicateDestParam = iDuplicateDest;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") +
                                                                 itmZList.ZTexture.ToString("00") +
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -631,7 +636,7 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByParamInBaseImageSameDestHigh15(S9.S9_ZList itmZList, int iDuplicateDest)
+        public static void UpdateTileByParamInBaseImageSameDestHigh15(S9_ZList itmZList, int iDuplicateDest)
         {
             bool bFound;
             int iIndexBI;
@@ -662,7 +667,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -670,7 +675,7 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add special tile data
@@ -678,7 +683,7 @@ namespace Aeris
                 lstUnswizzledBaseImages[iIndexBI].iDuplicateDestParamHigh15 = iDuplicateDest;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") +
                                                                 itmZList.ZTexture.ToString("00") +
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -693,7 +698,7 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByTileIDInBaseImage(S9.S9_ZList itmZList)
+        public static void UpdateTileByTileIDInBaseImage(S9_ZList itmZList)
         {
             bool bFound;
             int iIndexBI;
@@ -724,7 +729,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -732,14 +737,14 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add special tile data
                 lstUnswizzledBaseImages[iIndexBI].iUniqueSublayerID = itmZList.ZTileID;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") +
                                                                 itmZList.ZTexture.ToString("00") +
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -754,7 +759,7 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByTileIDInBaseImageHigh15(S9.S9_ZList itmZList)
+        public static void UpdateTileByTileIDInBaseImageHigh15(S9_ZList itmZList)
         {
             bool bFound;
             int iIndexBI;
@@ -785,7 +790,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -793,7 +798,7 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add special tile data
@@ -801,7 +806,7 @@ namespace Aeris
                 lstUnswizzledBaseImages[iIndexBI].bHigh15 = true;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") +
                                                                 itmZList.ZTexture.ToString("00") +
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -816,11 +821,11 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByJoinTileIDInBaseImage(S9.S9_ZList itmZList, int iMainTileID)
+        public static void UpdateTileByJoinTileIDInBaseImage(S9_ZList itmZList, int iMainTileID)
         {
             bool bFound;
             int iIndexBI, iIndexJoinedTileIDs;
-            st_JoinSublayerIDs itmJoinSublayerIDs;
+            St_JoinSublayerIDs itmJoinSublayerIDs;
 
             // Locate the image to be updated (or create new if needed) by Param/State.
             bFound = false;
@@ -858,19 +863,19 @@ namespace Aeris
                                 }
                                 else
                                 {
-                                    iIndexJoinedTileIDs = iIndexJoinedTileIDs + 1;
+                                    iIndexJoinedTileIDs++;
                                 }
                             }
                         }
 
                         if (!bFound)
                         {
-                            iIndexBI = iIndexBI + 1;
+                            iIndexBI++;
                         }
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -878,18 +883,18 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Prepare JoinSublayerIDs
-                lstUnswizzledBaseImages[iIndexBI].hsJoinSublayerIDs = new HashSet<st_JoinSublayerIDs>();
+                lstUnswizzledBaseImages[iIndexBI].hsJoinSublayerIDs = new HashSet<St_JoinSublayerIDs>();
                 itmJoinSublayerIDs.iMainTileID = iMainTileID;
                 itmJoinSublayerIDs.hsSecondaryTileIDs = new HashSet<int>();
                 lstUnswizzledBaseImages[iIndexBI].hsJoinSublayerIDs.Add(itmJoinSublayerIDs);
                 iIndexJoinedTileIDs = lstUnswizzledBaseImages[iIndexBI].hsJoinSublayerIDs.Count - 1;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") +
                                                                 itmZList.ZTexture.ToString("00") +
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -910,7 +915,7 @@ namespace Aeris
             }
         }
 
-        public static void UpdateTileByPaletteInBaseImageHigh15(S9.S9_ZList itmZList, 
+        public static void UpdateTileByPaletteInBaseImageHigh15(S9_ZList itmZList, 
                                                          int iMainHigh15ByPal, int iSecondaryHigh15ByPal)
         {
             bool bFound;
@@ -930,7 +935,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -938,7 +943,7 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add special tile data
@@ -947,7 +952,7 @@ namespace Aeris
                 lstUnswizzledBaseImages[iIndexBI].bHigh15 = true;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" + 
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" + 
                                                                 itmZList.ZLayer.ToString("0") + 
                                                                 itmZList.ZTexture.ToString("00") + 
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -962,7 +967,7 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByPaletteInBaseImageLow15(S9.S9_ZList itmZList, 
+        public static void UpdateTileByPaletteInBaseImageLow15(S9_ZList itmZList, 
                                                         int iMainLow15ByPal, int iSecondaryLow15ByPal)
         {
             bool bFound;
@@ -992,7 +997,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -1000,7 +1005,7 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add special tile data
@@ -1008,7 +1013,7 @@ namespace Aeris
                 lstUnswizzledBaseImages[iIndexBI].iSecondaryLow15ByPal = iSecondaryLow15ByPal;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" + 
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" + 
                                                                 itmZList.ZLayer.ToString("0") + 
                                                                 itmZList.ZTexture.ToString("00") + 
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -1023,9 +1028,8 @@ namespace Aeris
             DrawTileInBaseImage(itmZList, iIndexBI);
         }
 
-        public static void UpdateTileByTileSeparationInBaseImage(S9.S9_ZList itmZList, 
-                                                          int iIndexTileSeparation, 
-                                                          List<st_TileSeparationLayer> lstTileSeparation)
+        public static void UpdateTileByTileSeparationInBaseImage(S9_ZList itmZList, 
+                                                                 int iIndexTileSeparation)
         {
             bool bFound;
             int iIndexBI;
@@ -1055,7 +1059,7 @@ namespace Aeris
                     }
                     else
                     {
-                        iIndexBI = iIndexBI + 1;
+                        iIndexBI++;
                     }
                 }
             }
@@ -1063,7 +1067,7 @@ namespace Aeris
             if (!bFound)
             {
                 // Create new image/entry in lstUnswizzledBaseImages
-                lstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
+                LstUnswizzledBaseImages_NewEntry(true, itmZList.ZLayer);
                 iIndexBI = lstUnswizzledBaseImages.Count() - 1;
 
                 // Add special tile data
@@ -1073,7 +1077,7 @@ namespace Aeris
                     lstUnswizzledBaseImages[iIndexBI].bHigh15 = true;
 
                 // Add basic tile data
-                lstUnswizzledBaseImages[iIndexBI].strFileName = FileTools.strGlobalFieldName + "_" +
+                lstUnswizzledBaseImages[iIndexBI].strFileName = strGlobalFieldName + "_" +
                                                                 itmZList.ZLayer.ToString("0") + 
                                                                 itmZList.ZTexture.ToString("00") + 
                                                                 itmZList.ZTile.ToString("0000") + ".png";
@@ -1091,13 +1095,13 @@ namespace Aeris
         public static int UnswizzleFieldTexturesToBaseImages(string strOutputFolder)
         {
 
-            var sortZList = new List<S9.S9_ZList>();
-            var hsUniqueSublayerID = new HashSet<st_UniqueSublayerID>();
-            var hsJoinSublayerIDs = new HashSet<st_JoinSublayerIDs>();
-            var lstHigh15ByPal = new List<st_High15ByPal>();
-            var lstLow15ByPal = new List<st_Low15ByPal>();
-            List<st_TileSeparationLayer> lstTileSeparation;
-            st_UniqueSublayerID itmUniqueSublayerID;
+            var sortZList = new List<S9_ZList>();
+            var hsUniqueSublayerID = new HashSet<St_UniqueSublayerID>();
+            var hsJoinSublayerIDs = new HashSet<St_JoinSublayerIDs>();
+            var lstHigh15ByPal = new List<St_High15ByPal>();
+            var lstLow15ByPal = new List<St_Low15ByPal>();
+            List<St_TileSeparationLayer> lstTileSeparation;
+            St_UniqueSublayerID itmUniqueSublayerID;
 
             int iResult;
             int iLayer, iParam, iState, iTileID;
@@ -1133,7 +1137,7 @@ namespace Aeris
                 // sortZItem.ZTexture,
                 // sortZItem.ZTile).ToList()
 
-                sortZList = (from sortZItem in S9.Section9Z
+                sortZList = (from sortZItem in Section9Z
                              where (sortZItem.ZTexture < 0xF | sortZItem.ZTexture > 0x19) &
                                    (sortZItem.ZDestX > -2500 & sortZItem.ZDestX < 5000)
                              orderby sortZItem.ZLayer,
@@ -1143,7 +1147,7 @@ namespace Aeris
                                      sortZItem.ZState
                              select sortZItem).ToList();
 
-                sortZList = sortZList.Concat(from sortZItem in S9.Section9Z
+                sortZList = sortZList.Concat(from sortZItem in Section9Z
                                              where (sortZItem.ZTexture > 0xE & sortZItem.ZTexture < 0x1A) &
                                                    (sortZItem.ZDestX > -2500 & sortZItem.ZDestX < 5000)
                                              orderby sortZItem.ZLayer,
@@ -1173,7 +1177,7 @@ namespace Aeris
                 iDestXParamHigh15 = 9999;
                 iDestYParamHigh15 = 9999;
 
-                foreach (S9.S9_ZList itmZList in sortZList)
+                foreach (S9_ZList itmZList in sortZList)
                 {
 
                     iTileAbs = itmZList.ZTileAbs;
@@ -1241,7 +1245,7 @@ namespace Aeris
                     {
 
                         // Update Tile in Base Image by TileSeparation
-                        UpdateTileByTileSeparationInBaseImage(itmZList, iIndexTileSeparation, lstTileSeparation);
+                        UpdateTileByTileSeparationInBaseImage(itmZList, iIndexTileSeparation);
                     }
                     else if (itmZList.ZLayer == 1 &&
                              hsUniqueSublayerID.Count > 0 &&
@@ -1306,7 +1310,7 @@ namespace Aeris
                                 if (itmZList.ZDestX == iDestXHigh15 &
                                     itmZList.ZDestY == iDestYHigh15)
                                 {
-                                    iDuplicateDestHigh15 = iDuplicateDestHigh15 + 1;
+                                    iDuplicateDestHigh15++;
                                     UpdateTileByLayerInBaseImageSameDestHigh15(itmZList, iDuplicateDestHigh15);
                                 }
                                 else
@@ -1323,7 +1327,7 @@ namespace Aeris
                                 if (itmZList.ZDestX == iDestX &
                                     itmZList.ZDestY == iDestY)
                                 {
-                                    iDuplicateDest = iDuplicateDest + 1;
+                                    iDuplicateDest++;
                                     UpdateTileByLayerInBaseImageSameDest(itmZList, iDuplicateDest);
                                 }
                                 else
@@ -1343,7 +1347,7 @@ namespace Aeris
                                 itmZList.ZParam == iParam &
                                 itmZList.ZState == iState)
                             {
-                                iDuplicateDestParamHigh15 = iDuplicateDestParamHigh15 + 1;
+                                iDuplicateDestParamHigh15++;
                                 UpdateTileByParamInBaseImageSameDestHigh15(itmZList, iDuplicateDestParamHigh15);
                             }
                             else
@@ -1364,7 +1368,7 @@ namespace Aeris
                                 itmZList.ZParam == iParam &
                                 itmZList.ZState == iState)
                             {
-                                iDuplicateDestParam = iDuplicateDestParam + 1;
+                                iDuplicateDestParam++;
                                 UpdateTileByParamInBaseImageSameDest(itmZList, iDuplicateDestParam);
                             }
                             else
@@ -1397,14 +1401,15 @@ namespace Aeris
                 int iTileAbsError = 0;
 
                 iTileAbsError = iTileAbs;
-
+                
+                strExceptionVar = ex.Message;
                 iResult = -1;
             }
 
             return iResult;
         }
 
-        public static int IsTileSeparation(S9.S9_ZList itmZList, List<st_TileSeparationLayer> lstTileSeparation)
+        public static int IsTileSeparation(S9_ZList itmZList, List<St_TileSeparationLayer> lstTileSeparation)
         {
             int iIndexTileSeparation;
             int iTileSeparationCounter;
@@ -1418,14 +1423,14 @@ namespace Aeris
                 }
                 else
                 {
-                    iTileSeparationCounter = iTileSeparationCounter + 1;
+                    iTileSeparationCounter++;
                 }
             }
 
             return iIndexTileSeparation;
         }
 
-        public static int IsHigh15ByPal(S9.S9_ZList itmZList, List<st_High15ByPal> lstHigh15ByPal)
+        public static int IsHigh15ByPal(S9_ZList itmZList, List<St_High15ByPal> lstHigh15ByPal)
         {
             int iResult;
             int iHigh15ByPalCounter;
@@ -1439,14 +1444,14 @@ namespace Aeris
                 }
                 else
                 {
-                    iHigh15ByPalCounter = iHigh15ByPalCounter + 1;
+                    iHigh15ByPalCounter++;
                 }
             }
 
             return iResult;
         }
 
-        public static int IsLow15ByPal(S9.S9_ZList itmZList, List<st_Low15ByPal> lstLow15ByPal)
+        public static int IsLow15ByPal(S9_ZList itmZList, List<St_Low15ByPal> lstLow15ByPal)
         {
             int iResult;
             int iLow15ByPalCounter;
@@ -1460,14 +1465,14 @@ namespace Aeris
                 }
                 else
                 {
-                    iLow15ByPalCounter = iLow15ByPalCounter + 1;
+                    iLow15ByPalCounter++;
                 }
             }
 
             return iResult;
         }
 
-        public static int MustJoinTileID(S9.S9_ZList itmZList, HashSet<st_JoinSublayerIDs> hsJoinSublayerIDs)
+        public static int MustJoinTileID(S9_ZList itmZList, HashSet<St_JoinSublayerIDs> hsJoinSublayerIDs)
         {
             int iMainTileID;
             iMainTileID = -1;
@@ -1520,17 +1525,17 @@ namespace Aeris
         // The rest of tiles that do not use any of this keys will use the standard algorithm, presumably
         // the same as Palmer. But you have a bit more of control for some things.
 
-        public static int Read_BITemplates(ref HashSet<st_UniqueSublayerID> hsUniqueSublayerID, 
-                                           ref HashSet<st_JoinSublayerIDs> hsJoinSublayerIDs, 
-                                           ref List<st_High15ByPal> lstHigh15ByPal, 
-                                           ref List<st_Low15ByPal> lstLow15ByPal, 
-                                           ref List<st_TileSeparationLayer> lstTileSeparation)
+        public static int Read_BITemplates(ref HashSet<St_UniqueSublayerID> hsUniqueSublayerID, 
+                                           ref HashSet<St_JoinSublayerIDs> hsJoinSublayerIDs, 
+                                           ref List<St_High15ByPal> lstHigh15ByPal, 
+                                           ref List<St_Low15ByPal> lstLow15ByPal, 
+                                           ref List<St_TileSeparationLayer> lstTileSeparation)
         {
-            st_UniqueSublayerID itmUniqueSublayerID;
-            st_JoinSublayerIDs itmJoinSublayerIDs;
-            st_High15ByPal itmHigh15ByPal;
-            st_Low15ByPal itmLow15ByPal;
-            st_TileSeparationLayer itmTileSeparation;
+            St_UniqueSublayerID itmUniqueSublayerID;
+            St_JoinSublayerIDs itmJoinSublayerIDs;
+            St_High15ByPal itmHigh15ByPal;
+            St_Low15ByPal itmLow15ByPal;
+            St_TileSeparationLayer itmTileSeparation;
 
             int iResult;
             string strBITemplateLine;
@@ -1538,16 +1543,15 @@ namespace Aeris
 
 
             iResult = 0;
-            strBITemplateLine = "";
 
             try
             {
-                if (File.Exists(FileTools.strGlobalPath + "\\BITemplates\\" +
-                                FileTools.strGlobalFieldName + ".txt"))
+                if (File.Exists(strGlobalPath + "\\BITemplates\\" +
+                                strGlobalFieldName + ".txt"))
                 {
-                    using (var fileBITemplate = new StreamReader(FileTools.strGlobalPath + 
+                    using (var fileBITemplate = new StreamReader(strGlobalPath + 
                                                                  "\\BITemplates\\" +
-                                                                 FileTools.strGlobalFieldName + ".txt"))
+                                                                 strGlobalFieldName + ".txt"))
                     {
                         while (!fileBITemplate.EndOfStream)
                         {
@@ -1646,7 +1650,7 @@ namespace Aeris
                                 {
 
                                     // Process <TileSeparation>
-                                    lstTileSeparation = new List<st_TileSeparationLayer>();
+                                    lstTileSeparation = new List<St_TileSeparationLayer>();
                                     foreach (var itmTileSep in strBITemplateLine.Split('=')[1].Split(','))
                                     {
                                         itmTileSeparation.iLayer = Int32.Parse(itmTileSep.Split(':')[0]);
@@ -1671,6 +1675,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 iResult = -4;
             }
 
@@ -1702,11 +1707,11 @@ namespace Aeris
 
         // lstTileSeparation               Tiles separated in a given Layer. The position on the list in the Index
         // used in lstBaseImages.iIndexTileSeparation.
-        public static void Write_BIInfo(string strSavePath, List<st_TileSeparationLayer> lstTileSeparation)
+        public static void Write_BIInfo(string strSavePath, List<St_TileSeparationLayer> lstTileSeparation)
         {
             string strWriteLine;
             using (var fileWriterBI = new StreamWriter(strSavePath + "\\" +
-                                                       FileTools.strGlobalFieldName + "_BI.txt", 
+                                                       strGlobalFieldName + "_BI.txt", 
                                                        false))
             {
 
@@ -1725,49 +1730,49 @@ namespace Aeris
 
 
                     // High15ByPal
-                    strWriteLine = strWriteLine + itmBI.iMainHigh15ByPal.ToString();
+                    strWriteLine += itmBI.iMainHigh15ByPal.ToString();
                     if (itmBI.iSecondaryHigh15ByPal > -1)
                     {
                         strWriteLine = strWriteLine + "+" + itmBI.iSecondaryHigh15ByPal.ToString();
                     }
 
-                    strWriteLine = strWriteLine + ",";
+                    strWriteLine += ",";
 
 
                     // Low15ByPal
-                    strWriteLine = strWriteLine + itmBI.iMainLow15ByPal.ToString();
+                    strWriteLine += itmBI.iMainLow15ByPal.ToString();
                     if (itmBI.iSecondaryLow15ByPal > -1)
                     {
                         strWriteLine = strWriteLine + "+" + itmBI.iSecondaryLow15ByPal.ToString();
                     }
 
-                    strWriteLine = strWriteLine + ",";
+                    strWriteLine += ",";
                     strWriteLine = strWriteLine + itmBI.bHigh15.ToString() + ",";
 
 
                     // UniqueSublayerID
                     if (itmBI.iUniqueSublayerID == -1)
                     {
-                        strWriteLine = strWriteLine + "-1,";
+                        strWriteLine += "-1,";
                     }
                     else
                     {
                         if (itmBI.iParam == 0)
                         {
-                            strWriteLine = strWriteLine + itmBI.iUniqueSublayerID.ToString();
+                            strWriteLine += itmBI.iUniqueSublayerID.ToString();
                         }
                         else
                         {
                             strWriteLine = strWriteLine + itmBI.iUniqueSublayerID.ToString() + "_" + itmBI.iParam.ToString("00") + "_" + itmBI.iState.ToString("00");
                         }
 
-                        strWriteLine = strWriteLine + ",";
+                        strWriteLine += ",";
                     }
 
                     strWriteLine = strWriteLine + itmBI.iDuplicateDest.ToString() + ",";
                     strWriteLine = strWriteLine + itmBI.iDuplicateDestHigh15.ToString() + ",";
                     strWriteLine = strWriteLine + itmBI.iDuplicateDestParam.ToString() + ",";
-                    strWriteLine = strWriteLine + itmBI.iDuplicateDestParamHigh15.ToString();
+                    strWriteLine += itmBI.iDuplicateDestParamHigh15.ToString();
 
 
                     // JoinSublayerIDs
@@ -1787,7 +1792,7 @@ namespace Aeris
                     }
                     else
                     {
-                        strWriteLine = strWriteLine + ",-1";
+                        strWriteLine += ",-1";
                     }
 
 
@@ -1800,7 +1805,7 @@ namespace Aeris
                     }
                     else
                     {
-                        strWriteLine = strWriteLine + ",-1";
+                        strWriteLine += ",-1";
                     }
 
 
@@ -1813,16 +1818,16 @@ namespace Aeris
 
         // Function to Read <field>_BI.txt File And put them In BI Structure (lstUnswizzledBaseImages)
         public static int Read_BIInfo(string strLoadPath, 
-                               ref HashSet<st_UniqueSublayerID> hsUniqueSublayerID, 
-                               ref List<st_TileSeparationLayer> lstTileSeparation)
+                               ref HashSet<St_UniqueSublayerID> hsUniqueSublayerID, 
+                               ref List<St_TileSeparationLayer> lstTileSeparation)
         {
             string strLine;
             string[] strLineSplit;
             string[] strLineHigh15ByPal;
             string[] strLineLow15ByPal;
-            var itmUniqueSublayerID = default(st_UniqueSublayerID);
-            st_JoinSublayerIDs itmJoinSublayerIDs;
-            st_TileSeparationLayer itmTileSeparation;
+            var itmUniqueSublayerID = default(St_UniqueSublayerID);
+            St_JoinSublayerIDs itmJoinSublayerIDs;
+            St_TileSeparationLayer itmTileSeparation;
             int iIndexTileSeparation;
             int iResult;
 
@@ -1831,7 +1836,7 @@ namespace Aeris
 
             Initialize_lstUnswizzledBaseImages();
 
-            if (!File.Exists(strLoadPath + "\\" + FileTools.strGlobalFieldName + "_BI.txt"))
+            if (!File.Exists(strLoadPath + "\\" + strGlobalFieldName + "_BI.txt"))
             {
                 iResult = 3;
             }
@@ -1839,7 +1844,7 @@ namespace Aeris
             if (iResult == 0)
             {
                 using (var fileReadBI = new StreamReader(strLoadPath + "\\" +
-                                                         FileTools.strGlobalFieldName + "_BI.txt"))
+                                                         strGlobalFieldName + "_BI.txt"))
                 {
                     fileReadBI.ReadLine();
                     fileReadBI.ReadLine();
@@ -1852,7 +1857,7 @@ namespace Aeris
                         if (File.Exists(strLoadPath + "\\" + strLineSplit[0]))
                         {
 
-                            lstUnswizzledBaseImages_NewEntry(false, Int32.Parse(strLineSplit[1]));
+                            LstUnswizzledBaseImages_NewEntry(false, Int32.Parse(strLineSplit[1]));
 
                             var indexlstUBI = lstUnswizzledBaseImages.Count() - 1;
 
@@ -1869,22 +1874,22 @@ namespace Aeris
                             {
                                 if (iScaleFactorL0 == 0)
                                 {
-                                    if (lstUnswizzledBaseImages[indexlstUBI].bmpBaseImage.Width % S9.iLayersMaxWidthL0 != 0)
+                                    if (lstUnswizzledBaseImages[indexlstUBI].bmpBaseImage.Width % iLayersMaxWidthL0 != 0)
                                         return 4;
 
                                     // Prepare ScaleFactor for L0/L1
-                                    iScaleFactorL0 = lstUnswizzledBaseImages[indexlstUBI].bmpBaseImage.Width / S9.iLayersMaxWidthL0;
+                                    iScaleFactorL0 = lstUnswizzledBaseImages[indexlstUBI].bmpBaseImage.Width / iLayersMaxWidthL0;
                                 }
                             }
                             else
                             {
                                 if (iScaleFactorL2 == 0)
                                 {
-                                    if (lstUnswizzledBaseImages[indexlstUBI].bmpBaseImage.Width % S9.iLayersMaxWidthL2 != 0)
+                                    if (lstUnswizzledBaseImages[indexlstUBI].bmpBaseImage.Width % iLayersMaxWidthL2 != 0)
                                         return 4;
 
                                     // Prepare ScaleFactor for L2/L3
-                                    iScaleFactorL2 = lstUnswizzledBaseImages[indexlstUBI].bmpBaseImage.Width / S9.iLayersMaxWidthL2;
+                                    iScaleFactorL2 = lstUnswizzledBaseImages[indexlstUBI].bmpBaseImage.Width / iLayersMaxWidthL2;
                                 }
                             }
 
@@ -1963,7 +1968,7 @@ namespace Aeris
                             if (strLineSplit[12] != "-1")
                             {
                                 lstUnswizzledBaseImages[indexlstUBI].hsJoinSublayerIDs =
-                                                new HashSet<st_JoinSublayerIDs>();
+                                                new HashSet<St_JoinSublayerIDs>();
 
                                 foreach (var itmhsJoinTileID in strLineSplit[12].Split(','))
                                 {
@@ -1991,7 +1996,7 @@ namespace Aeris
                                 // Assign to lstTileSeparation
                                 if (lstTileSeparation == null)
                                 {
-                                    lstTileSeparation = new List<st_TileSeparationLayer>();
+                                    lstTileSeparation = new List<St_TileSeparationLayer>();
                                 }
 
                                 itmTileSeparation.iLayer = lstUnswizzledBaseImages[indexlstUBI].iLayer;
@@ -2003,7 +2008,7 @@ namespace Aeris
 
                                 lstTileSeparation.Add(itmTileSeparation);
 
-                                iIndexTileSeparation = iIndexTileSeparation + 1;
+                                iIndexTileSeparation++;
                             }
                             else
                             {
@@ -2029,7 +2034,7 @@ namespace Aeris
         // FROM UNSWIZZLED EXTERNAL BASE IMAGE TO EXTERNAL SWIZZLED TEXTURE (EVEN UPSCALED)
         // 
         // ------------------------------------------------------------------------------------------------
-        public static void DrawTileInBaseTexture(S9.S9_ZList itmZList, int iIndexBI, int iScaleFactor)
+        public static void DrawTileInBaseTexture(S9_ZList itmZList, int iIndexBI, int iScaleFactor)
         {
             string strTexPal;
             int iIndexSwizzledTexture;
@@ -2039,13 +2044,13 @@ namespace Aeris
 
             if (itmZList.ZLayer < 2)
             {
-                iLayerbmpPosXGlobal = S9.iLayersbmpPosXL0;
-                iLayerbmpPosYGlobal = S9.iLayersbmpPosYL0;
+                iLayerbmpPosXGlobal = iLayersbmpPosXL0;
+                iLayerbmpPosYGlobal = iLayersbmpPosYL0;
             }
             else
             {
-                iLayerbmpPosXGlobal = S9.iLayersbmpPosXL2;
-                iLayerbmpPosYGlobal = S9.iLayersbmpPosYL2;
+                iLayerbmpPosXGlobal = iLayersbmpPosXL2;
+                iLayerbmpPosYGlobal = iLayersbmpPosYL2;
             }
 
             // Put the tile in Swizzled Texture Image
@@ -2055,8 +2060,8 @@ namespace Aeris
 
             if (iIndexSwizzledTexture == -1)
             {
-                lstSwizzledBaseTextures.Add(strTexPal, new Bitmap(S9.TEXTURE_WIDTH * iScaleFactor, 
-                                                                  S9.TEXTURE_HEIGHT * iScaleFactor));
+                lstSwizzledBaseTextures.Add(strTexPal, new Bitmap(TEXTURE_WIDTH * iScaleFactor, 
+                                                                  TEXTURE_HEIGHT * iScaleFactor));
             }
 
             using (Graphics g = Graphics.FromImage(lstSwizzledBaseTextures[strTexPal]))
@@ -2090,7 +2095,7 @@ namespace Aeris
             }
         }
 
-        public static void PutTileByLayerInBaseTexture(S9.S9_ZList itmZList, int iScaleFactor)
+        public static void PutTileByLayerInBaseTexture(S9_ZList itmZList, int iScaleFactor)
         {
             bool bFound;
             int iIndexBI;
@@ -2119,7 +2124,7 @@ namespace Aeris
                 }
                 else
                 {
-                    iIndexBI = iIndexBI + 1;
+                    iIndexBI++;
                 }
             }
 
@@ -2128,7 +2133,7 @@ namespace Aeris
             DrawTileInBaseTexture(itmZList, iIndexBI, iScaleFactor);
         }
 
-        public static void PutTileByLayerInBaseTextureHigh15(S9.S9_ZList itmZList, int iScaleFactor)
+        public static void PutTileByLayerInBaseTextureHigh15(S9_ZList itmZList, int iScaleFactor)
         {
             bool bFound;
             int iIndexBI;
@@ -2157,7 +2162,7 @@ namespace Aeris
                 }
                 else
                 {
-                    iIndexBI = iIndexBI + 1;
+                    iIndexBI++;
                 }
             }
 
@@ -2166,7 +2171,7 @@ namespace Aeris
             DrawTileInBaseTexture(itmZList, iIndexBI, iScaleFactor);
         }
 
-        public static void PutTileByParamInBaseTexture(S9.S9_ZList itmZList, int iScaleFactor)
+        public static void PutTileByParamInBaseTexture(S9_ZList itmZList, int iScaleFactor)
         {
             bool bFound;
             int iIndexBI;
@@ -2195,7 +2200,7 @@ namespace Aeris
                 }
                 else
                 {
-                    iIndexBI = iIndexBI + 1;
+                    iIndexBI++;
                 }
             }
 
@@ -2204,7 +2209,7 @@ namespace Aeris
             DrawTileInBaseTexture(itmZList, iIndexBI, iScaleFactor);
         }
 
-        public static void PutTileByParamInBaseTextureHigh15(S9.S9_ZList itmZList, int iScaleFactor)
+        public static void PutTileByParamInBaseTextureHigh15(S9_ZList itmZList, int iScaleFactor)
         {
             bool bFound;
             int iIndexBI;
@@ -2233,7 +2238,7 @@ namespace Aeris
                 }
                 else
                 {
-                    iIndexBI = iIndexBI + 1;
+                    iIndexBI++;
                 }
             }
 
@@ -2242,7 +2247,7 @@ namespace Aeris
             DrawTileInBaseTexture(itmZList, iIndexBI, iScaleFactor);
         }
 
-        public static void PutTileByLayerInBaseTextureSameDest(S9.S9_ZList itmZList, int iDuplicateDest, int iScaleFactor)
+        public static void PutTileByLayerInBaseTextureSameDest(S9_ZList itmZList, int iDuplicateDest, int iScaleFactor)
         {
             bool bFound;
             int iIndexBI;
@@ -2270,7 +2275,7 @@ namespace Aeris
                 }
                 else
                 {
-                    iIndexBI = iIndexBI + 1;
+                    iIndexBI++;
                 }
             }
 
@@ -2279,7 +2284,7 @@ namespace Aeris
             DrawTileInBaseTexture(itmZList, iIndexBI, iScaleFactor);
         }
 
-        public static void PutTileByLayerInBaseTextureSameDestHigh15(S9.S9_ZList itmZList, int iDuplicateDest, int iScaleFactor)
+        public static void PutTileByLayerInBaseTextureSameDestHigh15(S9_ZList itmZList, int iDuplicateDest, int iScaleFactor)
         {
             bool bFound;
             int iIndexBI;
@@ -2307,7 +2312,7 @@ namespace Aeris
                 }
                 else
                 {
-                    iIndexBI = iIndexBI + 1;
+                    iIndexBI++;
                 }
             }
 
@@ -2316,7 +2321,7 @@ namespace Aeris
             DrawTileInBaseTexture(itmZList, iIndexBI, iScaleFactor);
         }
 
-        public static void PutTileByParamInBaseTextureSameDest(S9.S9_ZList itmZList, int iDuplicateDest, int iScaleFactor)
+        public static void PutTileByParamInBaseTextureSameDest(S9_ZList itmZList, int iDuplicateDest, int iScaleFactor)
         {
             bool bFound;
             int iIndexBI;
@@ -2345,7 +2350,7 @@ namespace Aeris
                 }
                 else
                 {
-                    iIndexBI = iIndexBI + 1;
+                    iIndexBI++;
                 }
             }
 
@@ -2354,7 +2359,7 @@ namespace Aeris
             DrawTileInBaseTexture(itmZList, iIndexBI, iScaleFactor);
         }
 
-        public static void PutTileByParamInBaseTextureSameDestHigh15(S9.S9_ZList itmZList, int iDuplicateDest, int iScaleFactor)
+        public static void PutTileByParamInBaseTextureSameDestHigh15(S9_ZList itmZList, int iDuplicateDest, int iScaleFactor)
         {
             bool bFound;
             int iIndexBI;
@@ -2383,7 +2388,7 @@ namespace Aeris
                 }
                 else
                 {
-                    iIndexBI = iIndexBI + 1;
+                    iIndexBI++;
                 }
             }
 
@@ -2392,7 +2397,7 @@ namespace Aeris
             DrawTileInBaseTexture(itmZList, iIndexBI, iScaleFactor);
         }
 
-        public static void PutTileByTileIDInBaseTexture(S9.S9_ZList itmZList, int iScaleFactor)
+        public static void PutTileByTileIDInBaseTexture(S9_ZList itmZList, int iScaleFactor)
         {
             bool bFound;
             int iIndexBI;
@@ -2421,7 +2426,7 @@ namespace Aeris
                 }
                 else
                 {
-                    iIndexBI = iIndexBI + 1;
+                    iIndexBI++;
                 }
             }
 
@@ -2429,7 +2434,7 @@ namespace Aeris
             DrawTileInBaseTexture(itmZList, iIndexBI, iScaleFactor);
         }
 
-        public static void PutTileByTileIDInBaseTextureHigh15(S9.S9_ZList itmZList, int iScaleFactor)
+        public static void PutTileByTileIDInBaseTextureHigh15(S9_ZList itmZList, int iScaleFactor)
         {
             bool bFound;
             int iIndexBI;
@@ -2458,7 +2463,7 @@ namespace Aeris
                 }
                 else
                 {
-                    iIndexBI = iIndexBI + 1;
+                    iIndexBI++;
                 }
             }
 
@@ -2466,7 +2471,7 @@ namespace Aeris
             DrawTileInBaseTexture(itmZList, iIndexBI, iScaleFactor);
         }
 
-        public static void PutTileByTileSeparationInBaseImage(S9.S9_ZList itmZList, int iIndexTileSeparation, int iScaleFactor)
+        public static void PutTileByTileSeparationInBaseImage(S9_ZList itmZList, int iIndexTileSeparation, int iScaleFactor)
         {
             bool bFound;
             int iIndexBI;
@@ -2494,7 +2499,7 @@ namespace Aeris
                 }
                 else
                 {
-                    iIndexBI = iIndexBI + 1;
+                    iIndexBI++;
                 }
             }
 
@@ -2508,10 +2513,10 @@ namespace Aeris
                                                            ref RichTextBox rtbResult)
         {
 
-            var sortZList = new List<S9.S9_ZList>();
-            var hsUniqueSublayerID = new HashSet<st_UniqueSublayerID>();
-            List<st_TileSeparationLayer> lstTileSeparation;
-            st_UniqueSublayerID itmUniqueSublayerID;
+            var sortZList = new List<S9_ZList>();
+            var hsUniqueSublayerID = new HashSet<St_UniqueSublayerID>();
+            List<St_TileSeparationLayer> lstTileSeparation;
+            St_UniqueSublayerID itmUniqueSublayerID;
             int iLayer, iParam, iState, iTileID;
             int iUnjoinTileIDBI, iIndexHigh15ByPal, iIndexLow15ByPal, iIndexTileSeparation;
             int iDestX, iDestY, iDestXParam, iDestYParam;
@@ -2547,7 +2552,7 @@ namespace Aeris
                 // sortZItem.ZTexture,
                 // sortZItem.ZTile).ToList()
 
-                sortZList = (from sortZItem in S9.Section9Z
+                sortZList = (from sortZItem in Section9Z
                              where (sortZItem.ZTexture < 0xF | sortZItem.ZTexture > 0x19) &&
                                    sortZItem.ZDestX < 5000 & sortZItem.ZDestX > -2500
                              orderby sortZItem.ZLayer, 
@@ -2557,7 +2562,7 @@ namespace Aeris
                                      sortZItem.ZState
                              select sortZItem).ToList();
 
-                sortZList = sortZList.Concat(from sortZItem in S9.Section9Z
+                sortZList = sortZList.Concat(from sortZItem in Section9Z
                                              where (sortZItem.ZTexture > 0xE & sortZItem.ZTexture < 0x1A) &&
                                                    sortZItem.ZDestX < 5000 & sortZItem.ZDestX > -2500
                                              orderby sortZItem.ZLayer, 
@@ -2710,7 +2715,7 @@ namespace Aeris
                             {
                                 if (itmZList.ZDestX == iDestXHigh15 & itmZList.ZDestY == iDestYHigh15)
                                 {
-                                    iDuplicateDestHigh15 = iDuplicateDestHigh15 + 1;
+                                    iDuplicateDestHigh15++;
                                     PutTileByLayerInBaseTextureSameDestHigh15(itmZList, iDuplicateDestHigh15, iScaleFactor);
                                 }
                                 else
@@ -2726,7 +2731,7 @@ namespace Aeris
                             {
                                 if (itmZList.ZDestX == iDestX & itmZList.ZDestY == iDestY)
                                 {
-                                    iDuplicateDest = iDuplicateDest + 1;
+                                    iDuplicateDest++;
                                     PutTileByLayerInBaseTextureSameDest(itmZList, iDuplicateDest, iScaleFactor);
                                 }
                                 else
@@ -2743,7 +2748,7 @@ namespace Aeris
                         {
                             if (itmZList.ZDestX == iDestXParamHigh15 & itmZList.ZDestY == iDestYParamHigh15 & itmZList.ZParam == iParam & itmZList.ZState == iState)
                             {
-                                iDuplicateDestParamHigh15 = iDuplicateDestParamHigh15 + 1;
+                                iDuplicateDestParamHigh15++;
                                 PutTileByParamInBaseTextureSameDestHigh15(itmZList, iDuplicateDestParamHigh15, iScaleFactor);
                             }
                             else
@@ -2761,7 +2766,7 @@ namespace Aeris
                         {
                             if (itmZList.ZDestX == iDestXParam & itmZList.ZDestY == iDestYParam & itmZList.ZParam == iParam & itmZList.ZState == iState)
                             {
-                                iDuplicateDestParam = iDuplicateDestParam + 1;
+                                iDuplicateDestParam++;
                                 PutTileByParamInBaseTextureSameDest(itmZList, iDuplicateDestParam, iScaleFactor);
                             }
                             else
@@ -2780,7 +2785,7 @@ namespace Aeris
 
                 TimeOut = DateTime.Now;
                 TimeDiff = TimeOut - TimeIn;
-                TotalTime = TotalTime + TimeDiff;
+                TotalTime += TimeDiff;
 
 
                 // -------------------------------------------------------------------------
@@ -2791,7 +2796,7 @@ namespace Aeris
                 {
                     // Prepare FileName
                     strProcessFileName = strOutputDirectory + "\\" +
-                                         FileTools.strGlobalFieldName + "_" + 
+                                         strGlobalFieldName + "_" + 
                                          itmSwizzledTexture.Key + ".png";
 
                     // Write image Swizzled
@@ -2818,14 +2823,14 @@ namespace Aeris
                 // Dim iStopTileAbs As Integer
 
                 // iStopTileAbs = iTileAbs
-
+                strExceptionVar = ex.Message;
                 iResult = -1;
             }
 
             return iResult;
         }
 
-        public static int GetLow15ByPal(S9.S9_ZList itmZList)
+        public static int GetLow15ByPal(S9_ZList itmZList)
         {
             int iIndexLow15ByPal;
             int iBICounter;
@@ -2850,14 +2855,14 @@ namespace Aeris
                 }
                 else
                 {
-                    iBICounter = iBICounter + 1;
+                    iBICounter++;
                 }
             }
 
             return iIndexLow15ByPal;
         }
 
-        public static int GetHigh15ByPal(S9.S9_ZList itmZList)
+        public static int GetHigh15ByPal(S9_ZList itmZList)
         {
             int iIndexHigh15ByPal;
             int iBICounter;
@@ -2882,14 +2887,14 @@ namespace Aeris
                 }
                 else
                 {
-                    iBICounter = iBICounter + 1;
+                    iBICounter++;
                 }
             }
 
             return iIndexHigh15ByPal;
         }
 
-        public static int MustUnJoinTileID(S9.S9_ZList itmZList)
+        public static int MustUnJoinTileID(S9_ZList itmZList)
         {
             int iUnjoinTileID;
             int iBICounter;
@@ -2914,27 +2919,27 @@ namespace Aeris
 
                 if (iUnjoinTileID > -1)
                     break;
-                iBICounter = iBICounter + 1;
+                iBICounter++;
             }
 
             return iUnjoinTileID;
         }
 
-        public static void UnswizzleInternalBaseTexture(int iUnsIntTexture, frmTextureImage frmTextureImage)
+        public static void UnswizzleInternalBaseTexture(int iUnsIntTexture, FrmTextureImage frmTextureImage)
         {
             Bitmap bmpUnsIntTexture;
-            List<S9.S9_ZList> sortZTexture;
+            List<S9_ZList> sortZTexture;
 
             ImageTools.ClearPictureBox(frmTextureImage.pbTextureImage, 1, frmTextureImage.panelTextureImage);
 
-            sortZTexture = (from sortZItem in S9.Section9Z
+            sortZTexture = (from sortZItem in Section9Z
                             where sortZItem.ZTexture == iUnsIntTexture
                             orderby sortZItem.ZTexture,
                                     sortZItem.ZSourceY,
                                     sortZItem.ZSourceX
                             select sortZItem).ToList();
 
-            bmpUnsIntTexture = new Bitmap(S9.iLayersMaxWidth, S9.iLayersMaxHeight, PixelFormat.Format32bppArgb);
+            bmpUnsIntTexture = new Bitmap(iLayersMaxWidth, iLayersMaxHeight, PixelFormat.Format32bppArgb);
 
             using (var g = Graphics.FromImage(bmpUnsIntTexture))
             {
@@ -2945,9 +2950,9 @@ namespace Aeris
                         g.InterpolationMode = InterpolationMode.NearestNeighbor;
                         g.CompositingMode = CompositingMode.SourceCopy;
 
-                        g.DrawImage(S9.Section9.Layer[sortZItem.ZLayer].layerTiles[sortZItem.ZTile].imgTile,
-                                    S9.iLayersbmpPosX + S9.Section9.Layer[sortZItem.ZLayer].layerTiles[sortZItem.ZTile].destX,
-                                    S9.iLayersbmpPosY + S9.Section9.Layer[sortZItem.ZLayer].layerTiles[sortZItem.ZTile].destY);
+                        g.DrawImage(Section9.Layer[sortZItem.ZLayer].layerTiles[sortZItem.ZTile].imgTile,
+                                    iLayersbmpPosX + Section9.Layer[sortZItem.ZLayer].layerTiles[sortZItem.ZTile].destX,
+                                    iLayersbmpPosY + Section9.Layer[sortZItem.ZLayer].layerTiles[sortZItem.ZTile].destY);
                     }
                 }
             }
@@ -2981,13 +2986,13 @@ namespace Aeris
                                                                      ref RichTextBox rtbResult)
         {
 
-            var sortZList = new List<S9.S9_ZList>();
-            var hsUniqueSublayerID = new HashSet<st_UniqueSublayerID>();
-            var hsJoinSublayerIDs = new HashSet<st_JoinSublayerIDs>();
-            var lstHigh15ByPal = new List<st_High15ByPal>();
-            var lstLow15ByPal = new List<st_Low15ByPal>();
-            List<st_TileSeparationLayer> lstTileSeparation;
-            st_UniqueSublayerID itmUniqueSublayerID;
+            var sortZList = new List<S9_ZList>();
+            var hsUniqueSublayerID = new HashSet<St_UniqueSublayerID>();
+            var hsJoinSublayerIDs = new HashSet<St_JoinSublayerIDs>();
+            var lstHigh15ByPal = new List<St_High15ByPal>();
+            var lstLow15ByPal = new List<St_Low15ByPal>();
+            List<St_TileSeparationLayer> lstTileSeparation;
+            St_UniqueSublayerID itmUniqueSublayerID;
 
             int iResult;
             int iLayer, iParam, iState, iTileID;
@@ -3025,12 +3030,13 @@ namespace Aeris
 
                 // Ok, here we will read the external files.
                 string strFileName;
-                int iNumTexture, iTextureCount;
+                int iTextureCount;
+
                 lstSwizzledExternalBaseTextures = new List<DirectBitmap>();
-                iTextureCount = 0;
+                iTextureCount = iScaleFactor = 0;
 
                 // Initialize it with max number of textures
-                for (int i = 0; i < S9.MAX_NUM_TEXTURES; i++) 
+                for (int i = 0; i < MAX_NUM_TEXTURES; i++) 
                     lstSwizzledExternalBaseTextures.Add(new DirectBitmap(1, 1));
 
                 foreach (string strFile in Directory.GetFiles(strInputFolder, "*.png"))
@@ -3038,8 +3044,17 @@ namespace Aeris
                     Bitmap tmpBmp = null;
                     ImageTools.ReadBitmap(ref tmpBmp, strFile);
 
+                    // The textures have not the same scale size,
+                    // or they are not 256pixels multiple
+                    if ((tmpBmp.Width / TEXTURE_WIDTH != iScaleFactor ||
+                         tmpBmp.Width % TEXTURE_WIDTH != 0) &&
+                         iScaleFactor != 0)
+                        return 4;
+
+                    iScaleFactor = tmpBmp.Width / TEXTURE_WIDTH;
+
                     strFileName = Path.GetFileNameWithoutExtension(strFile);
-                    Int32.TryParse(strFileName.Substring(strFileName.Length - 5, 2), out iNumTexture);
+                    Int32.TryParse(strFileName.Substring(strFileName.Length - 5, 2), out int iNumTexture);
 
                     lstSwizzledExternalBaseTextures.Insert(iNumTexture, new DirectBitmap(tmpBmp));
 
@@ -3049,14 +3064,10 @@ namespace Aeris
                 // Some file checks
                 // No files
                 if (lstSwizzledExternalBaseTextures.Count <= 0) return 2;
-                // Not all the textures for the field
-                if (iTextureCount != S9.GetNumRealTextures()) return 3;
+                // There are not all the textures for the field
+                if (iTextureCount != GetNumRealTextures()) return 3;
 
-
-                // Adjust iScaleFactor
-                iScaleFactor = lstSwizzledExternalBaseTextures[0].Bitmap.Width / 256;
-
-                sortZList = (from sortZItem in S9.Section9Z
+                sortZList = (from sortZItem in Section9Z
                              where (sortZItem.ZTexture < 0xF | sortZItem.ZTexture > 0x19) &
                                    (sortZItem.ZDestX > -2500 & sortZItem.ZDestX < 5000)
                              orderby sortZItem.ZLayer,
@@ -3066,7 +3077,7 @@ namespace Aeris
                                      sortZItem.ZState
                              select sortZItem).ToList();
 
-                sortZList = sortZList.Concat(from sortZItem in S9.Section9Z
+                sortZList = sortZList.Concat(from sortZItem in Section9Z
                                              where (sortZItem.ZTexture > 0xE & sortZItem.ZTexture < 0x1A) &
                                                    (sortZItem.ZDestX > -2500 & sortZItem.ZDestX < 5000)
                                              orderby sortZItem.ZLayer,
@@ -3096,7 +3107,7 @@ namespace Aeris
                 iDestXParamHigh15 = 9999;
                 iDestYParamHigh15 = 9999;
 
-                foreach (S9.S9_ZList itmZList in sortZList)
+                foreach (S9_ZList itmZList in sortZList)
                 {
 
                     iTileAbs = itmZList.ZTileAbs;
@@ -3164,7 +3175,7 @@ namespace Aeris
                     {
 
                         // Update Tile in Base Image by TileSeparation
-                        UpdateTileByTileSeparationInBaseImage(itmZList, iIndexTileSeparation, lstTileSeparation);
+                        UpdateTileByTileSeparationInBaseImage(itmZList, iIndexTileSeparation);
                     }
                     else if (itmZList.ZLayer == 1 &&
                              hsUniqueSublayerID.Count > 0 &&
@@ -3229,7 +3240,7 @@ namespace Aeris
                                 if (itmZList.ZDestX == iDestXHigh15 &
                                     itmZList.ZDestY == iDestYHigh15)
                                 {
-                                    iDuplicateDestHigh15 = iDuplicateDestHigh15 + 1;
+                                    iDuplicateDestHigh15++;
                                     UpdateTileByLayerInBaseImageSameDestHigh15(itmZList, iDuplicateDestHigh15);
                                 }
                                 else
@@ -3246,7 +3257,7 @@ namespace Aeris
                                 if (itmZList.ZDestX == iDestX &
                                     itmZList.ZDestY == iDestY)
                                 {
-                                    iDuplicateDest = iDuplicateDest + 1;
+                                    iDuplicateDest++;
                                     UpdateTileByLayerInBaseImageSameDest(itmZList, iDuplicateDest);
                                 }
                                 else
@@ -3266,7 +3277,7 @@ namespace Aeris
                                 itmZList.ZParam == iParam &
                                 itmZList.ZState == iState)
                             {
-                                iDuplicateDestParamHigh15 = iDuplicateDestParamHigh15 + 1;
+                                iDuplicateDestParamHigh15++;
                                 UpdateTileByParamInBaseImageSameDestHigh15(itmZList, iDuplicateDestParamHigh15);
                             }
                             else
@@ -3287,7 +3298,7 @@ namespace Aeris
                                 itmZList.ZParam == iParam &
                                 itmZList.ZState == iState)
                             {
-                                iDuplicateDestParam = iDuplicateDestParam + 1;
+                                iDuplicateDestParam++;
                                 UpdateTileByParamInBaseImageSameDest(itmZList, iDuplicateDestParam);
                             }
                             else
@@ -3325,7 +3336,7 @@ namespace Aeris
                 // Some bit of info for parent window result text box
                 TimeOut = DateTime.Now;
                 TimeDiff = TimeOut - TimeIn;
-                TotalTime = TotalTime + TimeDiff;
+                TotalTime += TimeDiff;
 
                 logEvents.AddEventText("SWIZZLE FINISHED\t\tDuration: " + TotalTime.Minutes.ToString("00") + ":" +
                                                 TotalTime.Seconds.ToString("00") + "." +
@@ -3338,6 +3349,7 @@ namespace Aeris
 
                 iTileAbsError = iTileAbs;
 
+                strExceptionVar = ex.Message;
                 iResult = -1;
             }
 

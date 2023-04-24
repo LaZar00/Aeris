@@ -1,6 +1,6 @@
 ﻿namespace Aeris
 {
-    partial class frmSwizzleExternalBaseImages
+    partial class FrmSwizzleExternalBaseImages
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSwizzleExternalBaseImages));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmSwizzleExternalBaseImages));
             this.lbSelectOutputFolder = new System.Windows.Forms.Label();
             this.lbSelectInputFolder = new System.Windows.Forms.Label();
             this.lbNote = new System.Windows.Forms.Label();
@@ -83,7 +83,7 @@
             this.rtbResult.TabStop = false;
             this.rtbResult.Text = "";
             this.rtbResult.WordWrap = false;
-            this.rtbResult.TextChanged += new System.EventHandler(this.rtbResult_TextChanged);
+            this.rtbResult.TextChanged += new System.EventHandler(this.RtbResult_TextChanged);
             // 
             // btnOutputFolder
             // 
@@ -94,7 +94,7 @@
             this.btnOutputFolder.TabIndex = 37;
             this.btnOutputFolder.Text = "...";
             this.btnOutputFolder.UseVisualStyleBackColor = true;
-            this.btnOutputFolder.Click += new System.EventHandler(this.btnOutputFolder_Click);
+            this.btnOutputFolder.Click += new System.EventHandler(this.BtnOutputFolder_Click);
             // 
             // btnInputFolder
             // 
@@ -105,7 +105,7 @@
             this.btnInputFolder.TabIndex = 36;
             this.btnInputFolder.Text = "...";
             this.btnInputFolder.UseVisualStyleBackColor = true;
-            this.btnInputFolder.Click += new System.EventHandler(this.btnInputFolder_Click);
+            this.btnInputFolder.Click += new System.EventHandler(this.BtnInputFolder_Click);
             // 
             // txtOutputFolder
             // 
@@ -133,7 +133,7 @@
             this.btnClose.TabIndex = 38;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // btnRun
             // 
@@ -144,7 +144,7 @@
             this.btnRun.TabIndex = 35;
             this.btnRun.Text = "Run";
             this.btnRun.UseVisualStyleBackColor = true;
-            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+            this.btnRun.Click += new System.EventHandler(this.BtnRun_Click);
             // 
             // frmSwizzleExternalBaseImages
             // 

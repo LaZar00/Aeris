@@ -1,6 +1,6 @@
 ﻿namespace Aeris
 {
-    partial class frmTileEditor
+    partial class FrmTileEditor
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTileEditor));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmTileEditor));
             this.gbGRAPHIC = new System.Windows.Forms.GroupBox();
             this.txtM = new System.Windows.Forms.TextBox();
             this.txtB = new System.Windows.Forms.TextBox();
@@ -250,7 +250,7 @@
             this.btnDraw.Size = new System.Drawing.Size(69, 69);
             this.btnDraw.TabIndex = 47;
             this.btnDraw.UseVisualStyleBackColor = true;
-            this.btnDraw.Click += new System.EventHandler(this.btnDraw_Click);
+            this.btnDraw.Click += new System.EventHandler(this.BtnDraw_Click);
             // 
             // btnInfo
             // 
@@ -263,7 +263,7 @@
             this.btnInfo.Size = new System.Drawing.Size(69, 69);
             this.btnInfo.TabIndex = 46;
             this.btnInfo.UseVisualStyleBackColor = true;
-            this.btnInfo.CheckedChanged += new System.EventHandler(this.btnInfo_CheckedChanged);
+            this.btnInfo.CheckedChanged += new System.EventHandler(this.BtnInfo_CheckedChanged);
             // 
             // btnPickColor
             // 
@@ -276,7 +276,7 @@
             this.btnPickColor.Size = new System.Drawing.Size(69, 69);
             this.btnPickColor.TabIndex = 45;
             this.btnPickColor.UseVisualStyleBackColor = true;
-            this.btnPickColor.Click += new System.EventHandler(this.btnPickColor_Click);
+            this.btnPickColor.Click += new System.EventHandler(this.BtnPickColor_Click);
             // 
             // cbActivateIFP
             // 
@@ -288,7 +288,7 @@
             this.cbActivateIFP.TabIndex = 44;
             this.cbActivateIFP.Text = "Activate IFP";
             this.cbActivateIFP.UseVisualStyleBackColor = true;
-            this.cbActivateIFP.CheckedChanged += new System.EventHandler(this.cbActivateIFP_CheckedChanged);
+            this.cbActivateIFP.CheckedChanged += new System.EventHandler(this.CbActivateIFP_CheckedChanged);
             // 
             // Label1
             // 
@@ -318,10 +318,10 @@
             this.pbTileEdit.Size = new System.Drawing.Size(261, 261);
             this.pbTileEdit.TabIndex = 3;
             this.pbTileEdit.TabStop = false;
-            this.pbTileEdit.Paint += new System.Windows.Forms.PaintEventHandler(this.pbTileEdit_Paint);
-            this.pbTileEdit.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbTileEdit_MouseDown);
-            this.pbTileEdit.MouseLeave += new System.EventHandler(this.pbTileEdit_MouseLeave);
-            this.pbTileEdit.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbTileEdit_MouseMove);
+            this.pbTileEdit.Paint += new System.Windows.Forms.PaintEventHandler(this.PbTileEdit_Paint);
+            this.pbTileEdit.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PbTileEdit_MouseDown);
+            this.pbTileEdit.MouseLeave += new System.EventHandler(this.PbTileEdit_MouseLeave);
+            this.pbTileEdit.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PbTileEdit_MouseMove);
             // 
             // pbPalette
             // 
@@ -333,10 +333,10 @@
             this.pbPalette.Size = new System.Drawing.Size(261, 261);
             this.pbPalette.TabIndex = 2;
             this.pbPalette.TabStop = false;
-            this.pbPalette.Paint += new System.Windows.Forms.PaintEventHandler(this.pbPalette_Paint);
-            this.pbPalette.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbPalette_MouseDown);
-            this.pbPalette.MouseLeave += new System.EventHandler(this.pbPalette_MouseLeave);
-            this.pbPalette.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbPalette_MouseMove);
+            this.pbPalette.Paint += new System.Windows.Forms.PaintEventHandler(this.PbPalette_Paint);
+            this.pbPalette.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PbPalette_MouseDown);
+            this.pbPalette.MouseLeave += new System.EventHandler(this.PbPalette_MouseLeave);
+            this.pbPalette.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PbPalette_MouseMove);
             // 
             // gbINFO
             // 
@@ -435,7 +435,7 @@
             this.txtSourceYBigID.Name = "txtSourceYBigID";
             this.txtSourceYBigID.Size = new System.Drawing.Size(120, 22);
             this.txtSourceYBigID.TabIndex = 19;
-            this.txtSourceYBigID.TextChanged += new System.EventHandler(this.txtSourceY2_TextChanged);
+            this.txtSourceYBigID.TextChanged += new System.EventHandler(this.TxtSourceY2_TextChanged);
             // 
             // txtSourceXBigID
             // 
@@ -443,7 +443,7 @@
             this.txtSourceXBigID.Name = "txtSourceXBigID";
             this.txtSourceXBigID.Size = new System.Drawing.Size(120, 22);
             this.txtSourceXBigID.TabIndex = 18;
-            this.txtSourceXBigID.TextChanged += new System.EventHandler(this.txtSourceXBigID_TextChanged);
+            this.txtSourceXBigID.TextChanged += new System.EventHandler(this.TxtSourceXBigID_TextChanged);
             // 
             // txtBigID
             // 
@@ -451,7 +451,7 @@
             this.txtBigID.Name = "txtBigID";
             this.txtBigID.Size = new System.Drawing.Size(120, 22);
             this.txtBigID.TabIndex = 17;
-            this.txtBigID.TextChanged += new System.EventHandler(this.txtBigID_TextChanged);
+            this.txtBigID.TextChanged += new System.EventHandler(this.TxtBigID_TextChanged);
             // 
             // txtSourceY2
             // 
@@ -459,7 +459,7 @@
             this.txtSourceY2.Name = "txtSourceY2";
             this.txtSourceY2.Size = new System.Drawing.Size(80, 22);
             this.txtSourceY2.TabIndex = 16;
-            this.txtSourceY2.TextChanged += new System.EventHandler(this.txtSourceY2_TextChanged);
+            this.txtSourceY2.TextChanged += new System.EventHandler(this.TxtSourceY2_TextChanged);
             // 
             // txtSourceX2
             // 
@@ -467,7 +467,7 @@
             this.txtSourceX2.Name = "txtSourceX2";
             this.txtSourceX2.Size = new System.Drawing.Size(80, 22);
             this.txtSourceX2.TabIndex = 15;
-            this.txtSourceX2.TextChanged += new System.EventHandler(this.txtSourceX2_TextChanged);
+            this.txtSourceX2.TextChanged += new System.EventHandler(this.TxtSourceX2_TextChanged);
             // 
             // txtTextureID2
             // 
@@ -475,7 +475,7 @@
             this.txtTextureID2.Name = "txtTextureID2";
             this.txtTextureID2.Size = new System.Drawing.Size(80, 22);
             this.txtTextureID2.TabIndex = 14;
-            this.txtTextureID2.TextChanged += new System.EventHandler(this.txtTextureID2_TextChanged);
+            this.txtTextureID2.TextChanged += new System.EventHandler(this.TxtTextureID2_TextChanged);
             // 
             // txtSourceY
             // 
@@ -483,7 +483,7 @@
             this.txtSourceY.Name = "txtSourceY";
             this.txtSourceY.Size = new System.Drawing.Size(80, 22);
             this.txtSourceY.TabIndex = 13;
-            this.txtSourceY.TextChanged += new System.EventHandler(this.txtSourceY_TextChanged);
+            this.txtSourceY.TextChanged += new System.EventHandler(this.TxtSourceY_TextChanged);
             // 
             // txtSourceX
             // 
@@ -491,7 +491,7 @@
             this.txtSourceX.Name = "txtSourceX";
             this.txtSourceX.Size = new System.Drawing.Size(80, 22);
             this.txtSourceX.TabIndex = 12;
-            this.txtSourceX.TextChanged += new System.EventHandler(this.txtSourceX_TextChanged);
+            this.txtSourceX.TextChanged += new System.EventHandler(this.TxtSourceX_TextChanged);
             // 
             // txtTextureID
             // 
@@ -499,7 +499,7 @@
             this.txtTextureID.Name = "txtTextureID";
             this.txtTextureID.Size = new System.Drawing.Size(80, 22);
             this.txtTextureID.TabIndex = 11;
-            this.txtTextureID.TextChanged += new System.EventHandler(this.txtTextureID_TextChanged);
+            this.txtTextureID.TextChanged += new System.EventHandler(this.TxtTextureID_TextChanged);
             // 
             // txtState
             // 
@@ -507,7 +507,7 @@
             this.txtState.Name = "txtState";
             this.txtState.Size = new System.Drawing.Size(80, 22);
             this.txtState.TabIndex = 10;
-            this.txtState.TextChanged += new System.EventHandler(this.txtState_TextChanged);
+            this.txtState.TextChanged += new System.EventHandler(this.TxtState_TextChanged);
             // 
             // txtParam
             // 
@@ -515,7 +515,7 @@
             this.txtParam.Name = "txtParam";
             this.txtParam.Size = new System.Drawing.Size(80, 22);
             this.txtParam.TabIndex = 9;
-            this.txtParam.TextChanged += new System.EventHandler(this.txtParam_TextChanged);
+            this.txtParam.TextChanged += new System.EventHandler(this.TxtParam_TextChanged);
             // 
             // txtBlendMode
             // 
@@ -523,7 +523,7 @@
             this.txtBlendMode.Name = "txtBlendMode";
             this.txtBlendMode.Size = new System.Drawing.Size(80, 22);
             this.txtBlendMode.TabIndex = 8;
-            this.txtBlendMode.TextChanged += new System.EventHandler(this.txtBlendMode_TextChanged);
+            this.txtBlendMode.TextChanged += new System.EventHandler(this.TxtBlendMode_TextChanged);
             // 
             // txtBlending
             // 
@@ -531,7 +531,7 @@
             this.txtBlending.Name = "txtBlending";
             this.txtBlending.Size = new System.Drawing.Size(80, 22);
             this.txtBlending.TabIndex = 7;
-            this.txtBlending.TextChanged += new System.EventHandler(this.txtBlending_TextChanged);
+            this.txtBlending.TextChanged += new System.EventHandler(this.TxtBlending_TextChanged);
             // 
             // txtDepth
             // 
@@ -548,7 +548,7 @@
             this.txtDestY.Name = "txtDestY";
             this.txtDestY.Size = new System.Drawing.Size(80, 22);
             this.txtDestY.TabIndex = 5;
-            this.txtDestY.TextChanged += new System.EventHandler(this.txtDestY_TextChanged);
+            this.txtDestY.TextChanged += new System.EventHandler(this.TxtDestY_TextChanged);
             // 
             // txtDestX
             // 
@@ -556,7 +556,7 @@
             this.txtDestX.Name = "txtDestX";
             this.txtDestX.Size = new System.Drawing.Size(80, 22);
             this.txtDestX.TabIndex = 4;
-            this.txtDestX.TextChanged += new System.EventHandler(this.txtDestX_TextChanged);
+            this.txtDestX.TextChanged += new System.EventHandler(this.TxtDestX_TextChanged);
             // 
             // txtHeight
             // 
@@ -582,7 +582,7 @@
             this.txtPaletteID.Name = "txtPaletteID";
             this.txtPaletteID.Size = new System.Drawing.Size(80, 22);
             this.txtPaletteID.TabIndex = 3;
-            this.txtPaletteID.TextChanged += new System.EventHandler(this.txtPaletteID_TextChanged);
+            this.txtPaletteID.TextChanged += new System.EventHandler(this.TxtPaletteID_TextChanged);
             // 
             // txtID
             // 
@@ -590,7 +590,7 @@
             this.txtID.Name = "txtID";
             this.txtID.Size = new System.Drawing.Size(80, 22);
             this.txtID.TabIndex = 0;
-            this.txtID.TextChanged += new System.EventHandler(this.txtID_TextChanged);
+            this.txtID.TextChanged += new System.EventHandler(this.TxtID_TextChanged);
             // 
             // lbSourceYBigID
             // 
@@ -781,7 +781,7 @@
             this.btnClose.TabIndex = 35;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // btnCommitIMAGE
             // 
@@ -792,7 +792,7 @@
             this.btnCommitIMAGE.TabIndex = 34;
             this.btnCommitIMAGE.Text = "Commit IMAGE";
             this.btnCommitIMAGE.UseVisualStyleBackColor = true;
-            this.btnCommitIMAGE.Click += new System.EventHandler(this.btnCommitIMAGE_Click);
+            this.btnCommitIMAGE.Click += new System.EventHandler(this.BtnCommitIMAGE_Click);
             // 
             // btnCommitINFO
             // 
@@ -803,7 +803,7 @@
             this.btnCommitINFO.TabIndex = 33;
             this.btnCommitINFO.Text = "Commit INFO";
             this.btnCommitINFO.UseVisualStyleBackColor = true;
-            this.btnCommitINFO.Click += new System.EventHandler(this.btnCommitINFO_Click);
+            this.btnCommitINFO.Click += new System.EventHandler(this.BtnCommitINFO_Click);
             // 
             // btnCommitALL
             // 
@@ -814,7 +814,7 @@
             this.btnCommitALL.TabIndex = 32;
             this.btnCommitALL.Text = "Commit ALL";
             this.btnCommitALL.UseVisualStyleBackColor = true;
-            this.btnCommitALL.Click += new System.EventHandler(this.btnCommitALL_Click);
+            this.btnCommitALL.Click += new System.EventHandler(this.BtnCommitALL_Click);
             // 
             // btnPrevTile
             // 
@@ -825,7 +825,7 @@
             this.btnPrevTile.Size = new System.Drawing.Size(38, 38);
             this.btnPrevTile.TabIndex = 31;
             this.btnPrevTile.UseVisualStyleBackColor = true;
-            this.btnPrevTile.Click += new System.EventHandler(this.btnPrevTile_Click);
+            this.btnPrevTile.Click += new System.EventHandler(this.BtnPrevTile_Click);
             // 
             // btnNextTile
             // 
@@ -836,7 +836,7 @@
             this.btnNextTile.Size = new System.Drawing.Size(38, 38);
             this.btnNextTile.TabIndex = 36;
             this.btnNextTile.UseVisualStyleBackColor = true;
-            this.btnNextTile.Click += new System.EventHandler(this.btnNextTile_Click);
+            this.btnNextTile.Click += new System.EventHandler(this.BtnNextTile_Click);
             // 
             // frmTileEditor
             // 
@@ -858,9 +858,9 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Tile Editor";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmTileEditor_FormClosing);
-            this.Load += new System.EventHandler(this.frmTileEditor_Load);
-            this.Shown += new System.EventHandler(this.frmTileEditor_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTileEditor_FormClosing);
+            this.Load += new System.EventHandler(this.FrmTileEditor_Load);
+            this.Shown += new System.EventHandler(this.FrmTileEditor_Shown);
             this.gbGRAPHIC.ResumeLayout(false);
             this.gbGRAPHIC.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTileEdit)).EndInit();

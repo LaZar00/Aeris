@@ -1,6 +1,6 @@
 ﻿namespace Aeris
 {
-    partial class frmBasePreview
+    partial class FrmBasePreview
     {
         /// <summary>
         /// Required designer variable.
@@ -43,7 +43,7 @@
             this.btnSave.TabIndex = 5;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
             // btnClose
             // 
@@ -54,7 +54,7 @@
             this.btnClose.TabIndex = 4;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // pbBasePreview
             // 
@@ -82,7 +82,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Base Preview";
-            this.Load += new System.EventHandler(this.frmBasePreview_Load);
+            this.Load += new System.EventHandler(this.FrmBasePreview_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pbBasePreview)).EndInit();
             this.ResumeLayout(false);
 

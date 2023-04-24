@@ -2,7 +2,7 @@
 
 namespace Aeris
 {
-    public partial class frmAeris
+    public partial class FrmAeris
     {
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Aeris
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAeris));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAeris));
             this.MenuStrip1 = new System.Windows.Forms.MenuStrip();
             this.FileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,6 +74,7 @@ namespace Aeris
             this.MarkTileBackgroundToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.UnswizzleAllInternalBaseTexturestoPNGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unswizzleAllExternalBaseTexturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SwizzleAllExportedBaseToPNGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.EventsLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ActivateLoggingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -143,7 +144,6 @@ namespace Aeris
             this.pbPalette = new System.Windows.Forms.PictureBox();
             this.saveFile = new System.Windows.Forms.SaveFileDialog();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
-            this.unswizzleAllExternalBaseTexturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuStrip1.SuspendLayout();
             this.gbSublayers.SuspendLayout();
             this.gbTile.SuspendLayout();
@@ -170,7 +170,7 @@ namespace Aeris
             this.MenuStrip1.Location = new System.Drawing.Point(0, 0);
             this.MenuStrip1.Name = "MenuStrip1";
             this.MenuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.MenuStrip1.Size = new System.Drawing.Size(1021, 24);
+            this.MenuStrip1.Size = new System.Drawing.Size(1026, 24);
             this.MenuStrip1.TabIndex = 1;
             this.MenuStrip1.Text = "MenuStrip1";
             // 
@@ -446,7 +446,7 @@ namespace Aeris
             // 
             this.AutoFillToolStripMenuItem.CheckOnClick = true;
             this.AutoFillToolStripMenuItem.Name = "AutoFillToolStripMenuItem";
-            this.AutoFillToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.AutoFillToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.AutoFillToolStripMenuItem.Text = "AutoFill";
             this.AutoFillToolStripMenuItem.Click += new System.EventHandler(this.AutoFillToolStripMenuItem_Click);
             // 
@@ -454,7 +454,7 @@ namespace Aeris
             // 
             this.X2ToolStripMenuItem.CheckOnClick = true;
             this.X2ToolStripMenuItem.Name = "X2ToolStripMenuItem";
-            this.X2ToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.X2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.X2ToolStripMenuItem.Text = "x2";
             this.X2ToolStripMenuItem.Click += new System.EventHandler(this.X2ToolStripMenuItem_Click);
             // 
@@ -462,7 +462,7 @@ namespace Aeris
             // 
             this.X4ToolStripMenuItem.CheckOnClick = true;
             this.X4ToolStripMenuItem.Name = "X4ToolStripMenuItem";
-            this.X4ToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.X4ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.X4ToolStripMenuItem.Text = "x4";
             this.X4ToolStripMenuItem.Click += new System.EventHandler(this.X4ToolStripMenuItem_Click);
             // 
@@ -493,6 +493,13 @@ namespace Aeris
             this.UnswizzleAllInternalBaseTexturestoPNGToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.UnswizzleAllInternalBaseTexturestoPNGToolStripMenuItem.Text = "Unswizzle All Internal Base Textures";
             this.UnswizzleAllInternalBaseTexturestoPNGToolStripMenuItem.Click += new System.EventHandler(this.UnswizzleAllInternalBaseTexturestoPNGToolStripMenuItem_Click);
+            // 
+            // unswizzleAllExternalBaseTexturesToolStripMenuItem
+            // 
+            this.unswizzleAllExternalBaseTexturesToolStripMenuItem.Name = "unswizzleAllExternalBaseTexturesToolStripMenuItem";
+            this.unswizzleAllExternalBaseTexturesToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.unswizzleAllExternalBaseTexturesToolStripMenuItem.Text = "Unswizzle All External Base Textures";
+            this.unswizzleAllExternalBaseTexturesToolStripMenuItem.Click += new System.EventHandler(this.UnswizzleAllExternalBaseTexturesToolStripMenuItem_Click);
             // 
             // SwizzleAllExportedBaseToPNGToolStripMenuItem
             // 
@@ -542,54 +549,53 @@ namespace Aeris
             // gbSublayers
             // 
             this.gbSublayers.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbSublayers.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbSublayers.Controls.Add(this.btnUncheckAll);
             this.gbSublayers.Controls.Add(this.btnCheckAll);
             this.gbSublayers.Controls.Add(this.clbSublayers);
             this.gbSublayers.Enabled = false;
-            this.gbSublayers.Location = new System.Drawing.Point(876, 288);
+            this.gbSublayers.Location = new System.Drawing.Point(881, 282);
             this.gbSublayers.Margin = new System.Windows.Forms.Padding(2);
             this.gbSublayers.Name = "gbSublayers";
             this.gbSublayers.Padding = new System.Windows.Forms.Padding(2);
-            this.gbSublayers.Size = new System.Drawing.Size(140, 405);
+            this.gbSublayers.Size = new System.Drawing.Size(140, 410);
             this.gbSublayers.TabIndex = 26;
             this.gbSublayers.TabStop = false;
             this.gbSublayers.Text = "Sublayers (Layer 1)";
             // 
             // btnUncheckAll
             // 
-            this.btnUncheckAll.Location = new System.Drawing.Point(68, 23);
+            this.btnUncheckAll.Location = new System.Drawing.Point(68, 26);
             this.btnUncheckAll.Margin = new System.Windows.Forms.Padding(2);
             this.btnUncheckAll.Name = "btnUncheckAll";
             this.btnUncheckAll.Size = new System.Drawing.Size(68, 20);
             this.btnUncheckAll.TabIndex = 18;
             this.btnUncheckAll.Text = "Uncheck All";
             this.btnUncheckAll.UseVisualStyleBackColor = true;
-            this.btnUncheckAll.Click += new System.EventHandler(this.btnUncheckAll_Click);
+            this.btnUncheckAll.Click += new System.EventHandler(this.BtnUncheckAll_Click);
             // 
             // btnCheckAll
             // 
-            this.btnCheckAll.Location = new System.Drawing.Point(4, 23);
+            this.btnCheckAll.Location = new System.Drawing.Point(4, 26);
             this.btnCheckAll.Margin = new System.Windows.Forms.Padding(2);
             this.btnCheckAll.Name = "btnCheckAll";
             this.btnCheckAll.Size = new System.Drawing.Size(58, 20);
             this.btnCheckAll.TabIndex = 17;
             this.btnCheckAll.Text = "Check All";
             this.btnCheckAll.UseVisualStyleBackColor = true;
-            this.btnCheckAll.Click += new System.EventHandler(this.btnCheckAll_Click);
+            this.btnCheckAll.Click += new System.EventHandler(this.BtnCheckAll_Click);
             // 
             // clbSublayers
             // 
             this.clbSublayers.CheckOnClick = true;
             this.clbSublayers.FormattingEnabled = true;
-            this.clbSublayers.Location = new System.Drawing.Point(4, 50);
+            this.clbSublayers.Location = new System.Drawing.Point(4, 55);
             this.clbSublayers.Margin = new System.Windows.Forms.Padding(2);
             this.clbSublayers.Name = "clbSublayers";
             this.clbSublayers.Size = new System.Drawing.Size(133, 349);
             this.clbSublayers.TabIndex = 16;
             this.clbSublayers.ThreeDCheckBoxes = true;
-            this.clbSublayers.SelectedIndexChanged += new System.EventHandler(this.clbSublayers_SelectedIndexChanged);
-            this.clbSublayers.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.clbSublayers_MouseDoubleClick);
+            this.clbSublayers.SelectedIndexChanged += new System.EventHandler(this.ClbSublayers_SelectedIndexChanged);
+            this.clbSublayers.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ClbSublayers_MouseDoubleClick);
             // 
             // gbTile
             // 
@@ -637,7 +643,7 @@ namespace Aeris
             this.gbTile.Controls.Add(this.btnTileRight);
             this.gbTile.Enabled = false;
             this.gbTile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gbTile.Location = new System.Drawing.Point(4, 500);
+            this.gbTile.Location = new System.Drawing.Point(4, 499);
             this.gbTile.Margin = new System.Windows.Forms.Padding(2);
             this.gbTile.Name = "gbTile";
             this.gbTile.Padding = new System.Windows.Forms.Padding(2);
@@ -724,7 +730,7 @@ namespace Aeris
             this.pbTile.Size = new System.Drawing.Size(60, 65);
             this.pbTile.TabIndex = 15;
             this.pbTile.TabStop = false;
-            this.pbTile.Click += new System.EventHandler(this.pbTile_Click);
+            this.pbTile.Click += new System.EventHandler(this.PbTile_Click);
             // 
             // cbIFX
             // 
@@ -1135,7 +1141,7 @@ namespace Aeris
             this.btnTileLeft.TabIndex = 17;
             this.btnTileLeft.Text = "◄";
             this.btnTileLeft.UseVisualStyleBackColor = true;
-            this.btnTileLeft.Click += new System.EventHandler(this.btnTileLeft_Click);
+            this.btnTileLeft.Click += new System.EventHandler(this.BtnTileLeft_Click);
             // 
             // btnTileRight
             // 
@@ -1147,14 +1153,14 @@ namespace Aeris
             this.btnTileRight.TabIndex = 16;
             this.btnTileRight.Text = "►";
             this.btnTileRight.UseVisualStyleBackColor = true;
-            this.btnTileRight.Click += new System.EventHandler(this.btnTileRight_Click);
+            this.btnTileRight.Click += new System.EventHandler(this.BtnTileRight_Click);
             // 
             // panelpbTexture
             // 
             this.panelpbTexture.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.panelpbTexture.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelpbTexture.Controls.Add(this.pbTexture);
-            this.panelpbTexture.Location = new System.Drawing.Point(4, 288);
+            this.panelpbTexture.Location = new System.Drawing.Point(4, 285);
             this.panelpbTexture.Margin = new System.Windows.Forms.Padding(2);
             this.panelpbTexture.Name = "panelpbTexture";
             this.panelpbTexture.Size = new System.Drawing.Size(197, 213);
@@ -1170,9 +1176,9 @@ namespace Aeris
             this.pbTexture.Size = new System.Drawing.Size(192, 208);
             this.pbTexture.TabIndex = 6;
             this.pbTexture.TabStop = false;
-            this.pbTexture.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbTexture_MouseDown);
-            this.pbTexture.MouseLeave += new System.EventHandler(this.pbTexture_MouseLeave);
-            this.pbTexture.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbTexture_MouseMove);
+            this.pbTexture.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PbTexture_MouseDown);
+            this.pbTexture.MouseLeave += new System.EventHandler(this.PbTexture_MouseLeave);
+            this.pbTexture.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PbTexture_MouseMove);
             // 
             // panelpbBackground
             // 
@@ -1180,13 +1186,14 @@ namespace Aeris
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelpbBackground.AutoScroll = true;
+            this.panelpbBackground.BackColor = System.Drawing.SystemColors.Control;
             this.panelpbBackground.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.panelpbBackground.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panelpbBackground.Controls.Add(this.pbBackground);
             this.panelpbBackground.Location = new System.Drawing.Point(203, 27);
             this.panelpbBackground.Margin = new System.Windows.Forms.Padding(2);
             this.panelpbBackground.Name = "panelpbBackground";
-            this.panelpbBackground.Size = new System.Drawing.Size(669, 665);
+            this.panelpbBackground.Size = new System.Drawing.Size(674, 673);
             this.panelpbBackground.TabIndex = 23;
             // 
             // pbBackground
@@ -1195,23 +1202,23 @@ namespace Aeris
             this.pbBackground.Location = new System.Drawing.Point(0, 0);
             this.pbBackground.Margin = new System.Windows.Forms.Padding(2);
             this.pbBackground.Name = "pbBackground";
-            this.pbBackground.Size = new System.Drawing.Size(664, 659);
+            this.pbBackground.Size = new System.Drawing.Size(664, 658);
             this.pbBackground.TabIndex = 5;
             this.pbBackground.TabStop = false;
-            this.pbBackground.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbBackground_MouseDown);
-            this.pbBackground.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbBackground_MouseMove);
-            this.pbBackground.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbBackground_MouseUp);
+            this.pbBackground.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PbBackground_MouseDown);
+            this.pbBackground.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PbBackground_MouseMove);
+            this.pbBackground.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PbBackground_MouseUp);
             // 
             // rtbEvents
             // 
             this.rtbEvents.BackColor = System.Drawing.SystemColors.Window;
             this.rtbEvents.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.rtbEvents.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtbEvents.Location = new System.Drawing.Point(0, 606);
+            this.rtbEvents.Location = new System.Drawing.Point(0, 703);
             this.rtbEvents.Margin = new System.Windows.Forms.Padding(2);
             this.rtbEvents.Name = "rtbEvents";
             this.rtbEvents.ReadOnly = true;
-            this.rtbEvents.Size = new System.Drawing.Size(1021, 81);
+            this.rtbEvents.Size = new System.Drawing.Size(1026, 90);
             this.rtbEvents.TabIndex = 22;
             this.rtbEvents.Text = "";
             this.rtbEvents.WordWrap = false;
@@ -1222,14 +1229,14 @@ namespace Aeris
             this.tcParams.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.tcParams.Enabled = false;
             this.tcParams.ItemSize = new System.Drawing.Size(28, 64);
-            this.tcParams.Location = new System.Drawing.Point(879, 106);
+            this.tcParams.Location = new System.Drawing.Point(884, 101);
             this.tcParams.Margin = new System.Windows.Forms.Padding(2);
             this.tcParams.Name = "tcParams";
             this.tcParams.SelectedIndex = 0;
             this.tcParams.Size = new System.Drawing.Size(135, 176);
             this.tcParams.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tcParams.TabIndex = 21;
-            this.tcParams.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tcParams_DrawItem);
+            this.tcParams.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.TcParams_DrawItem);
             // 
             // gbLayers
             // 
@@ -1239,7 +1246,7 @@ namespace Aeris
             this.gbLayers.Controls.Add(this.cbLayer1);
             this.gbLayers.Controls.Add(this.cbLayer0);
             this.gbLayers.Enabled = false;
-            this.gbLayers.Location = new System.Drawing.Point(876, 25);
+            this.gbLayers.Location = new System.Drawing.Point(881, 24);
             this.gbLayers.Margin = new System.Windows.Forms.Padding(2);
             this.gbLayers.Name = "gbLayers";
             this.gbLayers.Padding = new System.Windows.Forms.Padding(2);
@@ -1258,7 +1265,7 @@ namespace Aeris
             this.cbLayer3.TabIndex = 3;
             this.cbLayer3.Text = "Layer 3";
             this.cbLayer3.UseVisualStyleBackColor = true;
-            this.cbLayer3.CheckedChanged += new System.EventHandler(this.cbLayer3_CheckedChanged);
+            this.cbLayer3.CheckedChanged += new System.EventHandler(this.CbLayer3_CheckedChanged);
             // 
             // cbLayer2
             // 
@@ -1270,7 +1277,7 @@ namespace Aeris
             this.cbLayer2.TabIndex = 2;
             this.cbLayer2.Text = "Layer 2";
             this.cbLayer2.UseVisualStyleBackColor = true;
-            this.cbLayer2.CheckedChanged += new System.EventHandler(this.cbLayer2_CheckedChanged);
+            this.cbLayer2.CheckedChanged += new System.EventHandler(this.CbLayer2_CheckedChanged);
             // 
             // cbLayer1
             // 
@@ -1282,7 +1289,7 @@ namespace Aeris
             this.cbLayer1.TabIndex = 1;
             this.cbLayer1.Text = "Layer 1";
             this.cbLayer1.UseVisualStyleBackColor = true;
-            this.cbLayer1.CheckedChanged += new System.EventHandler(this.cbLayer1_CheckedChanged);
+            this.cbLayer1.CheckedChanged += new System.EventHandler(this.CbLayer1_CheckedChanged);
             // 
             // cbLayer0
             // 
@@ -1294,59 +1301,52 @@ namespace Aeris
             this.cbLayer0.TabIndex = 0;
             this.cbLayer0.Text = "Layer 0";
             this.cbLayer0.UseVisualStyleBackColor = true;
-            this.cbLayer0.CheckedChanged += new System.EventHandler(this.cbLayer0_CheckedChanged);
+            this.cbLayer0.CheckedChanged += new System.EventHandler(this.CbLayer0_CheckedChanged);
             // 
             // cbTextures
             // 
             this.cbTextures.Enabled = false;
             this.cbTextures.FormattingEnabled = true;
-            this.cbTextures.Location = new System.Drawing.Point(5, 266);
+            this.cbTextures.Location = new System.Drawing.Point(5, 264);
             this.cbTextures.Margin = new System.Windows.Forms.Padding(2);
             this.cbTextures.MaxDropDownItems = 16;
             this.cbTextures.Name = "cbTextures";
             this.cbTextures.Size = new System.Drawing.Size(195, 21);
             this.cbTextures.TabIndex = 19;
-            this.cbTextures.SelectedIndexChanged += new System.EventHandler(this.cbTextures_SelectedIndexChanged);
+            this.cbTextures.SelectedIndexChanged += new System.EventHandler(this.CbTextures_SelectedIndexChanged);
             // 
             // cbPalettes
             // 
             this.cbPalettes.Enabled = false;
             this.cbPalettes.FormattingEnabled = true;
-            this.cbPalettes.Location = new System.Drawing.Point(5, 27);
+            this.cbPalettes.Location = new System.Drawing.Point(5, 26);
             this.cbPalettes.Margin = new System.Windows.Forms.Padding(2);
             this.cbPalettes.MaxDropDownItems = 16;
             this.cbPalettes.Name = "cbPalettes";
             this.cbPalettes.Size = new System.Drawing.Size(195, 21);
             this.cbPalettes.TabIndex = 18;
-            this.cbPalettes.SelectedIndexChanged += new System.EventHandler(this.cbPalettes_SelectedIndexChanged);
+            this.cbPalettes.SelectedIndexChanged += new System.EventHandler(this.CbPalettes_SelectedIndexChanged);
             // 
             // pbPalette
             // 
             this.pbPalette.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pbPalette.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pbPalette.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.pbPalette.Location = new System.Drawing.Point(4, 48);
+            this.pbPalette.Location = new System.Drawing.Point(4, 47);
             this.pbPalette.Margin = new System.Windows.Forms.Padding(2);
             this.pbPalette.Name = "pbPalette";
             this.pbPalette.Size = new System.Drawing.Size(197, 213);
             this.pbPalette.TabIndex = 17;
             this.pbPalette.TabStop = false;
-            this.pbPalette.Paint += new System.Windows.Forms.PaintEventHandler(this.pbPalette_Paint);
-            this.pbPalette.MouseLeave += new System.EventHandler(this.pbPalette_MouseLeave);
-            this.pbPalette.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbPalette_MouseMove);
+            this.pbPalette.Paint += new System.Windows.Forms.PaintEventHandler(this.PbPalette_Paint);
+            this.pbPalette.MouseLeave += new System.EventHandler(this.PbPalette_MouseLeave);
+            this.pbPalette.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PbPalette_MouseMove);
             // 
-            // unswizzleAllExternalBaseTexturesToolStripMenuItem
-            // 
-            this.unswizzleAllExternalBaseTexturesToolStripMenuItem.Name = "unswizzleAllExternalBaseTexturesToolStripMenuItem";
-            this.unswizzleAllExternalBaseTexturesToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.unswizzleAllExternalBaseTexturesToolStripMenuItem.Text = "Unswizzle All External Base Textures";
-            this.unswizzleAllExternalBaseTexturesToolStripMenuItem.Click += new System.EventHandler(this.unswizzleAllExternalBaseTexturesToolStripMenuItem_Click);
-            // 
-            // frmAeris
+            // FrmAeris
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1021, 687);
+            this.ClientSize = new System.Drawing.Size(1026, 793);
             this.Controls.Add(this.gbSublayers);
             this.Controls.Add(this.gbTile);
             this.Controls.Add(this.panelpbTexture);
@@ -1362,12 +1362,12 @@ namespace Aeris
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.MenuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.MinimumSize = new System.Drawing.Size(1035, 683);
-            this.Name = "frmAeris";
+            this.MinimumSize = new System.Drawing.Size(1042, 832);
+            this.Name = "FrmAeris";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Aeris" + frmAeris.strAerisVersion;
-            this.Load += new System.EventHandler(this.frmAeris_Load);
-            this.Resize += new System.EventHandler(this.frmAeris_Resize);
+            this.Text = "Aeris";
+            this.Load += new System.EventHandler(this.FrmAeris_Load);
+            this.Resize += new System.EventHandler(this.FrmAeris_Resize);
             this.MenuStrip1.ResumeLayout(false);
             this.MenuStrip1.PerformLayout();
             this.gbSublayers.ResumeLayout(false);
