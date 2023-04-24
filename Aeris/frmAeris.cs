@@ -9,35 +9,41 @@ using System.Drawing.Drawing2D;
 
 namespace Aeris
 {
-    public partial class frmAeris : Form
+
+    using static S9;
+
+    using static Palette;
+    using static FileTools;
+
+    public partial class FrmAeris : Form
     {
 
-        public const string strAerisVersion = " v1.4b";
+        public const string strAerisVersion = " v1.4d";
 
-        private frmTileEditor frmTileEditor;
-        private frmBasePreview frmBasePreview;
-        private frmTextureImage frmTextureImage;
-        private frmSwizzleExternalHashImage frmSwizzleExternalHashImage;
-        private frmSwizzleExternalBaseImages frmSwizzleExternalBaseImages;
-        private frmSwizzleHashesBatch frmSwizzleHashesBatch;
-        private frmUnswizzleExternalBaseTextures frmUnswizzleExternalBaseTextures;
-        private frmUnswizzleExternalHashTextures frmUnswizzleExternalHashTextures;
-        private frmUnswizzleHashesBatch frmUnswizzleHashesBatch;
+        readonly private FrmTileEditor frmTileEditor;
+        readonly private FrmBasePreview frmBasePreview;
+        readonly private FrmTextureImage frmTextureImage;
+        readonly private FrmSwizzleExternalHashImage frmSwizzleExternalHashImage;
+        readonly private FrmSwizzleExternalBaseImages frmSwizzleExternalBaseImages;
+        readonly private FrmSwizzleHashesBatch frmSwizzleHashesBatch;
+        readonly private FrmUnswizzleExternalBaseTextures frmUnswizzleExternalBaseTextures;
+        readonly private FrmUnswizzleExternalHashTextures frmUnswizzleExternalHashTextures;
+        readonly private FrmUnswizzleHashesBatch frmUnswizzleHashesBatch;
 
-        public frmAeris()
+        public FrmAeris()
         {
 
             InitializeComponent();
 
-            frmTileEditor = new frmTileEditor(this);
-            frmBasePreview = new frmBasePreview(this);
-            frmTextureImage = new frmTextureImage(this);
-            frmSwizzleExternalHashImage = new frmSwizzleExternalHashImage(this);
-            frmSwizzleExternalBaseImages = new frmSwizzleExternalBaseImages(this);
-            frmSwizzleHashesBatch = new frmSwizzleHashesBatch(this);
-            frmUnswizzleExternalBaseTextures = new frmUnswizzleExternalBaseTextures(this);
-            frmUnswizzleExternalHashTextures = new frmUnswizzleExternalHashTextures(this);
-            frmUnswizzleHashesBatch = new frmUnswizzleHashesBatch(this);
+            frmTileEditor = new FrmTileEditor(this);
+            frmBasePreview = new FrmBasePreview(this);
+            frmTextureImage = new FrmTextureImage(this);
+            frmSwizzleExternalHashImage = new FrmSwizzleExternalHashImage(this);
+            frmSwizzleExternalBaseImages = new FrmSwizzleExternalBaseImages(this);
+            frmSwizzleHashesBatch = new FrmSwizzleHashesBatch(this);
+            frmUnswizzleExternalBaseTextures = new FrmUnswizzleExternalBaseTextures(this);
+            frmUnswizzleExternalHashTextures = new FrmUnswizzleExternalHashTextures(this);
+            frmUnswizzleHashesBatch = new FrmUnswizzleHashesBatch(this);
 
         }
 
@@ -45,9 +51,14 @@ namespace Aeris
         // Bools for use in modules depending on the checked menu options.
         public static bool Initializing;
         public static bool LoadNewField;
+        
         public static int iBGZoom;
+        public static bool bResized;
+
         public static CheckedListBox newCLB;
         public static TabPage newTab;
+
+        public static bool bFieldLoaded;
 
         // Public bmpPALInfoColor As Bitmap = New Bitmap(56, 50)
         public static Bitmap bmpPALInfoColor = new Bitmap(68, 66);
@@ -56,8 +67,10 @@ namespace Aeris
         public static bool bMarkTileBackground;
 
 
-        private void frmAeris_Load(object sender, EventArgs e)
+        private void FrmAeris_Load(object sender, EventArgs e)
         {
+            // Let's put the title
+            Text += strAerisVersion;
 
             // Load field IDs info.
             FieldIDs.PopulateFields();
@@ -81,6 +94,8 @@ namespace Aeris
             pbBackground.Cursor = ImageTools.MoveCUR;
 
             bMarkTileBackground = false;
+
+            bFieldLoaded = false;
         }
 
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -117,8 +132,8 @@ namespace Aeris
                                     MessageBoxButtons.OK);
 
                     // Finally we need to update/refresh the values in the loaded field.
-                    S9.PreRender_S9Tiles();
-                    S9.Load_ZList(rtbEvents);
+                    PreRender_S9Tiles();
+                    Load_ZList(rtbEvents);
 
                     cbTextures.SelectedIndex = 26;
 
@@ -168,10 +183,10 @@ namespace Aeris
             cbLayer1.Checked = false;
             cbLayer2.Checked = false;
             cbLayer3.Checked = false;
-            S9.bLayerChecked0 = false;
-            S9.bLayerChecked1 = false;
-            S9.bLayerChecked2 = false;
-            S9.bLayerChecked3 = false;
+            bLayerChecked0 = false;
+            bLayerChecked1 = false;
+            bLayerChecked2 = false;
+            bLayerChecked3 = false;
             cbPalettes.Items.Clear();
             cbPalettes.SelectedIndex = -1;
             cbPalettes.Enabled = false;
@@ -225,15 +240,15 @@ namespace Aeris
 
             // Initialize Vars
             // Clear List of Params/States
-            S9.Clear_ListParams();
-            S9.MaxSublayers = 0;
+            Clear_ListParams();
+            MaxSublayers = 0;
 
 
             // Clear textureImages.
-            S9.Clear_TextureImages();
+            Clear_TextureImages();
 
             // ZList
-            S9.Section9Z.Clear();
+            Section9Z.Clear();
 
             // TileSeparation
             SwizzleHash.lstTileSeparation.Clear();
@@ -251,13 +266,13 @@ namespace Aeris
             openFile.FileName = null;
 
             // Check Initial Directory
-            if (FileTools.strGlobalPathFieldFolder != null)
+            if (strGlobalPathFieldFolder != null)
             {
-                openFile.InitialDirectory = FileTools.strGlobalPathFieldFolder;
+                openFile.InitialDirectory = strGlobalPathFieldFolder;
             }
             else
             {
-                openFile.InitialDirectory = FileTools.strGlobalPath;
+                openFile.InitialDirectory = strGlobalPath;
             }
 
             try
@@ -267,31 +282,32 @@ namespace Aeris
                 {
                     if (File.Exists(openFile.FileName))
                     {
-                        FileTools.strFileFieldName = Path.GetFileName(openFile.FileName);
-                        FileTools.strGlobalFieldName = Path.GetFileNameWithoutExtension(FileTools.strFileFieldName);
+                        strFileFieldName = Path.GetFileName(openFile.FileName);
+                        strGlobalFieldName = Path.GetFileNameWithoutExtension(strFileFieldName);
 
                         // Initialize things.
                         Initialize();
 
 
                         // We load the field.
-                        iLoadResult = FileTools.Load_Field(openFile.FileName);
+                        iLoadResult = Load_Field(openFile.FileName);
                         if (iLoadResult == -1)
                         {
-                            MessageBox.Show("Error opening Field file '" + FileTools.strFileFieldName + "'.",
+                            MessageBox.Show("Error opening Field file '" + strFileFieldName + "'.",
                                             "Error");
                             return;
                         }
 
                         // Load TileSeparation File if there is any.
                         // The unique field until now that need this is 'blue_2'.
-                        if (File.Exists(FileTools.strGlobalPath + "\\tileseparation\\" +
-                                        FileTools.strGlobalFieldName + ".txt"))
+                        if (File.Exists(strGlobalPath + "\\tileseparation\\" +
+                                        strGlobalFieldName + ".txt"))
                         {
-                            SwizzleHash.Read_TileSeparation(FileTools.strGlobalPath + "\\tileseparation\\" +
-                                                               FileTools.strGlobalFieldName + ".txt");
+                            SwizzleHash.Read_TileSeparation(strGlobalPath + "\\tileseparation\\" +
+                                                            strGlobalFieldName + ".txt");
                         }
 
+                        bFieldLoaded = true;
 
                         // Prepare Param/Status Tab
                         Prepare_ParamStatus();
@@ -309,8 +325,8 @@ namespace Aeris
 
                         // Activate some Layer things.
                         gbLayers.Enabled = true;
-                        if (S9.Section9.Layer[1].layerFlag == 1 &&
-                            S9.Section9.Layer[1].numTiles > 0)
+                        if (Section9.Layer[1].layerFlag == 1 &&
+                            Section9.Layer[1].numTiles > 0)
                         {
                             cbLayer1.Enabled = true;
                         }
@@ -319,8 +335,8 @@ namespace Aeris
                             cbLayer1.Enabled = false;
                         }
 
-                        if (S9.Section9.Layer[2].layerFlag == 1 &&
-                            S9.Section9.Layer[2].numTiles > 0)
+                        if (Section9.Layer[2].layerFlag == 1 &&
+                            Section9.Layer[2].numTiles > 0)
                         {
                             cbLayer2.Enabled = true;
                         }
@@ -329,8 +345,8 @@ namespace Aeris
                             cbLayer2.Enabled = false;
                         }
 
-                        if (S9.Section9.Layer[3].layerFlag == 1 &&
-                            S9.Section9.Layer[3].numTiles > 0)
+                        if (Section9.Layer[3].layerFlag == 1 &&
+                            Section9.Layer[3].numTiles > 0)
                         {
                             cbLayer3.Enabled = true;
                         }
@@ -341,10 +357,10 @@ namespace Aeris
 
 
                         // Prepare ZList.
-                        S9.Load_ZList(rtbEvents);
+                        Load_ZList(rtbEvents);
 
                         // Prepare Sections
-                        if (S9.MaxSublayers > 0)
+                        if (MaxSublayers > 0)
                         {
                             Prepare_Sublayers();
                         }
@@ -356,7 +372,7 @@ namespace Aeris
                         cbTextures.Enabled = true;
                         if (cbTextures.Items.Count > 0)
                         {
-                            cbTextures.SelectedIndex = S9.Section9Z[0].ZTexture;
+                            cbTextures.SelectedIndex = Section9Z[0].ZTexture;
                         }
 
 
@@ -384,9 +400,9 @@ namespace Aeris
                         Repairfr_eToolStripMenuItem2.Enabled = false;
 
                         // Activate Menu Item for Repair Field fr_e
-                        if (string.Compare(FileTools.strGlobalFieldName, FieldIDs._FIELD_FR_E) == 0)
+                        if (string.Compare(strGlobalFieldName, FieldIDs._FIELD_FR_E) == 0)
                         {
-                            if (S9.Section9.Textures[26].textureFlag == 1)
+                            if (Section9.Textures[26].textureFlag == 1)
                             {
                                 Repairfr_eToolStripMenuItem2.Enabled = true;
                             }
@@ -394,16 +410,17 @@ namespace Aeris
 
 
                         // Initialize Title
-                        FileTools.bFieldModified = false;
+                        bFieldModified = false;
                         Update_AerisTitle();
 
                         // Set Global Path for Fields
-                        FileTools.strGlobalPathFieldFolder = Path.GetDirectoryName(openFile.FileName);
+                        strGlobalPathFieldFolder = Path.GetDirectoryName(openFile.FileName);
                     }
                 }
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error preparing data of the Field for Aeris.", "Error");
             }
         }
@@ -411,29 +428,29 @@ namespace Aeris
         public void Update_AerisTitle()
         {
             Text = "Aeris" + strAerisVersion + " - " +
-                   "Field: (" + FileTools.strGlobalFieldName + " | " +
-                   FieldIDs.stFieldIDNameList.Find(x => x.FieldName.Contains(FileTools.strGlobalFieldName)).FieldID.ToString("000") +
+                   "Field: (" + strGlobalFieldName + " | " +
+                   FieldIDs.stFieldIDNameList.Find(x => x.FieldName.Contains(strGlobalFieldName)).FieldID.ToString("000") +
                    ")";
 
-            if (FileTools.bFieldModified)
+            if (bFieldModified)
             {
-                Text = Text + " *";
+                Text += " *";
             }
         }
 
-        private void cbPalettes_SelectedIndexChanged(object sender, EventArgs e)
+        private void CbPalettes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbPalettes.Items.Count > 0 & cbPalettes.SelectedIndex > -1)
             {
-                Palette.Refresh_Palette(ref pbPalette, cbPalettes.SelectedIndex);
+                Refresh_Palette(ref pbPalette, cbPalettes.SelectedIndex);
             }
         }
 
-        private void cbTextures_SelectedIndexChanged(object sender, EventArgs e)
+        private void CbTextures_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbTextures.Items.Count > 0 & cbTextures.SelectedIndex > -1)
             {
-                if (S9.textureImage[cbTextures.SelectedIndex] != null)
+                if (textureImage[cbTextures.SelectedIndex] != null)
                 {
                     Render_Texture();
                     txtTileTex.Text = "0";
@@ -454,7 +471,7 @@ namespace Aeris
             ImageTools.ClearPictureBox(pbBackground, 0, panelpbBackground);
             logEvents.ClearEvents(rtbEvents);
 
-            S9.Render_S9Layers(this);
+            Render_S9Layers(this);
 
             if (cbLayer0.Checked | cbLayer1.Checked | cbLayer2.Checked | cbLayer3.Checked)
             {
@@ -469,32 +486,32 @@ namespace Aeris
 
             if (cbTextures.Items.Count > 0)
             {
-                if (S9.textureImage[cbTextures.SelectedIndex] != null)
+                if (textureImage[cbTextures.SelectedIndex] != null)
                 {
                     if (pbTexture.Image != null)
                     {
                         pbTexture.Image.Dispose();
                     }
 
-                    pbTexture.Image = new Bitmap(S9.textureImage[cbTextures.SelectedIndex].Bitmap);
+                    pbTexture.Image = new Bitmap(textureImage[cbTextures.SelectedIndex].Bitmap);
                 }
             }
         }
 
-        private void cbLayer0_CheckedChanged(object sender, EventArgs e)
+        private void CbLayer0_CheckedChanged(object sender, EventArgs e)
         {
-            S9.bLayerChecked0 = !S9.bLayerChecked0;
+            bLayerChecked0 = !bLayerChecked0;
 
             if (Initializing) return;
 
             Render_Layers();
         }
 
-        private void cbLayer1_CheckedChanged(object sender, EventArgs e)
+        private void CbLayer1_CheckedChanged(object sender, EventArgs e)
         {
             if (Initializing) return;
 
-            S9.bLayerChecked1 = !S9.bLayerChecked1;
+            bLayerChecked1 = !bLayerChecked1;
 
             if (cbLayer1.Checked)
             {
@@ -508,18 +525,18 @@ namespace Aeris
             Render_Layers();
         }
 
-        private void cbLayer2_CheckedChanged(object sender, EventArgs e)
+        private void CbLayer2_CheckedChanged(object sender, EventArgs e)
         {
-            S9.bLayerChecked2 = !S9.bLayerChecked2;
+            bLayerChecked2 = !bLayerChecked2;
 
             if (Initializing) return;
 
             Render_Layers();
         }
 
-        private void cbLayer3_CheckedChanged(object sender, EventArgs e)
+        private void CbLayer3_CheckedChanged(object sender, EventArgs e)
         {
-            S9.bLayerChecked3 = !S9.bLayerChecked3;
+            bLayerChecked3 = !bLayerChecked3;
 
             if (Initializing) return;
 
@@ -604,7 +621,7 @@ namespace Aeris
             // Set filter options and filter index.
             saveFile.Title = "Save Events As...";
             saveFile.Filter = "TXT|*.txt";
-            saveFile.InitialDirectory = FileTools.strGlobalPath;
+            saveFile.InitialDirectory = strGlobalPath;
             saveFile.FilterIndex = 1;
             saveFile.FileName = null;
             try
@@ -626,6 +643,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("ERROR: There has been some error saving the event log.", "Error");
             }
         }
@@ -639,13 +657,13 @@ namespace Aeris
             int ipbWidth, ipbHeight;
             var bResetAutoScroll = default(bool);
 
-            if (S9.bmpBgImage != null &&
+            if (bmpBgImage != null &&
                 (panelpbBackground.Width > 0 & panelpbBackground.Height > 0))
             {
 
                 // ClearPictureBox(pbBackground, 0, panelpbBackground)
 
-                bmpMarkBgImage = new Bitmap(S9.bmpBgImage.Bitmap);
+                bmpMarkBgImage = new Bitmap(bmpBgImage.Bitmap);
 
                 // Let's mark the tile in the background if option selected.
                 if (bMarkTileBackground & gbTile.Enabled)
@@ -654,8 +672,8 @@ namespace Aeris
                     // Let's mark the tile on the Background. ;)
                     using (Graphics g = Graphics.FromImage(bmpMarkBgImage))
                     {
-                        var rectTile = new Rectangle(S9.iLayersbmpPosX + Int32.Parse(txtDestX.Text),
-                                                     S9.iLayersbmpPosY + Int32.Parse(txtDestY.Text),
+                        var rectTile = new Rectangle(iLayersbmpPosX + Int32.Parse(txtDestX.Text),
+                                                     iLayersbmpPosY + Int32.Parse(txtDestY.Text),
                                                      Int32.Parse(txtTileSize.Text), Int32.Parse(txtTileSize.Text));
                         Color cColor1, cColor2;
                         cColor1 = Color.GreenYellow;
@@ -680,8 +698,8 @@ namespace Aeris
                     // Stretch image if AutoFill checked.
                     // Restore PictureBox Background original dimension.
 
-                    iWidth = S9.bmpBgImage.Width;
-                    iHeight = S9.bmpBgImage.Height;
+                    iWidth = bmpBgImage.Width;
+                    iHeight = bmpBgImage.Height;
                     ipbWidth = panelpbBackground.Width - 12;
                     ipbHeight = panelpbBackground.Height - 12;
                     dAspectRatio = iWidth / (double)iHeight;
@@ -702,13 +720,15 @@ namespace Aeris
                     // No Stretch image.
                     // Here we prepare the image with zoom if needed.
 
-                    iNewWidth = S9.bmpBgImage.Width * iBGZoom;
-                    iNewHeight = S9.bmpBgImage.Height * iBGZoom;
+                    iNewWidth = bmpBgImage.Width * iBGZoom;
+                    iNewHeight = bmpBgImage.Height * iBGZoom;
                 }
 
-                if (pbBackground.Width != iNewWidth | pbBackground.Height != iNewHeight)
+                if (pbBackground.Width != iNewWidth | pbBackground.Height != iNewHeight | bResized)
                 {
+                    
                     pbBackground.Size = new Size(iNewWidth, iNewHeight);
+
                     if (panelpbBackground.Height - 4 < pbBackground.Height)
                     {
                         yPoint = 0;
@@ -737,6 +757,9 @@ namespace Aeris
                     }
 
                     pbBackground.Location = new Point(xPoint, yPoint);
+
+                    bResized = false;
+
                 }
 
 
@@ -805,14 +828,14 @@ namespace Aeris
         {
             try
             {
-                if (S9.textureImage[cbTextures.SelectedIndex] !=  null)
+                if (textureImage[cbTextures.SelectedIndex] !=  null)
                 {
                     // Set filter options and filter index.
                     saveFile.Title = "Export Texture As .PNG";
                     saveFile.Filter = ".PNG File|*.png";
-                    saveFile.InitialDirectory = FileTools.strGlobalPath;
+                    saveFile.InitialDirectory = strGlobalPath;
                     saveFile.FilterIndex = 1;
-                    saveFile.FileName = FileTools.strGlobalFieldName + "_" + 
+                    saveFile.FileName = strGlobalFieldName + "_" + 
                                         cbTextures.SelectedIndex.ToString("00") + "_00.png";
                     saveFile.FilterIndex = 1;
 
@@ -822,7 +845,7 @@ namespace Aeris
                         {
                             if (saveFile.FilterIndex == 1)
                             {
-                                ImageTools.WriteBitmap(S9.textureImage[cbTextures.SelectedIndex].Bitmap,
+                                ImageTools.WriteBitmap(textureImage[cbTextures.SelectedIndex].Bitmap,
                                                        saveFile.FileName);
 
                                 MessageBox.Show("Texture exported in .PNG format.", "Information");
@@ -833,6 +856,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error exporting Texture.", "Error");
             }
         }
@@ -850,13 +874,13 @@ namespace Aeris
                 fbdEX.folderBrowser.Description = "Select Output Folder for Export All " +
                                                   "Swizzled Textures of the field:";
 
-                if (FileTools.strGlobalExportAllTextures != null)
+                if (strGlobalExportAllTextures != null)
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalExportAllTextures;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalExportAllTextures;
                 }
                 else
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalPath;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalPath;
                 }
 
                 fbdEX.Tmr.Start();
@@ -865,17 +889,17 @@ namespace Aeris
                     if (fbdEX.folderBrowser.SelectedPath != "")
                     {
                         // Put Global folder for export all base.
-                        FileTools.strGlobalExportAllTextures = fbdEX.folderBrowser.SelectedPath;
+                        strGlobalExportAllTextures = fbdEX.folderBrowser.SelectedPath;
 
-                        for (iNumTexture = 0; iNumTexture < S9.MAX_NUM_TEXTURES; iNumTexture++)
+                        for (iNumTexture = 0; iNumTexture < MAX_NUM_TEXTURES; iNumTexture++)
                         {
-                            if (S9.textureImage[iNumTexture] != null)
+                            if (textureImage[iNumTexture] != null)
                             {
-                                strTextureFile = FileTools.strGlobalExportAllTextures + "\\" + 
-                                                 FileTools.strGlobalFieldName + "_" + 
+                                strTextureFile = strGlobalExportAllTextures + "\\" + 
+                                                 strGlobalFieldName + "_" + 
                                                  iNumTexture.ToString("00") + "_00.png";
 
-                                ImageTools.WriteBitmap(S9.textureImage[iNumTexture].Bitmap, 
+                                ImageTools.WriteBitmap(textureImage[iNumTexture].Bitmap, 
                                                        strTextureFile);
 
                             }
@@ -889,6 +913,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("ERROR: Exporting All Swizzled Textures.", "Error");
             }
         }
@@ -903,32 +928,32 @@ namespace Aeris
             tcParams.TabPages.Clear();
 
             // Let's prepare params/states tab control
-            if (S9.MaxParams > 0)
+            if (MaxParams > 0)
             {
-                for (iTabParam = 1; iTabParam <= S9.MaxParams; iTabParam++)
+                for (iTabParam = 1; iTabParam <= MaxParams; iTabParam++)
                 {
-                    if (S9.ListParams[iTabParam].MinState != 1000)
+                    if (ListParams[iTabParam].MinState != 1000)
                     {
                         // If ListParams(iTabParam).MaxState > 0 Or ListParams(iTabParam).MinState > 0 Then
                         newTab = new TabPage("P " + iTabParam.ToString("00"));
                         newCLB = new CheckedListBox();
 
                         // Create State list in checkedlistbox
-                        for (iCLBState = 0; iCLBState <= S9.ListParams[iTabParam].MaxState; iCLBState++)
+                        for (iCLBState = 0; iCLBState <= ListParams[iTabParam].MaxState; iCLBState++)
                         {
-                            if (S9.ListParams[iTabParam].States[iCLBState])
+                            if (ListParams[iTabParam].States[iCLBState])
                             {
                                 newCLB.Items.Add("State " + iCLBState.ToString());
                                 newCLB.Name = "clbState" + (iTabParam - 1).ToString();
                                 newCLB.Size = new Size(172, 208);
                                 newCLB.CheckOnClick = true;
                                 newCLB.BorderStyle = BorderStyle.Fixed3D;
-                                S9.ListParams[iTabParam].States[iCLBState] = false;
+                                ListParams[iTabParam].States[iCLBState] = false;
                             }
                         }
 
                         // Add a Handler
-                        newCLB.ItemCheck += clbStatus_ItemCheck;
+                        newCLB.ItemCheck += ClbStatus_ItemCheck;
 
                         // Add CLB to TabPage
                         newTab.Controls.Add(newCLB);
@@ -944,7 +969,7 @@ namespace Aeris
             }
         }
 
-        public void tcParams_DrawItem(object sender, DrawItemEventArgs e)
+        public void TcParams_DrawItem(object sender, DrawItemEventArgs e)
         {
             Graphics g = e.Graphics;
 
@@ -959,9 +984,11 @@ namespace Aeris
             Font tabFont = e.Font;
 
             // Draw string. Center the text.
-            var stringFlags = new StringFormat();
-            stringFlags.Alignment = StringAlignment.Near;
-            stringFlags.LineAlignment = StringAlignment.Center;
+            var stringFlags = new StringFormat()
+            {
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Center,
+            };
 
             if (e.State == DrawItemState.Selected)
             {
@@ -975,7 +1002,7 @@ namespace Aeris
             g.DrawString(newTabPage.Text, tabFont, Brushes.Black, newtabBounds, new StringFormat(stringFlags));
         }
 
-        public void clbStatus_ItemCheck(object sender, ItemCheckEventArgs e)
+        public void ClbStatus_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             int iTabParam, iClbState;
             bool bclbState;
@@ -991,7 +1018,7 @@ namespace Aeris
 
             bclbState = Convert.ToBoolean(e.NewValue);
 
-            S9.ListParams[iTabParam].States[iClbState] = bclbState;
+            ListParams[iTabParam].States[iClbState] = bclbState;
             Render_Layers();
         }
 
@@ -1000,9 +1027,9 @@ namespace Aeris
             int iclbSublayers, iZID;
             clbSublayers.Items.Clear();
 
-            for (iclbSublayers = 0; iclbSublayers < S9.MaxSublayers; iclbSublayers++)
+            for (iclbSublayers = 0; iclbSublayers < MaxSublayers; iclbSublayers++)
             {
-                iZID = (from itemZID in S9.Section9Z
+                iZID = (from itemZID in Section9Z
                         where itemZID.ZLayer == 1 &
                               itemZID.ZSublayer == iclbSublayers
                         select itemZID.ZTileID).First();
@@ -1015,7 +1042,7 @@ namespace Aeris
         }
 
         // Procedure to prevent double-click changing state.
-        private void clbSublayers_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void ClbSublayers_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (clbSublayers.GetItemChecked(clbSublayers.SelectedIndex))
             {
@@ -1027,12 +1054,12 @@ namespace Aeris
             }
         }
 
-        private void clbSublayers_SelectedIndexChanged(object sender, EventArgs e)
+        private void ClbSublayers_SelectedIndexChanged(object sender, EventArgs e)
         {
             Render_Layers();
         }
 
-        private void pbTile_Click(object sender, EventArgs e)
+        private void PbTile_Click(object sender, EventArgs e)
         {
             frmTileEditor.ShowDialog(this);
         }
@@ -1040,7 +1067,7 @@ namespace Aeris
         public void SetpbTile(int iTile, int iTexture)
         {
 
-            var sortZTile = (from sortZItem in S9.Section9Z
+            var sortZTile = (from sortZItem in Section9Z
                              where sortZItem.ZTexture == iTexture &
                                    sortZItem.ZTileTex == iTile
                              select sortZItem).First();
@@ -1052,7 +1079,7 @@ namespace Aeris
             txtTileSize.Text = sortZTile.ZTileSize.ToString();
 
             cbBlending.Checked = Convert.ToBoolean(sortZTile.ZBlending);
-            cbIFX.Checked = Convert.ToBoolean(S9.Section9.pal_ignoreFirstPixel[sortZTile.ZPalette]);
+            cbIFX.Checked = Convert.ToBoolean(Section9.pal_ignoreFirstPixel[sortZTile.ZPalette]);
 
             txtParam.Text = sortZTile.ZParam.ToString();
             txtState.Text = sortZTile.ZState.ToString();
@@ -1067,14 +1094,14 @@ namespace Aeris
                 txtPalette.Text = sortZTile.ZPalette.ToString();
             }
 
-            txtSrcX.Text = S9.Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].sourceX.ToString();
-            txtSrcY.Text = S9.Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].sourceY.ToString();
-            txtDestX.Text = S9.Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].destX.ToString();
-            txtDestY.Text = S9.Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].destY.ToString();
-            txtSrcX2.Text = S9.Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].sourceX2.ToString();
-            txtSrcY2.Text = S9.Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].sourceY2.ToString();
-            txtTexture.Text = S9.Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].textureID.ToString();
-            txtTexture2.Text = S9.Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].textureID2.ToString();
+            txtSrcX.Text = Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].sourceX.ToString();
+            txtSrcY.Text = Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].sourceY.ToString();
+            txtDestX.Text = Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].destX.ToString();
+            txtDestY.Text = Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].destY.ToString();
+            txtSrcX2.Text = Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].sourceX2.ToString();
+            txtSrcY2.Text = Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].sourceY2.ToString();
+            txtTexture.Text = Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].textureID.ToString();
+            txtTexture2.Text = Section9.Layer[sortZTile.ZLayer].layerTiles[sortZTile.ZTile].textureID2.ToString();
 
             LoadTile(iTexture);
 
@@ -1101,7 +1128,7 @@ namespace Aeris
             int iLayer, iTile;
 
             // Put image tile in PictureBox
-            if (S9.textureImage[iTexture] != null)
+            if (textureImage[iTexture] != null)
             {
                 if (pbTile.Image != null) pbTile.Image.Dispose();
 
@@ -1109,7 +1136,6 @@ namespace Aeris
 
                 iLayer = Int32.Parse(txtLayer.Text);
                 iTile = Int32.Parse(txtTile.Text);
-                iTexture = cbTextures.SelectedIndex;
 
                 using (var g = Graphics.FromImage(pbTile.Image))
                 {
@@ -1117,22 +1143,22 @@ namespace Aeris
                     g.CompositingMode = CompositingMode.SourceCopy;
                     g.PixelOffsetMode = PixelOffsetMode.Half;
                     {
-                        g.DrawImage(S9.Section9.Layer[iLayer].layerTiles[iTile].imgTile, 
+                        g.DrawImage(Section9.Layer[iLayer].layerTiles[iTile].imgTile, 
                                     new Rectangle(0, 0, panelpbTile.Width - 4, panelpbTile.Height - 4), 
-                                    new Rectangle(0, 0, S9.Section9.Layer[iLayer].layerTiles[iTile].imgTile.Width,
-                                                        S9.Section9.Layer[iLayer].layerTiles[iTile].imgTile.Height), 
+                                    new Rectangle(0, 0, Section9.Layer[iLayer].layerTiles[iTile].imgTile.Width,
+                                                        Section9.Layer[iLayer].layerTiles[iTile].imgTile.Height), 
                                     GraphicsUnit.Pixel);
                     }
                 }
             }
         }
 
-        public void btnTileRight_Click(object sender, EventArgs e)
+        public void BtnTileRight_Click(object sender, EventArgs e)
         {
-            int iLayer, iTile, iTexture;
-            iLayer = Int32.Parse(txtLayer.Text);
+            int iTile, iTexture;
+
             iTile = Int32.Parse(txtTileTex.Text);
-            iTile = iTile + 1;
+            iTile++;
             if (Int32.Parse(txtTexture2.Text) == 0)
             {
                 iTexture = Int32.Parse(txtTexture.Text);
@@ -1142,24 +1168,24 @@ namespace Aeris
                 iTexture = Int32.Parse(txtTexture2.Text);
             }
 
-            if (iTile < S9.Section9.Textures[iTexture].MaxTiles)
+            if (iTile < Section9.Textures[iTexture].MaxTiles)
             {
                 txtTileTex.Text = iTile.ToString();
             }
             else
             {
-                txtTileTex.Text = S9.Section9.Textures[iTexture].MaxTiles.ToString();
+                txtTileTex.Text = Section9.Textures[iTexture].MaxTiles.ToString();
             }
 
             SetpbTile(Int32.Parse(txtTileTex.Text), iTexture);
         }
 
-        public void btnTileLeft_Click(object sender, EventArgs e)
+        public void BtnTileLeft_Click(object sender, EventArgs e)
         {
-            int iLayer, iTile, iTexture;
-            iLayer = Int32.Parse(txtLayer.Text);
+            int iTile, iTexture;
+
             iTile = Int32.Parse(txtTileTex.Text);
-            iTile = iTile - 1;
+            iTile--;
             if (Int32.Parse(txtTexture2.Text) == 0)
             {
                 iTexture = Int32.Parse(txtTexture.Text);
@@ -1181,12 +1207,12 @@ namespace Aeris
             SetpbTile(Int32.Parse(txtTileTex.Text), iTexture);
         }
 
-        private void pbTexture_MouseDown(object sender, MouseEventArgs e)
+        private void PbTexture_MouseDown(object sender, MouseEventArgs e)
         {
             int xPos, yPos, iTexture, iTileSize;
             if (cbTextures.Items.Count > 0 & cbTextures.SelectedIndex > -1)
             {
-                if (S9.textureImage[cbTextures.SelectedIndex] != null)
+                if (textureImage[cbTextures.SelectedIndex] != null)
                 {
                     iTileSize = Int32.Parse(txtTileSize.Text);
                     xPos = e.X / iTileSize * iTileSize;
@@ -1194,7 +1220,7 @@ namespace Aeris
                     iTexture = cbTextures.SelectedIndex;
 
                     // Let's search the clicked Tile.
-                    var sortZTile = (from ZItem in S9.Section9Z
+                    var sortZTile = (from ZItem in Section9Z
                                      where ZItem.ZTexture == iTexture &
                                            ZItem.ZSourceX == xPos &
                                            ZItem.ZSourceY == yPos
@@ -1212,12 +1238,12 @@ namespace Aeris
             }
         }
 
-        private void pbTexture_MouseMove(object sender, MouseEventArgs e)
+        private void PbTexture_MouseMove(object sender, MouseEventArgs e)
         {
             int xPos, yPos, iTileSize, iTexture;
             if (cbTextures.Enabled)
             {
-                if (S9.textureImage[cbTextures.SelectedIndex] != null)
+                if (textureImage[cbTextures.SelectedIndex] != null)
                 {
                     iTileSize = Int32.Parse(txtTileSize.Text);
                     xPos = e.X / iTileSize * iTileSize;
@@ -1225,7 +1251,7 @@ namespace Aeris
                     iTexture = cbTextures.SelectedIndex;
 
                     // Let's search the clicked Tile.
-                    var sortZTile = (from ZItem in S9.Section9Z
+                    var sortZTile = (from ZItem in Section9Z
                                      where ZItem.ZTexture == iTexture & 
                                            ZItem.ZSourceX == xPos & 
                                            ZItem.ZSourceY == yPos
@@ -1245,7 +1271,7 @@ namespace Aeris
             }
         }
 
-        private void pbTexture_MouseLeave(object sender, EventArgs e)
+        private void PbTexture_MouseLeave(object sender, EventArgs e)
         {
             if (cbTextures.Items.Count > 0)
             {
@@ -1261,13 +1287,13 @@ namespace Aeris
 
         private void PreviewTextureToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (S9.textureImage[cbTextures.SelectedIndex] != null)
+            if (textureImage[cbTextures.SelectedIndex] != null)
             {
                 ImageTools.ClearPictureBox(frmTextureImage.pbTextureImage, 1, panelpbTexture);
 
                 frmTextureImage.pbTextureImage.SizeMode = PictureBoxSizeMode.Normal;
 
-                if (S9.textureImage[cbTextures.SelectedIndex] != null)
+                if (textureImage[cbTextures.SelectedIndex] != null)
                 {
                     frmTextureImage.pbTextureImage.Image = new Bitmap(frmTextureImage.pbTextureImage.Width, 
                                                                       frmTextureImage.pbTextureImage.Height);
@@ -1277,11 +1303,11 @@ namespace Aeris
                         g.InterpolationMode = InterpolationMode.NearestNeighbor;
                         g.CompositingMode = CompositingMode.SourceCopy;
 
-                        g.DrawImage(S9.textureImage[cbTextures.SelectedIndex].Bitmap,
+                        g.DrawImage(textureImage[cbTextures.SelectedIndex].Bitmap,
                                     new Rectangle(0, 0, frmTextureImage.pbTextureImage.Width, 
                                                         frmTextureImage.pbTextureImage.Height),
-                                    0, 0, S9.textureImage[cbTextures.SelectedIndex].Width,
-                                          S9.textureImage[cbTextures.SelectedIndex].Height,
+                                    0, 0, textureImage[cbTextures.SelectedIndex].Width,
+                                          textureImage[cbTextures.SelectedIndex].Height,
                                     GraphicsUnit.Pixel);
                     }
                 }
@@ -1293,7 +1319,7 @@ namespace Aeris
 
         private void UnswizzleInternalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (S9.textureImage[cbTextures.SelectedIndex] != null)
+            if (textureImage[cbTextures.SelectedIndex] != null)
             {
                 SwizzleBase.UnswizzleInternalBaseTexture(cbTextures.SelectedIndex, frmTextureImage);
 
@@ -1332,7 +1358,7 @@ namespace Aeris
             frmSwizzleExternalBaseImages.ShowDialog(this);
         }
 
-        private void pbPalette_MouseMove(object sender, MouseEventArgs e)
+        private void PbPalette_MouseMove(object sender, MouseEventArgs e)
         {
             int xCursor, yCursor, iColor;
             Color cColor;
@@ -1383,7 +1409,7 @@ namespace Aeris
                                                             7, p);
                         }
 
-                        cColor = Palette.ARGB_BASEPAL[cbPalettes.SelectedIndex].ARGB_COLORS[iColor];
+                        cColor = ARGB_BASEPAL[cbPalettes.SelectedIndex].ARGB_COLORS[iColor];
                         g.DrawString("Idx: " + iColor.ToString("000") + 
                                      "\n\r R: " + cColor.R.ToString("000") +
                                      "\n\r G: " + cColor.G.ToString("000") +
@@ -1402,18 +1428,18 @@ namespace Aeris
             }
         }
 
-        private void pbPalette_MouseLeave(object sender, EventArgs e)
+        private void PbPalette_MouseLeave(object sender, EventArgs e)
         {
             if (cbPalettes.Items.Count > 0 & cbPalettes.SelectedIndex > -1)
             {
-                Palette.Refresh_Palette(ref pbPalette, cbPalettes.SelectedIndex);
+                Refresh_Palette(ref pbPalette, cbPalettes.SelectedIndex);
             }
 
             bPALInfoColorMouseMove = false;
             pbPalette.Invalidate();
         }
 
-        private void pbPalette_Paint(object sender, PaintEventArgs e)
+        private void PbPalette_Paint(object sender, PaintEventArgs e)
         {
             if (bPALInfoColorMouseMove)
             {
@@ -1421,7 +1447,7 @@ namespace Aeris
             }
         }
 
-        private void btnCheckAll_Click(object sender, EventArgs e)
+        private void BtnCheckAll_Click(object sender, EventArgs e)
         {
             int i;
             if (clbSublayers.Items.Count > 0)
@@ -1433,7 +1459,7 @@ namespace Aeris
             Render_Layers();
         }
 
-        private void btnUncheckAll_Click(object sender, EventArgs e)
+        private void BtnUncheckAll_Click(object sender, EventArgs e)
         {
             int i;
             if (clbSublayers.Items.Count > 0)
@@ -1459,13 +1485,13 @@ namespace Aeris
 
                 fbdEX.folderBrowser.RootFolder = Environment.SpecialFolder.MyComputer;
 
-                if (FileTools.strGlobalUnswizzleAllBaseTextures != null)
+                if (strGlobalUnswizzleAllBaseTextures != null)
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalUnswizzleAllBaseTextures;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalUnswizzleAllBaseTextures;
                 }
                 else
                 {
-                    fbdEX.folderBrowser.SelectedPath = FileTools.strGlobalPath;
+                    fbdEX.folderBrowser.SelectedPath = strGlobalPath;
                 }
 
                 fbdEX.Tmr.Start();
@@ -1474,9 +1500,9 @@ namespace Aeris
                     if (fbdEX.folderBrowser.SelectedPath != "")
                     {
                         // Put Global folder for export all base.
-                        FileTools.strGlobalUnswizzleAllBaseTextures = fbdEX.folderBrowser.SelectedPath;
+                        strGlobalUnswizzleAllBaseTextures = fbdEX.folderBrowser.SelectedPath;
 
-                        iResult = SwizzleBase.UnswizzleFieldTexturesToBaseImages(FileTools.strGlobalUnswizzleAllBaseTextures);
+                        iResult = SwizzleBase.UnswizzleFieldTexturesToBaseImages(strGlobalUnswizzleAllBaseTextures);
 
                         if (iResult == 0)
                         {
@@ -1500,14 +1526,17 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error in Unswizzle process for All Base Images...", "Error");
             }
         }
 
-        private void frmAeris_Resize(object sender, EventArgs e)
+        private void FrmAeris_Resize(object sender, EventArgs e)
         {
-            if (this.Text.Length > 0 && this.Text != "Aeris" + strAerisVersion)
+            //if (this.Text.Length > 0 && this.Text != "Aeris" + strAerisVersion)
+            if (bFieldLoaded)
             {
+                bResized = true;
                 Render_Layers();
             }
         }
@@ -1522,13 +1551,13 @@ namespace Aeris
         private bool _dragging;
 
         // Register mouse events
-        private void pbBackground_MouseUp(object sender, MouseEventArgs e)
+        private void PbBackground_MouseUp(object sender, MouseEventArgs e)
         {
             if (sender == null) return;
             _dragging = false;
         }
 
-        private void pbBackground_MouseDown(object sender, MouseEventArgs e)
+        private void PbBackground_MouseDown(object sender, MouseEventArgs e)
         {
             if (sender == null) return;
 
@@ -1539,7 +1568,7 @@ namespace Aeris
             _yPos = e.Y;
         }
 
-        private void pbBackground_MouseMove(object sender, MouseEventArgs e)
+        private void PbBackground_MouseMove(object sender, MouseEventArgs e)
         {
             if (_dragging)
             {
@@ -1565,21 +1594,21 @@ namespace Aeris
             {
 
                 // Check Initial Directory
-                if (FileTools.strGlobalPathSaveFieldFolder != null)
+                if (strGlobalPathSaveFieldFolder != null)
                 {
-                    saveFile.InitialDirectory = FileTools.strGlobalPathSaveFieldFolder;
+                    saveFile.InitialDirectory = strGlobalPathSaveFieldFolder;
                 }
                 else
                 {
-                    saveFile.InitialDirectory = FileTools.strGlobalPathFieldFolder;
+                    saveFile.InitialDirectory = strGlobalPathFieldFolder;
                 }
 
-                saveFile.FileName = FileTools.strFileFieldName;
+                saveFile.FileName = strFileFieldName;
                 if (saveFile.ShowDialog() == DialogResult.OK)
                 {
                     if (saveFile.FileName.Length > 0)
                     {
-                        iResult = FileTools.Save_Field(saveFile.FileName);
+                        iResult = Save_Field(saveFile.FileName);
 
                         if (iResult == 0)
                         {
@@ -1587,10 +1616,10 @@ namespace Aeris
                                             "Information");
 
                             // Update Aeris Title
-                            FileTools.bFieldModified = false;
+                            bFieldModified = false;
 
-                            FileTools.strGlobalPathSaveFieldFolder = Path.GetDirectoryName(saveFile.FileName);
-                            FileTools.strFileFieldName = Path.GetFileName(saveFile.FileName);
+                            strGlobalPathSaveFieldFolder = Path.GetDirectoryName(saveFile.FileName);
+                            strFileFieldName = Path.GetFileName(saveFile.FileName);
 
                             Update_AerisTitle();
                         }
@@ -1604,6 +1633,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error in the saving Field process.", 
                                 "Error");
             }
@@ -1626,14 +1656,14 @@ namespace Aeris
                 // Let's try to predict the name.
                 if (gbTile.Enabled)
                 {
-                    openFile.FileName = FileTools.strGlobalFieldName + "_" + 
+                    openFile.FileName = strGlobalFieldName + "_" + 
                                         cbTextures.SelectedIndex.ToString("00") + "_" + 
                                         String.Format(txtPalette.Text, "00") + ".png";
 
-                    if (FileTools.strGlobalImportTexture != null)
-                        openFile.InitialDirectory = FileTools.strGlobalImportTexture;
+                    if (strGlobalImportTexture != null)
+                        openFile.InitialDirectory = strGlobalImportTexture;
                     else
-                        openFile.InitialDirectory = FileTools.strGlobalPath;
+                        openFile.InitialDirectory = strGlobalPath;
 
                 }
                 else
@@ -1670,7 +1700,7 @@ namespace Aeris
 
                             RefreshBackground(iTexture);
 
-                            FileTools.strGlobalImportTexture = Path.GetDirectoryName(openFile.FileName);
+                            strGlobalImportTexture = Path.GetDirectoryName(openFile.FileName);
                         }
                         else if (iResult == 1)
                         {
@@ -1697,6 +1727,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error importing texture.", 
                                 "Error");
             }
@@ -1712,24 +1743,24 @@ namespace Aeris
             try
             {
                 // Check Initial Directory
-                if (FileTools.strGlobalPathSaveFieldFolder != null)
+                if (strGlobalPathSaveFieldFolder != null)
                 {
-                    strSaveFileName = FileTools.strGlobalPathSaveFieldFolder;
+                    strSaveFileName = strGlobalPathSaveFieldFolder;
                 }
                 else
                 {
-                    strSaveFileName = FileTools.strGlobalPathFieldFolder;
+                    strSaveFileName = strGlobalPathFieldFolder;
                 }
 
-                strSaveFileName += "\\" + FileTools.strFileFieldName;
+                strSaveFileName += "\\" + strFileFieldName;
 
                 if (strSaveFileName.Length > 0)
                 {
-                    iResult = FileTools.Save_Field(strSaveFileName);
+                    iResult = Save_Field(strSaveFileName);
                     if (iResult == 0)
                     {
                         // Update Aeris Title
-                        FileTools.bFieldModified = false;
+                        bFieldModified = false;
                         Update_AerisTitle();
                     }
                     else
@@ -1741,6 +1772,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error in the saving Field process.", 
                                 "Error");
             }
@@ -1751,13 +1783,13 @@ namespace Aeris
             // Set filter options and filter index.
             saveFile.Title = "Save Palette As...";
             saveFile.Filter = "PAL (GIMP Format) file|*.gpl|Windows PAL (RIFF Format) file|*.pal|All files (*.*)|*.*";
-            saveFile.InitialDirectory = FileTools.strGlobalPath;
+            saveFile.InitialDirectory = strGlobalPath;
             saveFile.FilterIndex = 1;
             saveFile.FileName = null;
 
             try
             {
-                saveFile.FileName = FileTools.strGlobalFieldName + "_" + cbPalettes.SelectedIndex.ToString("00");
+                saveFile.FileName = strGlobalFieldName + "_" + cbPalettes.SelectedIndex.ToString("00");
 
                 if (saveFile.ShowDialog() == DialogResult.OK)
                 {
@@ -1765,13 +1797,13 @@ namespace Aeris
                     {
                         if (saveFile.FilterIndex == 1)
                         {
-                            Palette.ExportGIMPPAL(saveFile.FileName, cbPalettes.SelectedIndex);
+                            ExportGIMPPAL(saveFile.FileName, cbPalettes.SelectedIndex);
                             MessageBox.Show("Palette in GIMP .GPL Format exported.", 
                                             "Information");
                         }
                         else if (saveFile.FilterIndex == 2)
                         {
-                            Palette.ExportMSPAL(saveFile.FileName, cbPalettes.SelectedIndex);
+                            ExportMSPAL(saveFile.FileName, cbPalettes.SelectedIndex);
                             MessageBox.Show("Palette in Windows RIFF .PAL Format exported.", 
                                             "Information");
                         }
@@ -1780,6 +1812,7 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("Error exporting Palette.",
                                 "Error");
             }
@@ -1792,7 +1825,7 @@ namespace Aeris
             // Set filter options and filter index.
             openFile.Title = "Import Palette...";
             openFile.Filter = "Microsoft PAL (*.pal)|*.pal|All Files (*.*)|*.*";
-            openFile.InitialDirectory = FileTools.strGlobalPath;
+            openFile.InitialDirectory = strGlobalPath;
             openFile.FilterIndex = 1;
             openFile.FileName = null;
             try
@@ -1800,27 +1833,27 @@ namespace Aeris
                 iPalette = cbPalettes.SelectedIndex;
 
                 // Let's try to predict the name.
-                openFile.FileName = FileTools.strGlobalFieldName + "_" + iPalette.ToString("00");
+                openFile.FileName = strGlobalFieldName + "_" + iPalette.ToString("00");
 
                 if (openFile.ShowDialog() == DialogResult.OK)
                 {
                     if (openFile.FileName != "")
                     {
                         iPalette = Int32.Parse(Path.GetFileNameWithoutExtension(openFile.FileName).Split('_').Last());
-                        iResult = Palette.ImportMSPAL(openFile.FileName, iPalette);
+                        iResult = ImportMSPAL(openFile.FileName, iPalette);
 
                         if (iResult == 0)
                         {
                             MessageBox.Show("DONE: Palette imported correctly.", 
                                             "Information");
 
-                            Palette.Load_BASEARGB();
+                            Load_BASEARGB();
 
                             RefreshBackground(cbTextures.SelectedIndex);
 
                             if (cbPalettes.Items.Count > 0 & cbPalettes.SelectedIndex > -1)
                             {
-                                Palette.Refresh_Palette(ref pbPalette, cbPalettes.SelectedIndex);
+                                Refresh_Palette(ref pbPalette, cbPalettes.SelectedIndex);
                             }
                         }
                         else if (iResult == -1)
@@ -1833,13 +1866,14 @@ namespace Aeris
             }
             catch (Exception ex)
             {
+                strExceptionVar = ex.Message;
                 MessageBox.Show("ERROR: There has been some error importing the palette.", "Error");
             }
         }
 
         private void Prepare_Palettes()
         {
-            int iPalette = 0;
+            int iPalette;
             cbPalettes.Items.Clear();
 
             for (iPalette = 0; iPalette < S4.Section4.numPalettes; iPalette++)
@@ -1848,16 +1882,16 @@ namespace Aeris
 
         private void Prepare_Textures()
         {
-            int iTexture = 0;
-            string strTexture = "";
+            int iTexture;
+            string strTexture;
 
             cbTextures.Items.Clear();
 
-            for (iTexture = 0; iTexture < S9.MAX_NUM_TEXTURES; iTexture++)
+            for (iTexture = 0; iTexture < MAX_NUM_TEXTURES; iTexture++)
             {
-                if (S9.Section9.Textures[iTexture].textureFlag == 1)
+                if (Section9.Textures[iTexture].textureFlag == 1)
                 {
-                    if (S9.Section9.Textures[iTexture].Depth < 2)
+                    if (Section9.Textures[iTexture].Depth < 2)
                         strTexture = "TextureID: " + iTexture.ToString();
                     else
                         strTexture = "TextureID: " + iTexture.ToString() + " (Direct - NO Palette)";
@@ -1873,9 +1907,9 @@ namespace Aeris
 
         public void RefreshBackground(int iTETexture)
         {
-            S9.Prepare_ListParams();
-            S9.PreRender_S9Tiles();
-            S9.Load_ZList(rtbEvents);
+            Prepare_ListParams();
+            PreRender_S9Tiles();
+            Load_ZList(rtbEvents);
 
             SetpbTile(Int32.Parse(txtTileTex.Text), iTETexture);
             Prepare_ParamStatus();
@@ -1883,9 +1917,15 @@ namespace Aeris
             Render_Layers();
         }
 
-        private void unswizzleAllExternalBaseTexturesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UnswizzleAllExternalBaseTexturesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmUnswizzleExternalBaseTextures.ShowDialog(this);
         }
+
+
+        public string GetLayer() { return txtLayer.Text; }
+        public string GetTile() { return txtTile.Text; }
+        public string GetTileTexture() { return txtTileTex.Text; }
+
     }
 }
